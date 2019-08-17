@@ -6,9 +6,20 @@
 
 
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
-
+import {
+  IDaily,
+} from './interfaces';
 
 export namespace Components {
+  interface AppDaily {
+    'breakfastCalories': number;
+    'breakfastSnackCalories': number;
+    'daily': IDaily;
+    'dinnerCalories': number;
+    'dinnerSnackCalories': number;
+    'lunchCalories': number;
+    'lunchSnackCalories': number;
+  }
   interface AppHome {}
   interface AppProfile {
     'name': string;
@@ -18,6 +29,12 @@ export namespace Components {
 
 declare global {
 
+
+  interface HTMLAppDailyElement extends Components.AppDaily, HTMLStencilElement {}
+  var HTMLAppDailyElement: {
+    prototype: HTMLAppDailyElement;
+    new (): HTMLAppDailyElement;
+  };
 
   interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {}
   var HTMLAppHomeElement: {
@@ -37,6 +54,7 @@ declare global {
     new (): HTMLAppRootElement;
   };
   interface HTMLElementTagNameMap {
+    'app-daily': HTMLAppDailyElement;
     'app-home': HTMLAppHomeElement;
     'app-profile': HTMLAppProfileElement;
     'app-root': HTMLAppRootElement;
@@ -44,6 +62,15 @@ declare global {
 }
 
 declare namespace LocalJSX {
+  interface AppDaily extends JSXBase.HTMLAttributes<HTMLAppDailyElement> {
+    'breakfastCalories'?: number;
+    'breakfastSnackCalories'?: number;
+    'daily'?: IDaily;
+    'dinnerCalories'?: number;
+    'dinnerSnackCalories'?: number;
+    'lunchCalories'?: number;
+    'lunchSnackCalories'?: number;
+  }
   interface AppHome extends JSXBase.HTMLAttributes<HTMLAppHomeElement> {}
   interface AppProfile extends JSXBase.HTMLAttributes<HTMLAppProfileElement> {
     'name'?: string;
@@ -51,6 +78,7 @@ declare namespace LocalJSX {
   interface AppRoot extends JSXBase.HTMLAttributes<HTMLAppRootElement> {}
 
   interface IntrinsicElements {
+    'app-daily': AppDaily;
     'app-home': AppHome;
     'app-profile': AppProfile;
     'app-root': AppRoot;

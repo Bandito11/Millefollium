@@ -1,91 +1,130 @@
-import { Component, h } from '@stencil/core';
-import { IDaily, IMeal } from '../../interfaces';
-import { MOCKDAILY, MOCKENTRIES } from '../../helpers/mockData';
+import { Component, h, State, Listen } from "@stencil/core";
+import { IDaily } from "../../interfaces";
+import { MOCKDAILY, MOCKENTRIES } from "../../helpers/mockData";
 
 @Component({
-  tag: 'app-home',
-  styleUrl: 'app-home.css'
+  tag: "app-home",
+  styleUrl: "app-home.css"
 })
 export class AppHome {
 
-  daily: IDaily;
-  pastDailyEntries: IDaily & Date[];
-  dailyCalories: number;
-  breakfastTotalCalories: number;
-  breakfastSnackTotalCalories: number;
-  lunchTotalCalories: number;
-  lunchSnackTotalCalories: number;
-  dinnerTotalCalories: number;
-  dinnerSnackTotalCalories: number;
-  totalFat: string;
-  dailyProtein: string;
-  dailyCarbs: string;
+  daily: IDaily = {
+    breakfast: [],
+    breakfastSnack: [],
+    lunch: [],
+    lunchSnack: [],
+    dinner: [],
+    dinnerSnack: []
+  };
+  @State() pastDailyEntries: IDaily[] = [];
+  dailyCalories: number = 0;
+  breakfastCalories: number = 0;
+  breakfastSnackCalories: number = 0;
+  lunchCalories: number = 0;
+  lunchSnackCalories: number = 0;
+  dinnerCalories: number = 0;
+  dinnerSnackCalories: number = 0;
+  totalFat: string = '0';
+  dailyProtein: string = '0';
+  dailyCarbs: string = '0';
 
-  componentWillLoad() {
-    this.daily = {
-      breakfast: [],
-      breakfastSnack: [],
-      lunch: [],
-      lunchSnack: [],
-      dinner: [],
-      dinnerSnack: []
-    };
-    this.totalFat = '0';
-    this.dailyProtein = '0';
-    this.dailyCarbs = '0';
-    this.dailyCalories = 0;
-    this.getDailyTotalNutrition().then(data => {
+  async componentWillLoad() {
+    try {
+      const data = await this.getDailyEntry();
       this.daily = data;
       const macros = this.calculateMacros(data);
       this.dailyCalories = macros.calories;
       this.dailyProtein = macros.protein;
       this.totalFat = macros.fat;
       this.dailyCarbs = macros.carbs;
-    });
+      this.breakfastCalories = macros.breakfastCalories;
+      this.breakfastSnackCalories = macros.breakfastSnackCalories;
+      this.lunchCalories = macros.lunchCalories;
+      this.lunchSnackCalories = macros.lunchSnackCalories;
+      this.dinnerCalories = macros.dinnerTotalCalories;
+      this.dinnerSnackCalories = macros.dinnerSnackCalories;
+
+    } catch (error) {
+      console.error(error);
+    }
   }
+
+  componentDidLoad() {
+    const content = document.querySelector('ion-content');
+    content.scrollEvents = true;
+  }
+
+
+  @Listen('ionScroll')
+  async handleIonScroll(ev) {
+    const content = document.querySelector('ion-content');
+    const scroll = await content.getScrollElement();
+    const scrollTopMax = scroll['scrollTopMax'];
+    if (ev['detail']['scrollTop'] === scrollTopMax) {
+      const loadingController = document.querySelector('ion-loading-controller');
+      const loading = await loadingController.create({
+        message: 'Fetching...'
+      });
+
+      await loading.present();
+      this.getPastDailyEntries()
+        .then(data => {
+          this.pastDailyEntries = [...this.pastDailyEntries, ...data];
+          loading.dismiss();
+        })
+        .catch(error => console.error(error));
+    };
+  };
 
   calculateMacros(daily: IDaily) {
     let totalCalories = 0;
     let totalFat = 0;
     let totalProtein = 0;
     let totalCarbs = 0;
+    let breakfastTotalCalories = 0;
+    let breakfastSnackTotalCalories = 0;
+    let lunchTotalCalories = 0;
+    let lunchSnackTotalCalories = 0;
+    let dinnerTotalCalories = 0;
+    let dinnerSnackTotalCalories = 0;
 
     daily.breakfast.forEach(meal => {
-      totalCalories += meal.calories;
+      breakfastTotalCalories += meal.calories;
       totalFat += meal.fat.total.grams;
       totalProtein += meal.protein;
       totalCarbs += meal.totalCarbohydrates.grams;
     });
     daily.breakfastSnack.forEach(meal => {
-      totalCalories += meal.calories;
+      breakfastSnackTotalCalories += meal.calories;
       totalFat += meal.fat.total.grams;
       totalProtein += meal.protein;
       totalCarbs += meal.totalCarbohydrates.grams;
     });
     daily.lunch.forEach(meal => {
-      totalCalories += meal.calories;
+      lunchTotalCalories += meal.calories;
       totalFat += meal.fat.total.grams;
       totalProtein += meal.protein;
       totalCarbs += meal.totalCarbohydrates.grams;
     });
     daily.lunchSnack.forEach(meal => {
-      totalCalories += meal.calories;
+      lunchSnackTotalCalories += meal.calories;
       totalFat += meal.fat.total.grams;
       totalProtein += meal.protein;
       totalCarbs += meal.totalCarbohydrates.grams;
     });
     daily.dinner.forEach(meal => {
-      totalCalories += meal.calories;
+      dinnerTotalCalories += meal.calories;
       totalFat += meal.fat.total.grams;
       totalProtein += meal.protein;
       totalCarbs += meal.totalCarbohydrates.grams;
     });
     daily.dinnerSnack.forEach(meal => {
-      totalCalories += meal.calories;
+      dinnerSnackTotalCalories += meal.calories;
       totalFat += meal.fat.total.grams;
       totalProtein += meal.protein;
       totalCarbs += meal.totalCarbohydrates.grams;
     });
+    totalCalories = breakfastTotalCalories + breakfastSnackTotalCalories + lunchTotalCalories + this.lunchSnackCalories + dinnerTotalCalories + dinnerSnackTotalCalories;
     totalFat = totalFat * 9 / totalCalories * 100;
     totalProtein = totalProtein * 4 / totalCalories * 100;
     totalCarbs = totalCarbs * 4 / totalCalories * 100;
@@ -93,14 +132,17 @@ export class AppHome {
       fat: totalFat.toFixed(0),
       protein: totalProtein.toFixed(0),
       carbs: totalCarbs.toFixed(0),
-      calories: totalCalories
+      calories: totalCalories,
+      breakfastCalories: breakfastTotalCalories,
+      breakfastSnackCalories: breakfastSnackTotalCalories,
+      lunchCalories: lunchTotalCalories,
+      lunchSnackCalories: lunchSnackTotalCalories,
+      dinnerTotalCalories: dinnerTotalCalories,
+      dinnerSnackCalories: dinnerSnackTotalCalories
     }
   }
 
-  getDailyTotalNutrition(): Promise<IDaily> {
-    //TODO: When deleting the fake data and implementing the call
-    // to the DB remember to DELETE any from return tyoe generic
-    // <IDaily | any>
+  getDailyEntry(): Promise<IDaily> {
     return new Promise(resolve => {
       const daily = MOCKDAILY;
 
@@ -108,9 +150,9 @@ export class AppHome {
     })
   };
 
-  getPastDailyEntries() {
+  getPastDailyEntries(): Promise<IDaily[]> {
     return new Promise(resolve => {
-      const entries = MOCKENTRIES; console.log(entries);
+      const entries = MOCKENTRIES;
       resolve(entries);
     });
   }
@@ -118,13 +160,14 @@ export class AppHome {
   render() {
     return [
       <div>
+        <ion-loading-controller></ion-loading-controller>
         {navigator.userAgent.match('Mobile')
-          ? <div></div>
+          ? ''
           : <ion-header>
-            <ion-toolbar color='primary'>
-              <ion-buttons slot='end'>
-                <ion-button href='.'>
-                  <ion-icon slot='icon-only' name='add'></ion-icon>
+            <ion-toolbar color="primary">
+              <ion-buttons slot="end">
+                <ion-button href=".">
+                  <ion-icon slot="icon-only" name="add"></ion-icon>
                 </ion-button>
               </ion-buttons>
             </ion-toolbar>
@@ -132,12 +175,12 @@ export class AppHome {
         }
       </div>,
 
-      <ion-content class='ion-padding'>
+      <ion-content class="ion-padding">
         <h1>Today</h1>
         <h3>Calories consumed: {this.dailyCalories}</h3>
 
-        <ion-list lines='none'>
-          <ion-item-divider color='secondary'>
+        <ion-list lines="none">
+          <ion-item-divider color="secondary">
             <ion-label>MacroNutrients</ion-label>
           </ion-item-divider>
           <ion-item>
@@ -149,120 +192,55 @@ export class AppHome {
           <ion-item>
             <ion-label>Fat: {this.totalFat}%</ion-label>
           </ion-item>
-          <ion-item-divider color='tertiary'>
+          <ion-item-divider color="tertiary">
             <ion-label>Calories consumed at:</ion-label>
           </ion-item-divider>
-          {this.daily.breakfast.length > 0
-            ? <ion-list lines='none'>
-              <ion-list-header>Breakfast: {this.breakfastTotalCalories}</ion-list-header>
-
-              {this.daily.breakfast.map((meal: IMeal) =>
-                <div>
-                  <ion-item>
-                    <ion-label class='ion-text-wrap'>Name: {meal.name}</ion-label>
-                    <ion-label>Calories: {meal.calories}</ion-label>
-                  </ion-item>
+          <app-daily
+            daily={this.daily}
+            breakfast-calories={this.breakfastCalories}
+            breakfast-snack-Calories={this.breakfastSnackCalories}
+            lunch-calories={this.lunchCalories}
+            lunch-snack-calories={this.lunchSnackCalories}
+            dinner-calories={this.dinnerCalories}
+            dinner-snack-calories={this.dinnerSnackCalories}
+          >
+          </app-daily>
+          <ion-item-divider color="tertiary">
+            <ion-label>This week:</ion-label>
+          </ion-item-divider>
+          {
+            this.pastDailyEntries.map(daily =>
+              <div>
+                <div class="ion-text-end">
+                  <h2>{`${daily.date.getDate()}-${daily.date.getMonth()}-${daily.date.getFullYear()}`}</h2>
                 </div>
-              )}
-            </ion-list>
-            : <div></div>
-          }
-
-          {this.daily.breakfastSnack.length > 0
-            ? <ion-list lines='none'>
-              <ion-list-header>Breakfast Snack: {this.breakfastSnackTotalCalories}</ion-list-header>
-
-              {this.daily.breakfastSnack.map((meal: IMeal) =>
-                <div>
-                  <ion-item>
-                    <ion-label class='ion-text-wrap'>Name: {meal.name}</ion-label>
-                    <ion-label>Calories: {meal.calories}</ion-label>
-                  </ion-item>
-                </div>
-              )}
-            </ion-list>
-            : <div></div>
-          }
-
-          {this.daily.lunch.length > 0
-            ? <ion-list lines='none'>
-              <ion-list-header>Lunch: {this.lunchTotalCalories}</ion-list-header>
-
-              {this.daily.lunch.map((meal: IMeal) =>
-                <div>
-                  <ion-item>
-                    <ion-label class='ion-text-wrap'>Name: {meal.name}</ion-label>
-                    <ion-label>Calories: {meal.calories}</ion-label>
-                  </ion-item>
-                </div>
-              )}
-            </ion-list>
-            : <div></div>
-          }
-
-          {this.daily.lunchSnack.length > 0
-            ? <ion-list lines='none'>
-              <ion-list-header>Lunch Snack: {this.lunchSnackTotalCalories}</ion-list-header>
-
-              {this.daily.lunchSnack.map((meal: IMeal) =>
-                <div>
-                  <ion-item>
-                    <ion-label class='ion-text-wrap'>Name: {meal.name}</ion-label>
-                    <ion-label>Calories: {meal.calories}</ion-label>
-                  </ion-item>
-                </div>
-              )}
-            </ion-list>
-            : <div></div>
-          }
-
-          {this.daily.dinner.length > 0
-            ? <ion-list lines='none'>
-              <ion-list-header>Dinner: {this.dinnerTotalCalories}</ion-list-header>
-
-              {this.daily.dinner.map((meal: IMeal) =>
-                <div>
-                  <ion-item>
-                    <ion-label class='ion-text-wrap'>Name: {meal.name}</ion-label>
-                    <ion-label>Calories: {meal.calories}</ion-label>
-                  </ion-item>
-                </div>
-              )}
-            </ion-list>
-            : <div></div>
-          }
-
-          {this.daily.dinnerSnack.length > 0
-            ? <ion-list lines='none'>
-              <ion-list-header>Dinner Snack: {this.dinnerSnackTotalCalories}</ion-list-header>
-
-              {this.daily.dinnerSnack.map((meal: IMeal) =>
-                <div>
-                  <ion-item>
-                    <ion-label class='ion-text-wrap'>Name: {meal.name}</ion-label>
-                    <ion-label>Calories: {meal.calories}</ion-label>
-                  </ion-item>
-                </div>
-              )}
-            </ion-list>
-            : <div></div>
+                <app-daily
+                  daily={daily}
+                // breakfast-calories={macros.breakfastCalories}
+                // breakfast-snack-Calories={macros.breakfastSnackCalories}
+                // lunch-calories={macros.lunchCalories}
+                // lunch-snack-calories={macros.lunchSnackCalories}
+                // dinner-calories={macros.dinnerTotalCalories}
+                // dinner-snack-calories={macros.dinnerSnackCalories}
+                >
+                </app-daily>
+              </div>
+            )
           }
         </ion-list>
-
       </ion-content>,
-
       <div>
         {navigator.userAgent.match('Mobile')
           ? <ion-footer>
-            <ion-toolbar color='primary'>
-              <ion-buttons slot='end'>
-                <ion-button href='.'>
-                  <ion-icon slot='icon-only' name='add'></ion-icon>
+            <ion-toolbar color="primary">
+              <ion-buttons slot="end">
+                <ion-button href=".">
+                  <ion-icon slot="icon-only" name="add"></ion-icon>
                 </ion-button>
               </ion-buttons>
             </ion-toolbar>
           </ion-footer>
-          : <div></div>
+          : ''
         }
       </div>
     ]
