@@ -1,5 +1,5 @@
-import { Component, h, State, Listen } from "@stencil/core";
-import { IDaily } from "../../interfaces";
+import { Component, h, Listen, State } from "@stencil/core";
+import { IDaily, IMeal } from "../../interfaces";
 import { MOCKDAILY, MOCKENTRIES } from "../../helpers/mockData";
 
 @Component({
@@ -54,7 +54,6 @@ export class AppHome {
     content.scrollEvents = true;
   }
 
-
   @Listen('ionScroll')
   async handleIonScroll(ev) {
     const content = document.querySelector('ion-content');
@@ -88,42 +87,42 @@ export class AppHome {
     let dinnerTotalCalories = 0;
     let dinnerSnackTotalCalories = 0;
 
-    daily.breakfast.forEach(meal => {
-      breakfastTotalCalories += meal.calories;
-      totalFat += meal.fat.total.grams;
-      totalProtein += meal.protein;
-      totalCarbs += meal.totalCarbohydrates.grams;
-    });
-    daily.breakfastSnack.forEach(meal => {
-      breakfastSnackTotalCalories += meal.calories;
-      totalFat += meal.fat.total.grams;
-      totalProtein += meal.protein;
-      totalCarbs += meal.totalCarbohydrates.grams;
-    });
-    daily.lunch.forEach(meal => {
-      lunchTotalCalories += meal.calories;
-      totalFat += meal.fat.total.grams;
-      totalProtein += meal.protein;
-      totalCarbs += meal.totalCarbohydrates.grams;
-    });
-    daily.lunchSnack.forEach(meal => {
-      lunchSnackTotalCalories += meal.calories;
-      totalFat += meal.fat.total.grams;
-      totalProtein += meal.protein;
-      totalCarbs += meal.totalCarbohydrates.grams;
-    });
-    daily.dinner.forEach(meal => {
-      dinnerTotalCalories += meal.calories;
-      totalFat += meal.fat.total.grams;
-      totalProtein += meal.protein;
-      totalCarbs += meal.totalCarbohydrates.grams;
-    });
-    daily.dinnerSnack.forEach(meal => {
-      dinnerSnackTotalCalories += meal.calories;
-      totalFat += meal.fat.total.grams;
-      totalProtein += meal.protein;
-      totalCarbs += meal.totalCarbohydrates.grams;
-    });
+    const breakfast = this.totalMealMacros(daily.breakfast);
+    breakfastTotalCalories += breakfast.calories;
+    totalFat += breakfast.fat;
+    totalProtein += breakfast.protein;
+    totalCarbs += breakfast.carbs;
+
+    const breakfastSnack = this.totalMealMacros(daily.breakfastSnack);
+    breakfastSnackTotalCalories += breakfastSnack.calories;
+    totalFat += breakfastSnack.fat;
+    totalProtein += breakfastSnack.protein;
+    totalCarbs += breakfastSnack.carbs;
+
+    const lunch = this.totalMealMacros(daily.lunch);
+    lunchTotalCalories += lunch.calories;
+    totalFat += lunch.fat;
+    totalProtein += lunch.protein;
+    totalCarbs += lunch.carbs;
+
+    const lunchSnack = this.totalMealMacros(daily.lunchSnack);
+    lunchSnackTotalCalories += lunchSnack.calories;
+    totalFat += lunchSnack.fat;
+    totalProtein += lunchSnack.protein;
+    totalCarbs += lunchSnack.carbs;
+
+    const dinner = this.totalMealMacros(daily.dinner);
+    dinnerTotalCalories += dinner.calories;
+    totalFat += dinner.fat;
+    totalProtein += dinner.protein;
+    totalCarbs += dinner.carbs;
+
+    const dinnerSnack = this.totalMealMacros(daily.dinnerSnack);
+    dinnerSnackTotalCalories += dinnerSnack.calories;
+    totalFat += dinnerSnack.fat;
+    totalProtein += dinnerSnack.protein;
+    totalCarbs += dinnerSnack.carbs;
+
     totalCalories = breakfastTotalCalories + breakfastSnackTotalCalories + lunchTotalCalories + this.lunchSnackCalories + dinnerTotalCalories + dinnerSnackTotalCalories;
     totalFat = totalFat * 9 / totalCalories * 100;
     totalProtein = totalProtein * 4 / totalCalories * 100;
@@ -142,6 +141,25 @@ export class AppHome {
     }
   }
 
+  totalMealMacros(meals: IMeal[]) {
+    let totalCalories = 0;
+    let totalFat = 0;
+    let totalProtein = 0;
+    let totalCarbs = 0;
+    meals.forEach(meal => {
+      totalCalories += meal.calories;
+      totalFat += meal.fat.total.grams;
+      totalProtein += meal.protein;
+      totalCarbs += meal.totalCarbohydrates.grams;
+    });
+    return {
+      calories: totalCalories,
+      fat: totalFat,
+      protein: totalProtein,
+      carbs: totalCarbs
+    }
+  }
+
   getDailyEntry(): Promise<IDaily> {
     return new Promise(resolve => {
       const daily = MOCKDAILY;
@@ -157,21 +175,31 @@ export class AppHome {
     });
   }
 
+  goToList() {
+    const ionNav = document.querySelector('ion-nav');
+    // if(navigator.userAgent.toLowerCase().match('iphone') || navigator.userAgent.toLowerCase().match('ipad')){
+    //   ionNav.animated = false;
+    // }
+    ionNav.push('app-food-list');
+  }
+
   render() {
     return [
       <div>
+        <ion-nav></ion-nav>
         <ion-loading-controller></ion-loading-controller>
-        {navigator.userAgent.match('Mobile')
-          ? ''
-          : <ion-header>
-            <ion-toolbar color="primary">
-              <ion-buttons slot="end">
-                <ion-button href=".">
-                  <ion-icon slot="icon-only" name="add"></ion-icon>
-                </ion-button>
-              </ion-buttons>
-            </ion-toolbar>
-          </ion-header>
+        {
+          navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
+            ? ''
+            : <ion-header>
+              <ion-toolbar color="primary">
+                <ion-buttons slot="end">
+                  <ion-button href="/food-list">
+                    <ion-icon slot="icon-only" name="add"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-header>
         }
       </div>,
 
@@ -216,12 +244,12 @@ export class AppHome {
                 </div>
                 <app-daily
                   daily={daily}
-                // breakfast-calories={macros.breakfastCalories}
-                // breakfast-snack-Calories={macros.breakfastSnackCalories}
-                // lunch-calories={macros.lunchCalories}
-                // lunch-snack-calories={macros.lunchSnackCalories}
-                // dinner-calories={macros.dinnerTotalCalories}
-                // dinner-snack-calories={macros.dinnerSnackCalories}
+                  breakfast-calories={this.totalMealMacros(daily.breakfast).calories}
+                  breakfast-snack-Calories={this.totalMealMacros(daily.breakfastSnack).calories}
+                  lunch-calories={this.totalMealMacros(daily.lunch).calories}
+                  lunch-snack-calories={this.totalMealMacros(daily.lunchSnack).calories}
+                  dinner-calories={this.totalMealMacros(daily.dinner).calories}
+                  dinner-snack-calories={this.totalMealMacros(daily.dinnerSnack).calories}
                 >
                 </app-daily>
               </div>
@@ -230,17 +258,18 @@ export class AppHome {
         </ion-list>
       </ion-content>,
       <div>
-        {navigator.userAgent.match('Mobile')
-          ? <ion-footer>
-            <ion-toolbar color="primary">
-              <ion-buttons slot="end">
-                <ion-button href=".">
-                  <ion-icon slot="icon-only" name="add"></ion-icon>
-                </ion-button>
-              </ion-buttons>
-            </ion-toolbar>
-          </ion-footer>
-          : ''
+        {
+          navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
+            ? <ion-footer>
+              <ion-toolbar color="primary">
+                <ion-buttons slot="end">
+                  <ion-button href="." onClick={this.goToList.bind(this)}>
+                    <ion-icon slot="icon-only" name="add"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-footer>
+            : ''
         }
       </div>
     ]
