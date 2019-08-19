@@ -185,16 +185,17 @@ export class AppHome {
 
   render() {
     return [
+
+      <ion-nav></ion-nav>,
+      <ion-loading-controller></ion-loading-controller>,
       <div>
-        <ion-nav></ion-nav>
-        <ion-loading-controller></ion-loading-controller>
         {
           navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
             ? ''
             : <ion-header>
               <ion-toolbar color="primary">
                 <ion-buttons slot="end">
-                  <ion-button href="/food-list">
+                  <ion-button href="/list">
                     <ion-icon slot="icon-only" name="add"></ion-icon>
                   </ion-button>
                 </ion-buttons>
@@ -202,59 +203,64 @@ export class AppHome {
             </ion-header>
         }
       </div>,
-
       <ion-content class="ion-padding">
         <h1>Today</h1>
-        <h3>Calories consumed: {this.dailyCalories}</h3>
+        <h3>{this.dailyCalories} calories consumed</h3>
 
         <ion-list lines="none">
-          <ion-item-divider color="secondary">
-            <ion-label>MacroNutrients</ion-label>
-          </ion-item-divider>
-          <ion-item>
-            <ion-label>Carbohydrates: {this.dailyCarbs}%</ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-label>Protein: {this.dailyProtein}%</ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-label>Fat: {this.totalFat}%</ion-label>
-          </ion-item>
-          <ion-item-divider color="tertiary">
-            <ion-label>Calories consumed at:</ion-label>
-          </ion-item-divider>
-          <app-daily
-            daily={this.daily}
-            breakfast-calories={this.breakfastCalories}
-            breakfast-snack-Calories={this.breakfastSnackCalories}
-            lunch-calories={this.lunchCalories}
-            lunch-snack-calories={this.lunchSnackCalories}
-            dinner-calories={this.dinnerCalories}
-            dinner-snack-calories={this.dinnerSnackCalories}
-          >
-          </app-daily>
-          <ion-item-divider color="tertiary">
-            <ion-label>This week:</ion-label>
-          </ion-item-divider>
-          {
-            this.pastDailyEntries.map(daily =>
-              <div>
-                <div class="ion-text-end">
-                  <h2>{`${daily.date.getDate()}-${daily.date.getMonth()}-${daily.date.getFullYear()}`}</h2>
+          <ion-item-group>
+            <ion-item-divider color="secondary">
+              <ion-label>MacroNutrients</ion-label>
+            </ion-item-divider>
+            <ion-item>
+              <ion-label>{this.dailyCarbs}% carbs</ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>{this.dailyProtein}% protein</ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>{this.totalFat}% fat</ion-label>
+            </ion-item>
+          </ion-item-group>
+          <ion-item-group>
+            <ion-item-divider color="tertiary">
+              <ion-label>Calories consumed at:</ion-label>
+            </ion-item-divider>
+            <app-daily
+              daily={this.daily}
+              breakfast-calories={this.breakfastCalories}
+              breakfast-snack-Calories={this.breakfastSnackCalories}
+              lunch-calories={this.lunchCalories}
+              lunch-snack-calories={this.lunchSnackCalories}
+              dinner-calories={this.dinnerCalories}
+              dinner-snack-calories={this.dinnerSnackCalories}
+            >
+            </app-daily>
+          </ion-item-group>
+          <ion-item-group>
+            <ion-item-divider color="tertiary">
+              <ion-label>This week:</ion-label>
+            </ion-item-divider>
+            {
+              this.pastDailyEntries.map(daily =>
+                <div>
+                  <div class="ion-text-end">
+                    <h2>{`${daily.date.getDate()}-${daily.date.getMonth()}-${daily.date.getFullYear()}`}</h2>
+                  </div>
+                  <app-daily
+                    daily={daily}
+                    breakfast-calories={this.totalMealMacros(daily.breakfast).calories}
+                    breakfast-snack-Calories={this.totalMealMacros(daily.breakfastSnack).calories}
+                    lunch-calories={this.totalMealMacros(daily.lunch).calories}
+                    lunch-snack-calories={this.totalMealMacros(daily.lunchSnack).calories}
+                    dinner-calories={this.totalMealMacros(daily.dinner).calories}
+                    dinner-snack-calories={this.totalMealMacros(daily.dinnerSnack).calories}
+                  >
+                  </app-daily>
                 </div>
-                <app-daily
-                  daily={daily}
-                  breakfast-calories={this.totalMealMacros(daily.breakfast).calories}
-                  breakfast-snack-Calories={this.totalMealMacros(daily.breakfastSnack).calories}
-                  lunch-calories={this.totalMealMacros(daily.lunch).calories}
-                  lunch-snack-calories={this.totalMealMacros(daily.lunchSnack).calories}
-                  dinner-calories={this.totalMealMacros(daily.dinner).calories}
-                  dinner-snack-calories={this.totalMealMacros(daily.dinnerSnack).calories}
-                >
-                </app-daily>
-              </div>
-            )
-          }
+              )
+            }
+          </ion-item-group>
         </ion-list>
       </ion-content>,
       <div>

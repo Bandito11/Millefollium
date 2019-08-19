@@ -26,12 +26,6 @@ export interface IEntry {
     dinnerSnack: IFoodItem[]
 }
 
-export interface IFoodItem extends INutritionFacts {
-    name: string;
-    id: string;
-    picture: string;
-}
-
 interface IMeal {
     name: string;
     calories: number;
@@ -49,13 +43,19 @@ interface measurement {
     measurement?: string;
 }
 
+export interface IFoodItem extends INutritionFacts {
+    name: string;
+    id: string;
+    picture: string;
+}
+
 export interface INutritionFacts {
-    servingsSize: number;
-    ServingsPerContainer: {
+    servingSize: number;
+    servingsPerContainer: {
         grams: number;
-        amount?: measurement;
+        amount: string;
     };
-    calories: IAmount;
+    calories: number;
     fat: IFat;
     cholesterol: IAmount;
     sodium: IAmount;
@@ -69,7 +69,7 @@ export interface INutritionFacts {
     iron: IAmount;
     magnesium: IAmount;
     manganese: IAmount;
-    dateCreated: IAmount;
+    dateCreated: string;
     vitamin: {
         A: IAmount;
         B: IAmount;

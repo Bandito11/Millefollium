@@ -1,4 +1,4 @@
-export const measurements = [
+export enum measurements {
   'gram',
   'tbsp',
   'cup',
@@ -19,4 +19,4 @@ export const measurements = [
   'piece',
   'bottle',
   'can'
-]
+}

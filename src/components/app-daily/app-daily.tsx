@@ -25,14 +25,14 @@ export class AppDaily {
                         </ion-list-header>
                         <ion-item>
                             <ion-label>
-                                Total Calories: {this.breakfastCalories}
+                                {this.breakfastCalories} calories consumed
                             </ion-label>
                         </ion-item>
                         {this.daily.breakfast.map((meal: IMeal) =>
                             <div>
                                 <ion-item>
-                                    <ion-label class='ion-text-wrap'>Name: {meal.name}</ion-label>
-                                    <ion-label class='ion-text-wrap'>Calories: {meal.calories}</ion-label>
+                                    <ion-label class='ion-text-wrap'>{meal.name}</ion-label>
+                                    <ion-label class='ion-text-wrap'>{meal.calories} calories</ion-label>
                                 </ion-item>
                             </div>
                         )}
@@ -47,14 +47,14 @@ export class AppDaily {
                         </ion-list-header>
                         <ion-item>
                             <ion-label>
-                                Total Calories: {this.breakfastSnackCalories}
+                                {this.breakfastSnackCalories} calories consumed
                             </ion-label>
                         </ion-item>
                         {this.daily.breakfastSnack.map((meal: IMeal) =>
                             <div>
                                 <ion-item>
-                                    <ion-label class='ion-text-wrap'>Name: {meal.name}</ion-label>
-                                    <ion-label class='ion-text-wrap'>Calories: {meal.calories}</ion-label>
+                                    <ion-label class='ion-text-wrap'>{meal.name}</ion-label>
+                                    <ion-label class='ion-text-wrap'>{meal.calories} calories</ion-label>
                                 </ion-item>
                             </div>
                         )}
@@ -69,15 +69,15 @@ export class AppDaily {
                         </ion-list-header>
                         <ion-item>
                             <ion-label>
-                                Total Calories: {this.lunchCalories}
+                                {this.lunchCalories} calories consumed
                             </ion-label>
                         </ion-item>
 
                         {this.daily.lunch.map((meal: IMeal) =>
                             <div>
                                 <ion-item>
-                                    <ion-label class='ion-text-wrap'>Name: {meal.name}</ion-label>
-                                    <ion-label class='ion-text-wrap'>Calories: {meal.calories}</ion-label>
+                                    <ion-label class='ion-text-wrap'>{meal.name}</ion-label>
+                                    <ion-label class='ion-text-wrap'>{meal.calories} calories</ion-label>
                                 </ion-item>
                             </div>
                         )}
@@ -92,15 +92,15 @@ export class AppDaily {
                         </ion-list-header>
                         <ion-item>
                             <ion-label>
-                                Total Calories: {this.lunchSnackCalories}
+                                {this.lunchSnackCalories} calories consumed
                             </ion-label>
                         </ion-item>
 
                         {this.daily.lunchSnack.map((meal: IMeal) =>
                             <div>
                                 <ion-item>
-                                    <ion-label class='ion-text-wrap'>Name: {meal.name}</ion-label>
-                                    <ion-label class='ion-text-wrap'>Calories: {meal.calories}</ion-label>
+                                    <ion-label class='ion-text-wrap'>{meal.name}</ion-label>
+                                    <ion-label class='ion-text-wrap'>{meal.calories} calories</ion-label>
                                 </ion-item>
                             </div>
                         )}
@@ -115,15 +115,15 @@ export class AppDaily {
                         </ion-list-header>
                         <ion-item>
                             <ion-label>
-                                Total Calories: {this.dinnerCalories}
+                                {this.dinnerCalories} calories consumed
                             </ion-label>
                         </ion-item>
 
                         {this.daily.dinner.map((meal: IMeal) =>
                             <div>
                                 <ion-item>
-                                    <ion-label class='ion-text-wrap'>Name: {meal.name}</ion-label>
-                                    <ion-label class='ion-text-wrap'>Calories: {meal.calories}</ion-label>
+                                    <ion-label class='ion-text-wrap'>{meal.name}</ion-label>
+                                    <ion-label class='ion-text-wrap'>{meal.calories} calories</ion-label>
                                 </ion-item>
                             </div>
                         )}
@@ -138,15 +138,15 @@ export class AppDaily {
                         </ion-list-header>
                         <ion-item>
                             <ion-label>
-                                Total Calories: {this.dinnerSnackCalories}
+                                {this.dinnerSnackCalories} calories consumed
                             </ion-label>
                         </ion-item>
 
                         {this.daily.dinnerSnack.map((meal: IMeal) =>
                             <div>
                                 <ion-item>
-                                    <ion-label class='ion-text-wrap'>Name: {meal.name}</ion-label>
-                                    <ion-label class='ion-text-wrap'>Calories: {meal.calories}</ion-label>
+                                    <ion-label class='ion-text-wrap'>{meal.name}</ion-label>
+                                    <ion-label class='ion-text-wrap'>{meal.calories} calories</ion-label>
                                 </ion-item>
                             </div>
                         )}

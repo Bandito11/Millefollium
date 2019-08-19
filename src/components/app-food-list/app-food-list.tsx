@@ -1,4 +1,6 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, Listen, State } from '@stencil/core';
+import { IFoodItem } from '../../interfaces';
+import { MOCKFOODITEMS } from '../../helpers/mockData';
 
 @Component({
     tag: 'app-food-list',
@@ -7,9 +9,33 @@ import { Component, h } from '@stencil/core';
 
 export class AppFoodList {
 
+    @State() foodItems: IFoodItem[] = [];
+    @State() frequentFoodItems: IFoodItem[] = [];
+
+    componentWillLoad() {
+        this.getFrequentFoodItems();
+    }
     componentDidLoad() {
         const searchBar = document.querySelector('ion-searchbar');
         searchBar.setFocus();
+    }
+
+    @Listen('ionChange')
+    handleIonChange(ev) {
+        this.queryByNameOrID(ev.detail.value);
+    }
+
+    queryByNameOrID(value) {
+        const query = value;
+        if (query) {
+            this.foodItems = [...MOCKFOODITEMS];
+        } else {
+            this.foodItems = [];
+        }
+    }
+
+    getFrequentFoodItems() {
+        this.frequentFoodItems = [...MOCKFOODITEMS.reverse()];
     }
 
     render() {
@@ -25,13 +51,76 @@ export class AppFoodList {
                                     <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
                                 </ion-button>
                             </ion-buttons>
+                            <ion-searchbar animated debounce={500} spellcheck={true} autocomplete="on" placeholder="Look for meal or snacks!"></ion-searchbar>
+                            <ion-buttons slot="end">
+                                <ion-button>
+                                    <ion-icon slot="icon-only" name="barcode"></ion-icon>
+                                </ion-button>
+                                <ion-button href="create">
+                                    Add
+                                </ion-button>
+                            </ion-buttons>
                         </ion-toolbar>
                 }
             </ion-header>
             ,
             <ion-content class="ion-padding">
-                <ion-searchbar spellcheck={true} autocomplete="on" placeholder="Look for meal or snacks!"></ion-searchbar>
-
+                <ion-list lines="none">
+                    {
+                        this.foodItems.length > 0
+                            ? this.foodItems.map((foodItem, index) =>
+                                <ion-item-group>
+                                    {
+                                        index % 2
+                                            ? <ion-item-divider color="secondary">
+                                                <ion-label>{foodItem.name} </ion-label>
+                                            </ion-item-divider>
+                                            : <ion-item-divider color="tertiary">
+                                                <ion-label>{foodItem.name} </ion-label>
+                                            </ion-item-divider>
+                                    }
+                                    <ion-item>
+                                        <ion-label>
+                                            {foodItem.servingSize} {foodItem.servingsPerContainer.amount}
+                                        </ion-label>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-label>{foodItem.calories} calories</ion-label>
+                                    </ion-item>
+                                </ion-item-group>
+                            )
+                            : <ion-item-header>
+                                <ion-label>Recent</ion-label>
+                            </ion-item-header>
+                    }
+                    {
+                        this.frequentFoodItems.length > 0 && this.foodItems.length <= 0
+                            ? this.frequentFoodItems.map((foodItem, index) =>
+                                <ion-item-group>
+                                    <ion-item-group>
+                                        {
+                                            index % 2
+                                                ? <ion-item-divider color="tertiary">
+                                                    <ion-label>{foodItem.name} </ion-label>
+                                                </ion-item-divider>
+                                                : <ion-item-divider color="secondary">
+                                                    <ion-label>{foodItem.name} </ion-label>
+                                                </ion-item-divider>
+                                        }
+                                        <ion-item>
+                                            <ion-label>
+                                                {foodItem.servingSize} {foodItem.servingsPerContainer.amount}
+                                            </ion-label>
+                                        </ion-item>
+                                        <ion-item>
+                                            <ion-label>{foodItem.calories} calories</ion-label>
+                                        </ion-item>
+                                    </ion-item-group>
+                                </ion-item-group>
+                            )
+                            : ''
+                    }
+                </ion-list>
             </ion-content>
             ,
             <ion-footer>
@@ -42,6 +131,15 @@ export class AppFoodList {
                             <ion-buttons slot="start">
                                 <ion-button href="/" >
                                     <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+                                </ion-button>
+                            </ion-buttons>
+                            <ion-searchbar animated debounce={500} spellcheck={true} autocomplete="on" placeholder="Look for meal or snacks!"></ion-searchbar>
+                            <ion-buttons slot="end">
+                                <ion-button>
+                                    <ion-icon slot="icon-only" name="barcode"></ion-icon>
+                                </ion-button>
+                                <ion-button href="create">
+                                    Add
                                 </ion-button>
                             </ion-buttons>
                         </ion-toolbar>

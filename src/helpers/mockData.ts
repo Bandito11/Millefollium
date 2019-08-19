@@ -1,4 +1,5 @@
-import { IDaily } from "../interfaces";
+import { measurements } from './utils';
+import { IDaily, IFoodItem } from "../interfaces";
 
 export const MOCKDAILY: IDaily = {
     breakfast: [{
@@ -7,53 +8,53 @@ export const MOCKDAILY: IDaily = {
         calories: 40,
         dietaryFiber: {
             grams: 6,
-            percent: 0
+            percent: 23
         },
         totalCarbohydrates: {
             grams: 6,
-            percent: 0
+            percent: 23
         },
         fat: {
             total: {
                 grams: 5,
-                percent: 0
+                percent: 665
             },
             saturated: {
                 grams: 6,
-                percent: 0
+                percent: 13
             },
             trans: {
                 grams: 3,
-                percent: 0
+                percent: 46
             },
             polyunsaturated: {
                 grams: 8,
-                percent: 0
+                percent: 234
             },
             monounsaturated: {
                 grams: 13,
-                percent: 0
+                percent: 13
             },
         },
         protein: 1,
         sugar: {
             added: {
                 grams: 25,
-                percent: 0
+                percent: 87
             },
             total: {
                 grams: 32,
-                percent: 0
+                percent: 45
             }
         },
         sugarAlcohol: {
             added: {
                 grams: 32,
-                percent: 0
+                percent: 45
             },
             total: {
                 grams: 34,
-                percent: 0
+                percent: 12
             }
         }
     }],
@@ -955,7 +956,7 @@ export const MOCKENTRIES: IDaily[] = [
                 },
                 total: {
                     grams: 85,
-                    percent: 0
+                    percent: 45
                 }
             }
         }],
@@ -965,53 +966,53 @@ export const MOCKENTRIES: IDaily[] = [
             calories: 1200,
             dietaryFiber: {
                 grams: 54,
-                percent: 0
+                percent: 34
             },
             totalCarbohydrates: {
                 grams: 21,
-                percent: 0
+                percent: 34
             },
             fat: {
                 total: {
                     grams: 33,
-                    percent: 0
+                    percent: 14
                 },
                 saturated: {
                     grams: 22,
-                    percent: 0
+                    percent: 45
                 },
                 trans: {
                     grams: 323,
-                    percent: 0
+                    percent: 56
                 },
                 polyunsaturated: {
                     grams: 24,
-                    percent: 0
+                    percent: 87
                 },
                 monounsaturated: {
                     grams: 2,
-                    percent: 0
+                    percent: 34
                 },
             },
             protein: 32,
             sugar: {
                 added: {
                     grams: 40,
-                    percent: 0
+                    percent: 21
                 },
                 total: {
                     grams: 50,
-                    percent: 0
+                    percent: 56
                 }
             },
             sugarAlcohol: {
                 added: {
                     grams: 65,
-                    percent: 0
+                    percent: 45
                 },
                 total: {
                     grams: 85,
-                    percent: 0
+                    percent: 76
                 }
             }
         }],
@@ -1021,53 +1022,53 @@ export const MOCKENTRIES: IDaily[] = [
             calories: 125,
             dietaryFiber: {
                 grams: 6,
-                percent: 0
+                percent: 23
             },
             totalCarbohydrates: {
                 grams: 6,
-                percent: 0
+                percent: 45
             },
             fat: {
                 total: {
                     grams: 5,
-                    percent: 0
+                    percent: 54
                 },
                 saturated: {
                     grams: 6,
-                    percent: 0
+                    percent: 450
                 },
                 trans: {
                     grams: 3,
-                    percent: 0
+                    percent: 46
                 },
                 polyunsaturated: {
                     grams: 8,
-                    percent: 0
+                    percent: 24
                 },
                 monounsaturated: {
                     grams: 13,
-                    percent: 0
+                    percent: 74
                 },
             },
             protein: 1,
             sugar: {
                 added: {
                     grams: 25,
-                    percent: 0
+                    percent: 374
                 },
                 total: {
                     grams: 32,
-                    percent: 0
+                    percent: 24
                 }
             },
             sugarAlcohol: {
                 added: {
                     grams: 32,
-                    percent: 0
+                    percent: 86
                 },
                 total: {
                     grams: 34,
-                    percent: 0
+                    percent: 30
                 }
             }
         }]
@@ -1079,53 +1080,53 @@ export const MOCKENTRIES: IDaily[] = [
             calories: 40,
             dietaryFiber: {
                 grams: 54,
-                percent: 0
+                percent: 17
             },
             totalCarbohydrates: {
                 grams: 54,
-                percent: 0
+                percent: 15
             },
             fat: {
                 total: {
                     grams: 33,
-                    percent: 0
+                    percent: 37
                 },
                 saturated: {
                     grams: 22,
-                    percent: 0
+                    percent: 34
                 },
                 trans: {
                     grams: 323,
-                    percent: 0
+                    percent: 34
                 },
                 polyunsaturated: {
                     grams: 24,
-                    percent: 0
+                    percent: 35
                 },
                 monounsaturated: {
                     grams: 2,
-                    percent: 0
+                    percent: 36
                 },
             },
             protein: 32,
             sugar: {
                 added: {
                     grams: 40,
-                    percent: 0
+                    percent: 32
                 },
                 total: {
                     grams: 50,
-                    percent: 0
+                    percent: 36
                 }
             },
             sugarAlcohol: {
                 added: {
                     grams: 65,
-                    percent: 0
+                    percent: 14
                 },
                 total: {
                     grams: 85,
-                    percent: 0
+                    percent: 43
                 }
             }
         }],
@@ -1136,53 +1137,53 @@ export const MOCKENTRIES: IDaily[] = [
             calories: 45,
             dietaryFiber: {
                 grams: 54,
-                percent: 0
+                percent: 53
             },
             totalCarbohydrates: {
                 grams: 93,
-                percent: 0
+                percent: 64
             },
             fat: {
                 total: {
                     grams: 33,
-                    percent: 0
+                    percent: 24
                 },
                 saturated: {
                     grams: 22,
-                    percent: 0
+                    percent: 864
                 },
                 trans: {
                     grams: 323,
-                    percent: 0
+                    percent: 56
                 },
                 polyunsaturated: {
                     grams: 24,
-                    percent: 0
+                    percent: 82
                 },
                 monounsaturated: {
                     grams: 2,
-                    percent: 0
+                    percent: 28
                 },
             },
             protein: 32,
             sugar: {
                 added: {
                     grams: 40,
-                    percent: 0
+                    percent: 28
                 },
                 total: {
                     grams: 50,
-                    percent: 0
+                    percent: 75
                 }
             },
             sugarAlcohol: {
                 added: {
                     grams: 65,
-                    percent: 0
+                    percent: 25
                 },
                 total: {
                     grams: 85,
-                    percent: 0
+                    percent: 68
                 }
             }
         }, {
@@ -1191,53 +1192,53 @@ export const MOCKENTRIES: IDaily[] = [
             calories: 234,
             dietaryFiber: {
                 grams: 54,
-                percent: 0
+                percent: 86
             },
             totalCarbohydrates: {
                 grams: 50,
-                percent: 0
+                percent: 28
             },
             fat: {
                 total: {
                     grams: 33,
-                    percent: 0
+                    percent: 52
                 },
                 saturated: {
                     grams: 22,
-                    percent: 0
+                    percent: 58
                 },
                 trans: {
                     grams: 323,
-                    percent: 0
+                    percent: 18
                 },
                 polyunsaturated: {
                     grams: 24,
-                    percent: 0
+                    percent: 42
                 },
                 monounsaturated: {
                     grams: 2,
-                    percent: 0
+                    percent: 37
                 },
             },
             protein: 32,
             sugar: {
                 added: {
                     grams: 40,
-                    percent: 0
+                    percent: 86
                 },
                 total: {
                     grams: 50,
-                    percent: 0
+                    percent: 43
                 }
             },
             sugarAlcohol: {
                 added: {
                     grams: 65,
-                    percent: 0
+                    percent: 56
                 },
                 total: {
                     grams: 85,
-                    percent: 0
+                    percent: 56
                 }
             }
         }],
@@ -1247,53 +1248,53 @@ export const MOCKENTRIES: IDaily[] = [
             calories: 250,
             dietaryFiber: {
                 grams: 54,
-                percent: 0
+                percent: 97
             },
             totalCarbohydrates: {
                 grams: 54,
-                percent: 0
+                percent: 24
             },
             fat: {
                 total: {
                     grams: 33,
-                    percent: 0
+                    percent: 57
                 },
                 saturated: {
                     grams: 22,
-                    percent: 0
+                    percent: 85
                 },
                 trans: {
                     grams: 323,
-                    percent: 0
+                    percent: 57
                 },
                 polyunsaturated: {
                     grams: 24,
-                    percent: 0
+                    percent: 45
                 },
                 monounsaturated: {
                     grams: 2,
-                    percent: 0
+                    percent: 245
                 },
             },
             protein: 32,
             sugar: {
                 added: {
                     grams: 40,
-                    percent: 0
+                    percent: 78
                 },
                 total: {
                     grams: 50,
-                    percent: 0
+                    percent: 13
                 }
             },
             sugarAlcohol: {
                 added: {
                     grams: 65,
-                    percent: 0
+                    percent: 86
                 },
                 total: {
                     grams: 85,
-                    percent: 0
+                    percent: 45
                 }
             }
         }],
@@ -1307,49 +1308,49 @@ export const MOCKENTRIES: IDaily[] = [
             },
             totalCarbohydrates: {
                 grams: 54,
-                percent: 0
+                percent: 8
             },
             fat: {
                 total: {
                     grams: 33,
-                    percent: 0
+                    percent: 57
                 },
                 saturated: {
                     grams: 22,
-                    percent: 0
+                    percent: 854
                 },
                 trans: {
                     grams: 323,
-                    percent: 0
+                    percent: 38
                 },
                 polyunsaturated: {
                     grams: 24,
-                    percent: 0
+                    percent: 36
                 },
                 monounsaturated: {
                     grams: 2,
-                    percent: 0
+                    percent: 56
                 },
             },
             protein: 32,
             sugar: {
                 added: {
                     grams: 40,
-                    percent: 0
+                    percent: 58
                 },
                 total: {
                     grams: 50,
-                    percent: 0
+                    percent: 87
                 }
             },
             sugarAlcohol: {
                 added: {
                     grams: 65,
-                    percent: 0
+                    percent: 45
                 },
                 total: {
                     grams: 85,
-                    percent: 0
+                    percent: 76
                 }
             }
         }],
@@ -1359,55 +1360,427 @@ export const MOCKENTRIES: IDaily[] = [
             calories: 125,
             dietaryFiber: {
                 grams: 54,
-                percent: 0
+                percent: 56
             },
             totalCarbohydrates: {
                 grams: 54,
-                percent: 0
+                percent: 56
             },
             fat: {
                 total: {
                     grams: 33,
-                    percent: 0
+                    percent: 86
                 },
                 saturated: {
                     grams: 22,
-                    percent: 0
+                    percent: 45
                 },
                 trans: {
                     grams: 323,
-                    percent: 0
+                    percent: 67
                 },
                 polyunsaturated: {
                     grams: 24,
-                    percent: 0
+                    percent: 76
                 },
                 monounsaturated: {
                     grams: 2,
-                    percent: 0
+                    percent: 67
                 },
             },
             protein: 32,
             sugar: {
                 added: {
                     grams: 40,
-                    percent: 0
+                    percent: 57
                 },
                 total: {
                     grams: 50,
-                    percent: 0
+                    percent: 57
                 }
             },
             sugarAlcohol: {
                 added: {
                     grams: 65,
-                    percent: 0
+                    percent: 45
                 },
                 total: {
                     grams: 85,
-                    percent: 0
+                    percent: 75
                 }
             }
         }]
     }
 ];
+
+export const MOCKFOODITEMS: IFoodItem[] = [{
+    name: 'banana',
+    id: '',
+    picture: '',
+    servingSize: 1,
+    servingsPerContainer: {
+        grams: 34,
+        amount: measurements[measurements.piece]
+    },
+    calories: 50,
+    fat: {
+        total: {
+            percent: 0,
+            grams: 0
+        },
+        saturated: {
+            percent: 0,
+            grams: 0
+        },
+        trans: {
+            percent: 0,
+            grams: 0
+        },
+        polyunsaturated: {
+            percent: 0,
+            grams: 0
+        },
+        monounsaturated: {
+            percent: 9,
+            grams: 0
+        },
+    },
+    cholesterol: {
+        percent: 3,
+        grams: 30
+    },
+    sodium: {
+        percent: 237,
+        grams: 0
+    },
+    potassium: {
+        percent: 567,
+        grams: 50
+    },
+    totalCarbohydrates: {
+        percent: 567,
+        grams: 40
+    },
+    dietaryFiber: {
+        percent: 76,
+        grams: 10
+    },
+    protein: {
+        percent: 67,
+        grams: 10
+    },
+    niacin: {
+        percent: 78,
+        grams: 65
+    },
+    phosphorus: {
+        percent: 37,
+        grams: 12
+    },
+    calcium: {
+        percent: 37,
+        grams: 10
+    },
+    iron: {
+        percent: 53,
+        grams: 76
+    },
+    magnesium: {
+        percent: 765,
+        grams: 32
+    },
+    manganese: {
+        percent: 67,
+        grams: 79
+    },
+    dateCreated: new Date().toString(),
+    vitamin: {
+        A: {
+            percent: 0,
+            grams: 0
+        },
+        B: {
+            percent: 0,
+            grams: 0
+        },
+        C: {
+            percent: 37,
+            grams: 145
+        },
+        D: {
+            percent: 0,
+            grams: 0
+        },
+        E: {
+            percent: 0,
+            grams: 0
+        },
+    },
+    sugar: {
+        total: {
+            percent: 67,
+            grams: 12
+        },
+        added: {
+            grams: 0,
+            percent: 0
+        }
+    },
+    sugarAlcohol: {
+        total: {
+            percent: 0,
+            grams: 0
+        },
+        added: {
+            grams: 0,
+            percent: 0
+        }
+    }
+},
+{
+    name: 'apple',
+    id: '',
+    picture: '',
+    servingSize: 1,
+    servingsPerContainer: {
+        grams: 0,
+        amount: measurements[measurements.piece]
+    },
+    calories: 40,
+    fat: {
+        total: {
+            percent: 0,
+            grams: 0
+        },
+        saturated: {
+            percent: 0,
+            grams: 0
+        },
+        trans: {
+            percent: 0,
+            grams: 0
+        },
+        polyunsaturated: {
+            percent: 0,
+            grams: 0
+        },
+        monounsaturated: {
+            percent: 0,
+            grams: 0
+        },
+    },
+    cholesterol: {
+        percent: 53,
+        grams: 15
+    },
+    sodium: {
+        percent: 0,
+        grams: 0
+    },
+    potassium: {
+        percent: 0,
+        grams: 0
+    },
+    totalCarbohydrates: {
+        percent: 68,
+        grams: 34
+    },
+    dietaryFiber: {
+        percent: 53,
+        grams: 10
+    },
+    protein: {
+        percent: 97,
+        grams: 10
+    },
+    niacin: {
+        percent: 0,
+        grams: 0
+    },
+    phosphorus: {
+        percent: 27,
+        grams: 12
+    },
+    calcium: {
+        percent: 0,
+        grams: 0
+    },
+    iron: {
+        percent: 0,
+        grams: 0
+    },
+    magnesium: {
+        percent: 0,
+        grams: 0
+    },
+    manganese: {
+        percent: 0,
+        grams: 0
+    },
+    dateCreated: new Date().toString(),
+    vitamin: {
+        A: {
+            percent: 56,
+            grams: 67
+        },
+        B: {
+            percent: 0,
+            grams: 0
+        },
+        C: {
+            percent: 56,
+            grams: 405
+        },
+        D: {
+            percent: 0,
+            grams: 0
+        },
+        E: {
+            percent: 0,
+            grams: 0
+        },
+    },
+    sugar: {
+        total: {
+            percent: 73,
+            grams: 12
+        },
+        added: {
+            grams: 0,
+            percent: 0
+        }
+    },
+    sugarAlcohol: {
+        total: {
+            percent: 0,
+            grams: 0
+        },
+        added: {
+            grams: 0,
+            percent: 0
+        }
+    }
+}, {
+    name: 'Protein Drink',
+    id: '',
+    picture: '',
+    servingSize: 1,
+    servingsPerContainer: {
+        grams: 40,
+        amount: measurements[measurements.oz]
+    },
+    calories: 120,
+    fat: {
+        total: {
+            percent: 0,
+            grams: 0
+        },
+        saturated: {
+            percent: 0,
+            grams: 0
+        },
+        trans: {
+            percent: 0,
+            grams: 0
+        },
+        polyunsaturated: {
+            percent: 0,
+            grams: 0
+        },
+        monounsaturated: {
+            percent: 0,
+            grams: 0
+        },
+    },
+    cholesterol: {
+        percent: 953,
+        grams: 50
+    },
+    sodium: {
+        percent: 62,
+        grams: 3
+    },
+    potassium: {
+        percent: 61,
+        grams: 0
+    },
+    totalCarbohydrates: {
+        percent: 32,
+        grams: 0
+    },
+    dietaryFiber: {
+        percent: 20,
+        grams: 34
+    },
+    protein: {
+        percent: 456,
+        grams: 20
+    },
+    niacin: {
+        percent: 0,
+        grams: 0
+    },
+    phosphorus: {
+        percent: 0,
+        grams: 0
+    },
+    calcium: {
+        percent: 0,
+        grams: 0
+    },
+    iron: {
+        percent: 0,
+        grams: 0
+    },
+    magnesium: {
+        percent: 0,
+        grams: 0
+    },
+    manganese: {
+        percent: 0,
+        grams: 0
+    },
+    dateCreated: new Date().toString(),
+    vitamin: {
+        A: {
+            percent: 0,
+            grams: 0
+        },
+        B: {
+            percent: 0,
+            grams: 0
+        },
+        C: {
+            percent: 0,
+            grams: 0
+        },
+        D: {
+            percent: 0,
+            grams: 0
+        },
+        E: {
+            percent: 0,
+            grams: 0
+        },
+    },
+    sugar: {
+        total: {
+            percent: 0,
+            grams: 0
+        },
+        added: {
+            grams: 0,
+            percent: 0
+        }
+    },
+    sugarAlcohol: {
+        total: {
+            percent: 0,
+            grams: 0
+        },
+        added: {
+            grams: 0,
+            percent: 0
+        }
+    }
+},];
