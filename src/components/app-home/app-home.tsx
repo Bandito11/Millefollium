@@ -195,7 +195,7 @@ export class AppHome {
             : <ion-header>
               <ion-toolbar color="primary">
                 <ion-buttons slot="end">
-                  <ion-button href="/list">
+                  <ion-button href="/food/list">
                     <ion-icon slot="icon-only" name="add"></ion-icon>
                   </ion-button>
                 </ion-buttons>

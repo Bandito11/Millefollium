@@ -38,6 +38,11 @@ export class AppFoodList {
         this.frequentFoodItems = [...MOCKFOODITEMS.reverse()];
     }
 
+    goBack() {
+        const ionNav = document.querySelector('ion-nav');
+        ionNav.pop();
+    }
+
     render() {
         return [
             <ion-header >
@@ -47,7 +52,7 @@ export class AppFoodList {
                         :
                         <ion-toolbar color="primary">
                             <ion-buttons slot="start">
-                                <ion-button href="/" >
+                                <ion-button href="/">
                                     <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
                                 </ion-button>
                             </ion-buttons>
@@ -56,7 +61,7 @@ export class AppFoodList {
                                 <ion-button>
                                     <ion-icon slot="icon-only" name="barcode"></ion-icon>
                                 </ion-button>
-                                <ion-button href="create">
+                                <ion-button href="/food/create">
                                     Add
                                 </ion-button>
                             </ion-buttons>
@@ -81,8 +86,11 @@ export class AppFoodList {
                                     }
                                     <ion-item>
                                         <ion-label>
-                                            {foodItem.servingSize} {foodItem.servingsPerContainer.amount}
+                                            {foodItem.servingSize.amount} {foodItem.servingSize.measurement}
                                         </ion-label>
+                                    </ion-item>
+                                    <ion-item>
+                                        <ion-label>Servings per Container {foodItem.servingPerContainer}</ion-label>
                                     </ion-item>
                                     <ion-item>
                                         <ion-label>{foodItem.calories} calories</ion-label>
@@ -109,8 +117,11 @@ export class AppFoodList {
                                         }
                                         <ion-item>
                                             <ion-label>
-                                                {foodItem.servingSize} {foodItem.servingsPerContainer.amount}
+                                                {foodItem.servingSize.amount} {foodItem.servingSize.measurement}
                                             </ion-label>
+                                        </ion-item>
+                                        <ion-item>
+                                            <ion-label>Servings per Container {foodItem.servingPerContainer}</ion-label>
                                         </ion-item>
                                         <ion-item>
                                             <ion-label>{foodItem.calories} calories</ion-label>
@@ -129,7 +140,7 @@ export class AppFoodList {
                         ?
                         <ion-toolbar color="primary">
                             <ion-buttons slot="start">
-                                <ion-button href="/" >
+                                <ion-button href="/">
                                     <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
                                 </ion-button>
                             </ion-buttons>
@@ -138,7 +149,7 @@ export class AppFoodList {
                                 <ion-button>
                                     <ion-icon slot="icon-only" name="barcode"></ion-icon>
                                 </ion-button>
-                                <ion-button href="create">
+                                <ion-button href="/food/create">
                                     Add
                                 </ion-button>
                             </ion-buttons>

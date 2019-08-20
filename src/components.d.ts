@@ -23,9 +23,6 @@ export namespace Components {
   }
   interface AppFoodList {}
   interface AppHome {}
-  interface AppProfile {
-    'name': string;
-  }
   interface AppRoot {}
 }
 
@@ -56,12 +53,6 @@ declare global {
     new (): HTMLAppHomeElement;
   };
 
-  interface HTMLAppProfileElement extends Components.AppProfile, HTMLStencilElement {}
-  var HTMLAppProfileElement: {
-    prototype: HTMLAppProfileElement;
-    new (): HTMLAppProfileElement;
-  };
-
   interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {}
   var HTMLAppRootElement: {
     prototype: HTMLAppRootElement;
@@ -72,7 +63,6 @@ declare global {
     'app-daily': HTMLAppDailyElement;
     'app-food-list': HTMLAppFoodListElement;
     'app-home': HTMLAppHomeElement;
-    'app-profile': HTMLAppProfileElement;
     'app-root': HTMLAppRootElement;
   }
 }
@@ -90,9 +80,6 @@ declare namespace LocalJSX {
   }
   interface AppFoodList extends JSXBase.HTMLAttributes<HTMLAppFoodListElement> {}
   interface AppHome extends JSXBase.HTMLAttributes<HTMLAppHomeElement> {}
-  interface AppProfile extends JSXBase.HTMLAttributes<HTMLAppProfileElement> {
-    'name'?: string;
-  }
   interface AppRoot extends JSXBase.HTMLAttributes<HTMLAppRootElement> {}
 
   interface IntrinsicElements {
@@ -100,7 +87,6 @@ declare namespace LocalJSX {
     'app-daily': AppDaily;
     'app-food-list': AppFoodList;
     'app-home': AppHome;
-    'app-profile': AppProfile;
     'app-root': AppRoot;
   }
 }

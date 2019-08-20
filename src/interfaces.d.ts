@@ -16,7 +16,6 @@ export interface IDaily {
 }
 
 export interface IEntry {
-    id: string;
     date: Date;
     breakfast: IFoodItem[];
     breakfastSnack: IFoodItem[];
@@ -39,22 +38,19 @@ interface IMeal {
 }
 
 interface measurement {
-    number;
+    amount: number;
     measurement?: string;
 }
 
 export interface IFoodItem extends INutritionFacts {
     name: string;
-    id: string;
+    barcode: string;
     picture: string;
 }
 
 export interface INutritionFacts {
-    servingSize: number;
-    servingsPerContainer: {
-        grams: number;
-        amount: string;
-    };
+    servingSize: measurement;
+    servingPerContainer: number;
     calories: number;
     fat: IFat;
     cholesterol: IAmount;

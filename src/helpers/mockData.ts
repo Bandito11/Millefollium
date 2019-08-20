@@ -1,5 +1,5 @@
 import { measurements } from './utils';
-import { IDaily, IFoodItem } from "../interfaces";
+import { IFoodItem, IDaily } from "../interfaces";
 
 export const MOCKDAILY: IDaily = {
     breakfast: [{
@@ -1415,12 +1415,12 @@ export const MOCKENTRIES: IDaily[] = [
 
 export const MOCKFOODITEMS: IFoodItem[] = [{
     name: 'banana',
-    id: '',
+    barcode: '',
     picture: '',
-    servingSize: 1,
-    servingsPerContainer: {
-        grams: 34,
-        amount: measurements[measurements.piece]
+    servingPerContainer: 1,
+    servingSize: {
+        amount: 34,
+        measurement: measurements[measurements.pieces]
     },
     calories: 50,
     fat: {
@@ -1539,12 +1539,12 @@ export const MOCKFOODITEMS: IFoodItem[] = [{
 },
 {
     name: 'apple',
-    id: '',
+    barcode: '',
     picture: '',
-    servingSize: 1,
-    servingsPerContainer: {
-        grams: 0,
-        amount: measurements[measurements.piece]
+    servingPerContainer: 1,
+    servingSize: {
+        amount: 0,
+        measurement: measurements[measurements.piece]
     },
     calories: 40,
     fat: {
@@ -1662,12 +1662,12 @@ export const MOCKFOODITEMS: IFoodItem[] = [{
     }
 }, {
     name: 'Protein Drink',
-    id: '',
+    barcode: '',
     picture: '',
-    servingSize: 1,
-    servingsPerContainer: {
-        grams: 40,
-        amount: measurements[measurements.oz]
+    servingPerContainer: 1,
+    servingSize: {
+        amount: 40,
+        measurement: measurements[measurements.oz]
     },
     calories: 120,
     fat: {
