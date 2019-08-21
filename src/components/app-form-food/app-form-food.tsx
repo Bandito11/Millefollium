@@ -4,8 +4,8 @@ import { DIMENSIONS } from '../../helpers/utils';
 import { formControls } from '../../helpers/utils'
 
 @Component({
-    tag: 'app-create-food',
-    styleUrl: 'app-create-food.css'
+    tag: 'app-form-food',
+    styleUrl: 'app-form-food.css'
 })
 export class AppDaily {
 

@@ -11,7 +11,6 @@ import {
 } from './interfaces';
 
 export namespace Components {
-  interface AppCreateFood {}
   interface AppDaily {
     'breakfastCalories': number;
     'breakfastSnackCalories': number;
@@ -22,18 +21,13 @@ export namespace Components {
     'lunchSnackCalories': number;
   }
   interface AppFoodList {}
+  interface AppFormFood {}
   interface AppHome {}
   interface AppRoot {}
 }
 
 declare global {
 
-
-  interface HTMLAppCreateFoodElement extends Components.AppCreateFood, HTMLStencilElement {}
-  var HTMLAppCreateFoodElement: {
-    prototype: HTMLAppCreateFoodElement;
-    new (): HTMLAppCreateFoodElement;
-  };
 
   interface HTMLAppDailyElement extends Components.AppDaily, HTMLStencilElement {}
   var HTMLAppDailyElement: {
@@ -45,6 +39,12 @@ declare global {
   var HTMLAppFoodListElement: {
     prototype: HTMLAppFoodListElement;
     new (): HTMLAppFoodListElement;
+  };
+
+  interface HTMLAppFormFoodElement extends Components.AppFormFood, HTMLStencilElement {}
+  var HTMLAppFormFoodElement: {
+    prototype: HTMLAppFormFoodElement;
+    new (): HTMLAppFormFoodElement;
   };
 
   interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {}
@@ -59,16 +59,15 @@ declare global {
     new (): HTMLAppRootElement;
   };
   interface HTMLElementTagNameMap {
-    'app-create-food': HTMLAppCreateFoodElement;
     'app-daily': HTMLAppDailyElement;
     'app-food-list': HTMLAppFoodListElement;
+    'app-form-food': HTMLAppFormFoodElement;
     'app-home': HTMLAppHomeElement;
     'app-root': HTMLAppRootElement;
   }
 }
 
 declare namespace LocalJSX {
-  interface AppCreateFood extends JSXBase.HTMLAttributes<HTMLAppCreateFoodElement> {}
   interface AppDaily extends JSXBase.HTMLAttributes<HTMLAppDailyElement> {
     'breakfastCalories'?: number;
     'breakfastSnackCalories'?: number;
@@ -79,13 +78,14 @@ declare namespace LocalJSX {
     'lunchSnackCalories'?: number;
   }
   interface AppFoodList extends JSXBase.HTMLAttributes<HTMLAppFoodListElement> {}
+  interface AppFormFood extends JSXBase.HTMLAttributes<HTMLAppFormFoodElement> {}
   interface AppHome extends JSXBase.HTMLAttributes<HTMLAppHomeElement> {}
   interface AppRoot extends JSXBase.HTMLAttributes<HTMLAppRootElement> {}
 
   interface IntrinsicElements {
-    'app-create-food': AppCreateFood;
     'app-daily': AppDaily;
     'app-food-list': AppFoodList;
+    'app-form-food': AppFormFood;
     'app-home': AppHome;
     'app-root': AppRoot;
   }
