@@ -2,7 +2,8 @@ export interface IResponse {
     success: boolean;
     error: string;
     dateStamp: Date;
-    data: IDaily
+    data: IDaily;
+    message: string;
 }
 
 export interface IDaily {
