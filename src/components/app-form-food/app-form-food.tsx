@@ -400,7 +400,7 @@ export class AppDaily {
 
             return;
         }
-        if (this.calories) {
+        if (this.calories || this.calories < 0) {
             this.foodItem.calories = this.calories;
         } else {
             //implement error message
