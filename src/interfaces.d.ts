@@ -39,7 +39,7 @@ interface IMeal {
 
 interface measurement {
     amount: number;
-    measurement?: string;
+    measurement: string;
 }
 
 export interface IFoodItem extends INutritionFacts {

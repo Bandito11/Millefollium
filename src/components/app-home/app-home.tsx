@@ -177,15 +177,11 @@ export class AppHome {
 
   goToList() {
     const ionNav = document.querySelector('ion-nav');
-    // if(navigator.userAgent.toLowerCase().match('iphone') || navigator.userAgent.toLowerCase().match('ipad')){
-    //   ionNav.animated = false;
-    // }
     ionNav.push('app-food-list');
   }
 
   render() {
     return [
-
       <ion-nav></ion-nav>,
       <ion-loading-controller></ion-loading-controller>,
       <div>
@@ -206,7 +202,6 @@ export class AppHome {
       <ion-content class="ion-padding">
         <h1>Today</h1>
         <h3>{this.dailyCalories} calories consumed</h3>
-
         <ion-list lines="none">
           <ion-item-group>
             <ion-item-divider color="secondary">
@@ -238,7 +233,7 @@ export class AppHome {
             </app-daily>
           </ion-item-group>
           <ion-item-group>
-            <ion-item-divider color="tertiary">
+            <ion-item-divider color="medium">
               <ion-label>This week:</ion-label>
             </ion-item-divider>
             {

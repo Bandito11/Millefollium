@@ -1543,7 +1543,7 @@ export const MOCKFOODITEMS: IFoodItem[] = [{
     picture: '',
     servingPerContainer: 1,
     servingSize: {
-        amount: 0,
+        amount: 4,
         measurement: measurements[measurements.piece]
     },
     calories: 40,

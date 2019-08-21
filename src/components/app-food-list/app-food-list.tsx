@@ -43,6 +43,11 @@ export class AppFoodList {
         ionNav.pop();
     }
 
+    getBarcode() {
+        const ionSearch = document.querySelector('ion-searchbar');
+        ionSearch.value = 'test1';
+    }
+
     render() {
         return [
             <ion-header >
@@ -58,7 +63,7 @@ export class AppFoodList {
                             </ion-buttons>
                             <ion-searchbar animated debounce={500} spellcheck={true} autocomplete="on" placeholder="Look for meal or snacks!"></ion-searchbar>
                             <ion-buttons slot="end">
-                                <ion-button>
+                                <ion-button onClick={this.getBarcode.bind(this)}>
                                     <ion-icon slot="icon-only" name="barcode"></ion-icon>
                                 </ion-button>
                                 <ion-button href="/food/create">
@@ -146,7 +151,7 @@ export class AppFoodList {
                             </ion-buttons>
                             <ion-searchbar animated debounce={500} spellcheck={true} autocomplete="on" placeholder="Look for meal or snacks!"></ion-searchbar>
                             <ion-buttons slot="end">
-                                <ion-button>
+                                <ion-button onClick={this.getBarcode.bind(this)}>
                                     <ion-icon slot="icon-only" name="barcode"></ion-icon>
                                 </ion-button>
                                 <ion-button href="/food/create">
