@@ -67,7 +67,7 @@ export class AppFoodList {
                                     <ion-icon slot="icon-only" name="barcode"></ion-icon>
                                 </ion-button>
                                 <ion-button href="/food/create">
-                                    Add
+                                    Create new food
                                 </ion-button>
                             </ion-buttons>
                         </ion-toolbar>
@@ -155,7 +155,7 @@ export class AppFoodList {
                                     <ion-icon slot="icon-only" name="barcode"></ion-icon>
                                 </ion-button>
                                 <ion-button href="/food/create">
-                                    Add
+                                    Create new food
                                 </ion-button>
                             </ion-buttons>
                         </ion-toolbar>
