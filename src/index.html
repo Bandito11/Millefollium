@@ -19,27 +19,17 @@
 
   <meta http-equiv="x-ua-compatible" content="IE=Edge">
 
-  <script>
-    const head = document.querySelector('head');
-    const noEsm = document.createElement('script');
-    if (navigator.userAgent.match('Electron')) {
-      noEsm.src = './build/app.js';
-      head.appendChild(noEsm);
-    } else {
-      const esm = document.createElement('script');
-      esm.type = 'module';
-      esm.src = './build/app.esm.js';
-      head.appendChild(esm);
-
-      noEsm.noModule = true;
-      noEsm.src = './build/app.js';
-      head.appendChild(noEsm);
-    }
-  </script>
   <link href="/build/app.css" rel="stylesheet">
+
+  <script type="module" src="/build/app.esm.js"></script>
+  <script nomodule src="/build/app.js"></script>
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-touch-icon.png">
   <link rel="icon" type="image/x-icon" href="/assets/icon/favicon.ico">
   <link rel="manifest" href="/manifest.json">
+
+  <script nomodule src="/assets/libs/lokijs.min.js"></script>
 </head>
 
 <body>

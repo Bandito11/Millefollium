@@ -1,8 +1,8 @@
-export interface IResponse {
+export interface IResponse<T> {
     success: boolean;
     error: string;
     dateStamp: Date;
-    data: IDaily;
+    data: T;
     message: string;
 }
 

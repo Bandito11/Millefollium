@@ -1,10 +1,11 @@
-import { IFoodItem, IResponse } from "./interface";
-
+import { IFoodItem, IResponse } from './../interfaces.d';
 declare const loki;
 
 const db: Loki = new loki('millefollium.db');
 
 let foodItemColl: Collection<IFoodItem>;
+
+createCollection();
 
 function createCollection() {
     db.loadDatabase();
@@ -15,7 +16,7 @@ function createCollection() {
     db.saveDatabase();
 }
 
-function insertOrUpdateFoodItem(foodItem: IFoodItem) {
+export function insertOrUpdateFoodItem(foodItem: IFoodItem): IResponse<IFoodItem> {
     const result = foodItemColl.find({
         barcode: foodItem.barcode,
         name: foodItem.name
@@ -41,8 +42,8 @@ function insertOrUpdateFoodItem(foodItem: IFoodItem) {
     }
 }
 
-function deleteFoodItem(foodItem: IFoodItem): IResponse {
-    const result = foodItemColl.findAndRemove(foodItem);
+export function deleteFoodItem(foodItem: IFoodItem): IResponse<IFoodItem> {
+    foodItemColl.findAndRemove(foodItem);
     return {
         success: true,
         error: null,
@@ -52,9 +53,8 @@ function deleteFoodItem(foodItem: IFoodItem): IResponse {
     }
 }
 
-function getFoodItem(foodItem: IFoodItem & LokiObj): IResponse {
-    let results = null;
-    let response = {
+export function getFoodItem(foodItem: IFoodItem): IResponse<IFoodItem> {
+    let response: IResponse<IFoodItem> = {
         success: false,
         error: `Didn't find any results.`,
         data: null,
@@ -62,26 +62,52 @@ function getFoodItem(foodItem: IFoodItem & LokiObj): IResponse {
         message: null
     };
 
-    if (foodItem['$loki']) {
-        results = foodItemColl
-            .chain()
-            .limit(10)
-            .data();
-    } else {
-        results = foodItemColl
-            .chain()
-            .find({ '$loki': { $gt: foodItem.dateCreated } })
-            .limit(10)
-            .data();
-    }
+    const results = foodItemColl.findOne(foodItem)
     if (results) {
-        return response;
-    } else {
-        response = {
+        return {
             ...response,
             success: true,
             data: results,
-        }
+        };
+    } else {
+        return response
+    }
+}
+
+
+
+//TODO: Figure out what the hell I was doing here
+export function getPastDailyEntries(foodItem: IFoodItem & LokiObj): IResponse<IFoodItem> {
+    let response: IResponse<IFoodItem> = {
+        success: false,
+        error: `Didn't find any results.`,
+        data: null,
+        dateStamp: new Date(),
+        message: null
+    };
+    let results;
+    if (foodItem['$loki']) {
+        results = foodItemColl
+            .chain()
+            .find({ '$loki': { $gt: foodItem.$loki } })
+            .limit(10)
+            .data();
+    } else {
+        results = foodItemColl
+            .chain()
+            .find({ 'dateCreated': { $lt: foodItem.dateCreated } })
+            .limit(10)
+            .data();
+    }
+
+    if (results) {
+        return {
+            ...response,
+            success: true,
+            data: results,
+        };
+    } else {
+        return response
     }
 }
 

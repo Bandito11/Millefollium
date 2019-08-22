@@ -2,6 +2,7 @@ import { Component, h, State, Listen } from "@stencil/core";
 import { IFoodItem } from "../../interfaces";
 import { DIMENSIONS } from '../../helpers/utils';
 import { formControls } from '../../helpers/utils'
+import { insertOrUpdateFoodItem, deleteFoodItem } from "../../services/db";
 
 @Component({
     tag: 'app-form-food',
@@ -17,123 +18,123 @@ export class AppDaily {
         name: '',
         barcode: '',
         picture: '',
-        servingPerContainer: 0,
+        servingPerContainer: null,
         servingSize: {
-            amount: 0,
+            amount: null,
             measurement: '',
         },
-        calories: 0,
+        calories: null,
         fat: {
             total: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             },
             saturated: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             },
             trans: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             },
             polyunsaturated: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             },
             monounsaturated: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             },
         },
         cholesterol: {
-            grams: 0,
-            percent: 0,
+            grams: null,
+            percent: null,
         },
         sodium: {
-            grams: 0,
-            percent: 0,
+            grams: null,
+            percent: null,
         },
         potassium: {
-            grams: 0,
-            percent: 0,
+            grams: null,
+            percent: null,
         },
         totalCarbohydrates: {
-            grams: 0,
-            percent: 0,
+            grams: null,
+            percent: null,
         },
         dietaryFiber: {
-            grams: 0,
-            percent: 0,
+            grams: null,
+            percent: null,
         },
         protein: {
-            grams: 0,
-            percent: 0,
+            grams: null,
+            percent: null,
         },
         niacin: {
-            grams: 0,
-            percent: 0,
+            grams: null,
+            percent: null,
         },
         phosphorus: {
-            grams: 0,
-            percent: 0,
+            grams: null,
+            percent: null,
         },
         calcium: {
-            grams: 0,
-            percent: 0,
+            grams: null,
+            percent: null,
         },
         iron: {
-            grams: 0,
-            percent: 0,
+            grams: null,
+            percent: null,
         },
         magnesium: {
-            grams: 0,
-            percent: 0,
+            grams: null,
+            percent: null,
         },
         manganese: {
-            grams: 0,
-            percent: 0,
+            grams: null,
+            percent: null,
         },
         dateCreated: '',
         vitamin: {
             A: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             },
             B: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             },
             C: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             },
             D: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             },
             E: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             },
         },
         sugar: {
             added: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             },
             total: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             }
         },
         sugarAlcohol: {
             added: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             },
             total: {
-                grams: 0,
-                percent: 0,
+                grams: null,
+                percent: null,
             }
         }
 
@@ -392,26 +393,59 @@ export class AppDaily {
         console.log('click Barcode')
     }
 
-    createFoodProd() {
-        if (this.name) {
-            this.foodItem.name = this.name;
+    createEditFoodProd() {
+        const response = insertOrUpdateFoodItem(this.foodItem);
+        if (response) {
+            this.displayMessage({
+                header: 'Success!',
+                message: response.message
+            });
         } else {
-            //implement error message
-
-            return;
+            this.displayMessage({
+                header: 'Error!',
+                message: response.error
+            })
         }
-        if (this.calories || this.calories < 0) {
-            this.foodItem.calories = this.calories;
+    }
+
+    deleteFoodProd() {
+        const response = deleteFoodItem(this.foodItem);
+        if (response) {
+            this.displayMessage({
+                header: 'Success!',
+                message: response.message
+            });
         } else {
-            //implement error message
-
-            return;
+            this.displayMessage({
+                header: 'Error!',
+                message: response.error
+            })
         }
+    }
+    async displayMessage(opts: {
+        header: string,
+        subHeader?: string,
+        message: string,
+        buttons?: string[]
+    }) {
+        if (!opts.buttons) {
+            opts.buttons = ['OK'];
+        }
+        const alertController = document.querySelector('ion-alert-controller');
+
+        const alert = await alertController.create({
+            header: opts.header,
+            subHeader: opts.subHeader,
+            message: opts.message,
+            buttons: opts.buttons
+        });
+        return await alert.present();
     }
 
     render() {
         return [
             <ion-nav></ion-nav>,
+            <ion-alert-controller></ion-alert-controller>,
             <div>
                 {
                     navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
@@ -427,10 +461,10 @@ export class AppDaily {
                                     this.calories > 0 && this.name
                                         ? <ion-buttons slot="end">
                                             {this.path === 'create'
-                                                ? <ion-button>Create</ion-button>
+                                                ? <ion-button onClick={_ => this.createEditFoodProd()}>Create</ion-button>
                                                 : <div>
                                                     <ion-button>Delete</ion-button>
-                                                    <ion-button>Edit</ion-button>
+                                                    <ion-button onClick={_ => this.createEditFoodProd()}>Edit</ion-button>
                                                 </div>
                                             }
                                         </ion-buttons>
@@ -450,23 +484,27 @@ export class AppDaily {
                             </ion-button>
                             <p>Take a photo or choose one picture from the album.</p>
                         </div>
-
-                        <ion-item>
-                            <ion-input type="text" readonly></ion-input>
-                            <ion-button size="large" fill="clear" onClick={this.getBarcode.bind(this)}>
-                                <ion-icon slot="icon-only" name="barcode"></ion-icon>
-                            </ion-button>
-                        </ion-item>
-
+                        {
+                            this.path === 'edit'
+                                ? <ion-item>
+                                    <ion-input value={this.foodItem.barcode} type="text" readonly></ion-input>
+                                </ion-item>
+                                : <ion-item>
+                                    <ion-input type="text" readonly></ion-input>
+                                    <ion-button size="large" fill="clear" onClick={this.getBarcode.bind(this)}>
+                                        <ion-icon slot="icon-only" name="barcode"></ion-icon>
+                                    </ion-button>
+                                </ion-item>
+                        }
                         <ion-item>
                             <ion-label position="floating">Name</ion-label>
-                            <ion-input onInput={e => this.name = e.target['value']} type="text" required></ion-input>
+                            <ion-input value={this.foodItem.name} onInput={e => this.name = e.target['value']} type="text" required></ion-input>
                         </ion-item>
 
                         <h3>Nutrition Facts</h3>
                         <ion-item>
                             <ion-label position="floating">Calories</ion-label>
-                            <ion-input onInput={e => this.calories = e.target['value']} type="number" required></ion-input>
+                            <ion-input value={this.foodItem.calories.toString()} onInput={e => this.calories = e.target['value']} type="number" required></ion-input>
                         </ion-item>
 
 
@@ -475,20 +513,21 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Per container</ion-label>
                                 <ion-input
+                                    value={this.foodItem.servingPerContainer.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.servingPerContainer, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
                             </ion-item>
                             <ion-item>
                                 <ion-label position="floating">Amount</ion-label>
-                                <ion-input onInput={e => this.getFormData({ prop: formControls.servingSizeAmount, value: e.target['value'] })}
+                                <ion-input value={this.foodItem.servingSize.amount.toString()} onInput={e => this.getFormData({ prop: formControls.servingSizeAmount, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
                             </ion-item>
                             <ion-item>
                                 <ion-label>Measurement</ion-label>
 
-                                <ion-select multiple={false} placeholder="Select Measurement if amount is specified">
+                                <ion-select value={this.foodItem.servingSize.measurement} multiple={false} placeholder="Select Measurement if amount is specified">
                                     {
                                         this.dimensions.map(dimension =>
                                             <ion-select-option value={dimension}>{dimension}</ion-select-option>
@@ -504,6 +543,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.fat.total.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.totalFatGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -511,6 +551,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.fat.total.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.totalFatPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -521,6 +562,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.fat.saturated.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.saturatedFatGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -528,6 +570,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.fat.saturated.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.saturatedFatPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -538,6 +581,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.fat.trans.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.transFatGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -545,6 +589,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.fat.trans.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.transFatPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -555,6 +600,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.fat.monounsaturated.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.monounsaturatedFatGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -562,6 +608,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.fat.monounsaturated.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.monounsaturatedFatPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -572,6 +619,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.fat.polyunsaturated.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.polyunsaturatedFatGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -579,6 +627,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.fat.polyunsaturated.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.polyunsaturatedFatPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -590,6 +639,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.cholesterol.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.cholesterolGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -597,6 +647,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.cholesterol.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.cholesterolPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -608,6 +659,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.sodium.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.sodiumGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -615,6 +667,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.sodium.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.sodiumPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -627,6 +680,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.potassium.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.potassiumGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -634,6 +688,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.potassium.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.potassiumPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -646,6 +701,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.totalCarbohydrates.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.totalCarbohydratesGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -653,6 +709,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.totalCarbohydrates.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.totalCarbohydratesPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -665,6 +722,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.dietaryFiber.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.dietaryFiberGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -672,6 +730,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.dietaryFiber.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.dietaryFiberPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -684,6 +743,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.protein.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.proteinGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -691,6 +751,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.protein.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.proteinPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -702,6 +763,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.niacin.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.niacinGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -709,6 +771,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.niacin.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.niacinPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -720,6 +783,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.phosphorus.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.phosphorusGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -727,6 +791,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.phosphorus.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.phosphorusPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -739,6 +804,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.calcium.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.calciumGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -746,6 +812,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.calcium.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.calciumPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -758,6 +825,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.iron.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.ironGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -765,6 +833,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.iron.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.ironPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -776,6 +845,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.magnesium.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.magnesiumGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -783,6 +853,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.magnesium.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.magnesiumPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -794,6 +865,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.manganese.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.manganeseGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -801,6 +873,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.manganese.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.manganesePercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -812,6 +885,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.vitamin.A.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.vitaminAGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -819,6 +893,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.vitamin.A.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.vitaminAGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -830,6 +905,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.vitamin.B.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.vitaminBGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -837,6 +913,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.vitamin.B.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.vitaminBPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -848,6 +925,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.vitamin.C.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.vitaminCGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -855,6 +933,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.vitamin.C.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.vitaminCPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -866,6 +945,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.vitamin.D.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.vitaminDGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -873,6 +953,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.vitamin.D.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.vitaminDPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -884,6 +965,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Grams</ion-label>
                                 <ion-input
+                                    value={this.foodItem.vitamin.E.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.vitaminEGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -891,6 +973,7 @@ export class AppDaily {
                             <ion-item>
                                 <ion-label position="floating">Percent</ion-label>
                                 <ion-input
+                                    value={this.foodItem.vitamin.E.percent.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.vitaminEPercent, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
@@ -900,12 +983,11 @@ export class AppDaily {
                         <ion-item-group>
                             <h5>Sugar</h5>
                             <ion-item-group class="ion-margin-horizontal">
-                                <h6>
-                                    <ion-label>Total</ion-label>
-                                </h6>
+                                <h6>Total</h6>
                                 <ion-item>
                                     <ion-label position="floating">Grams</ion-label>
                                     <ion-input
+                                        value={this.foodItem.sugar.total.grams.toString()}
                                         onInput={e => this.getFormData({ prop: formControls.sugarTotalGrams, value: e.target['value'] })}
                                         type="number">
                                     </ion-input>
@@ -913,18 +995,18 @@ export class AppDaily {
                                 <ion-item>
                                     <ion-label position="floating">Percent</ion-label>
                                     <ion-input
+                                        value={this.foodItem.sugar.total.percent.toString()}
                                         onInput={e => this.getFormData({ prop: formControls.sugarTotalPercent, value: e.target['value'] })}
                                         type="number">
                                     </ion-input>
                                 </ion-item>
                             </ion-item-group>
                             <ion-item-group class="ion-margin-horizontal">
-                                <h6>
-                                    <ion-label>Added</ion-label>
-                                </h6>
+                                <h6>Added</h6>
                                 <ion-item>
                                     <ion-label position="floating">Grams</ion-label>
                                     <ion-input
+                                        value={this.foodItem.sugar.added.grams.toString()}
                                         onInput={e => this.getFormData({ prop: formControls.sugarAddedGrams, value: e.target['value'] })}
                                         type="number">
                                     </ion-input>
@@ -932,6 +1014,7 @@ export class AppDaily {
                                 <ion-item>
                                     <ion-label position="floating">Percent</ion-label>
                                     <ion-input
+                                        value={this.foodItem.sugar.added.percent.toString()}
                                         onInput={e => this.getFormData({ prop: formControls.sugarAddedPercent, value: e.target['value'] })}
                                         type="number">
                                     </ion-input>
@@ -942,12 +1025,11 @@ export class AppDaily {
                         <ion-item-group>
                             <h5>Sugar Alcohol</h5>
                             <ion-item-group class="ion-margin-horizontal">
-                                <h6>
-                                    <ion-label>Total</ion-label>
-                                </h6>
+                                <h6>Total</h6>
                                 <ion-item>
                                     <ion-label position="floating">Grams</ion-label>
                                     <ion-input
+                                        value={this.foodItem.sugarAlcohol.total.grams.toString()}
                                         onInput={e => this.getFormData({ prop: formControls.sugarAlcoholTotalGrams, value: e.target['value'] })}
                                         type="number">
                                     </ion-input>
@@ -955,18 +1037,18 @@ export class AppDaily {
                                 <ion-item>
                                     <ion-label position="floating">Percent</ion-label>
                                     <ion-input
+                                        value={this.foodItem.sugarAlcohol.total.percent.toString()}
                                         onInput={e => this.getFormData({ prop: formControls.sugarAlcoholTotalPercent, value: e.target['value'] })}
                                         type="number">
                                     </ion-input>
                                 </ion-item>
                             </ion-item-group>
                             <ion-item-group class="ion-margin-horizontal">
-                                <h6>
-                                    <ion-label>Added</ion-label>
-                                </h6>
+                                <h6>Added</h6>
                                 <ion-item>
                                     <ion-label position="floating">Grams</ion-label>
                                     <ion-input
+                                        value={this.foodItem.sugarAlcohol.added.grams.toString()}
                                         onInput={e => this.getFormData({ prop: formControls.sugarAlcoholAddedGrams, value: e.target['value'] })}
                                         type="number">
                                     </ion-input>
@@ -974,6 +1056,7 @@ export class AppDaily {
                                 <ion-item>
                                     <ion-label position="floating">Percent</ion-label>
                                     <ion-input
+                                        value={this.foodItem.sugarAlcohol.added.percent.toString()}
                                         onInput={e => this.getFormData({ prop: formControls.sugarAlcoholAddedPercent, value: e.target['value'] })}
                                         type="number">
                                     </ion-input>
@@ -998,10 +1081,10 @@ export class AppDaily {
                                     this.calories > 0 && this.name
                                         ? <ion-buttons slot="end">
                                             {this.path === 'create'
-                                                ? <ion-button>Create</ion-button>
+                                                ? <ion-button onClick={_ => this.createEditFoodProd()}>Create</ion-button>
                                                 : <div>
                                                     <ion-button>Delete</ion-button>
-                                                    <ion-button>Edit</ion-button>
+                                                    <ion-button onClick={_ => this.createEditFoodProd()}>Edit</ion-button>
                                                 </div>
                                             }
                                         </ion-buttons>
