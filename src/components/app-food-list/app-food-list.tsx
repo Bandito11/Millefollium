@@ -1,6 +1,7 @@
 import { Component, h, Listen, State } from '@stencil/core';
 import { IFoodItem } from '../../interfaces';
-import { MOCKFOODITEMS } from '../../helpers/mockData';
+import { getFoodItems } from '../../services/db';
+import { foodNameToUppercase } from '../../helpers/utils';
 
 @Component({
     tag: 'app-food-list',
@@ -9,8 +10,8 @@ import { MOCKFOODITEMS } from '../../helpers/mockData';
 
 export class AppFoodList {
 
-    @State() foodItems: IFoodItem[] = [];
-    @State() frequentFoodItems: IFoodItem[] = [];
+    @State() foodItems: (IFoodItem & LokiObj)[] = [];
+    @State() frequentFoodItems: (IFoodItem & LokiObj)[] = [];
 
     componentWillLoad() {
         this.getFrequentFoodItems();
@@ -28,14 +29,17 @@ export class AppFoodList {
     queryByNameOrID(value) {
         const query = value;
         if (query) {
-            this.foodItems = [...MOCKFOODITEMS];
+            const response = getFoodItems(query);
+            if (response.success) {
+                this.foodItems = [...response.data];
+            }
         } else {
             this.foodItems = [];
         }
     }
 
     getFrequentFoodItems() {
-        this.frequentFoodItems = [...MOCKFOODITEMS.reverse()];
+        // this.frequentFoodItems = [...MOCKFOODITEMS.reverse()];
     }
 
     goBack() {
@@ -48,9 +52,68 @@ export class AppFoodList {
         ionSearch.value = 'test1';
     }
 
+    async presentCreateModal(componentProps: { $loki?: number, mode: string }) {
+        const ionSearch = document.querySelector('ion-searchbar');
+        const modalController = document.querySelector('ion-modal-controller');
+        // create the modal with the `modal-page` component
+        const modal = await modalController.create({
+            component: 'app-form-food',
+            componentProps: componentProps
+        });
+        ionSearch.value = '';
+        // present the modal
+        await modal.present();
+    }
+
+    async showSelectionWindow(foodItem: (IFoodItem & LokiObj)) {
+        const actionSheetController = document.querySelector('ion-action-sheet-controller');
+        const actionSheet = await actionSheetController.create({
+            header: foodNameToUppercase(foodItem.name),
+            buttons: [
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+
+                },
+                {
+                    text: 'View',
+                    role: 'view',
+                    cssClass: 'tertiary',
+                    handler: async () => {
+                        const modalController = document.querySelector('ion-modal-controller');
+                        const modal = await modalController.create({
+                            component: 'app-view-food',
+                            componentProps: {
+                                $loki: foodItem.$loki
+                            }
+                        });
+                        await modal.present();
+                    }
+                }, {
+                    text: 'Edit',
+                    cssClass: 'secondary',
+                    handler: () => {
+                        this.presentCreateModal({ mode: 'edit', $loki: foodItem.$loki });
+                    }
+                },
+                {
+                    text: 'Add to Daily',
+                    role: 'add',
+                    cssClass: 'primary',
+                    handler: () => {
+                        //Create a page to add daily food
+                    }
+                }
+            ]
+        });
+        return await actionSheet.present();
+    }
+
     render() {
         return [
-            <ion-header >
+            <ion-action-sheet-controller></ion-action-sheet-controller>,
+            <ion-modal-controller></ion-modal-controller>,
+            <ion-header>
                 {
                     navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
                         ? ''
@@ -61,13 +124,13 @@ export class AppFoodList {
                                     <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
                                 </ion-button>
                             </ion-buttons>
-                            <ion-searchbar animated debounce={500} spellcheck={true} autocomplete="on" placeholder="Look for meal or snacks!"></ion-searchbar>
+                            <ion-searchbar animated debounce={500} spellcheck={true} autocomplete="on"></ion-searchbar>
                             <ion-buttons slot="end">
                                 <ion-button onClick={this.getBarcode.bind(this)}>
                                     <ion-icon slot="icon-only" name="barcode"></ion-icon>
                                 </ion-button>
-                                <ion-button href="/food/create">
-                                    Create new food
+                                <ion-button onClick={() => this.presentCreateModal({ mode: 'create' })}>
+                                    Create
                                 </ion-button>
                             </ion-buttons>
                         </ion-toolbar>
@@ -75,68 +138,62 @@ export class AppFoodList {
             </ion-header>
             ,
             <ion-content class="ion-padding">
-                <ion-list lines="none">
-                    {
-                        this.foodItems.length > 0
-                            ? this.foodItems.map((foodItem, index) =>
-                                <ion-item-group>
-                                    {
-                                        index % 2
-                                            ? <ion-item-divider color="secondary">
-                                                <ion-label>{foodItem.name} </ion-label>
-                                            </ion-item-divider>
-                                            : <ion-item-divider color="tertiary">
-                                                <ion-label>{foodItem.name} </ion-label>
-                                            </ion-item-divider>
-                                    }
-                                    <ion-item>
-                                        <ion-label>
-                                            {foodItem.servingSize.amount} {foodItem.servingSize.measurement}
-                                        </ion-label>
-                                    </ion-item>
-                                    <ion-item>
-                                        <ion-label>Servings per Container {foodItem.servingPerContainer}</ion-label>
-                                    </ion-item>
-                                    <ion-item>
-                                        <ion-label>{foodItem.calories} calories</ion-label>
-                                    </ion-item>
-                                </ion-item-group>
-                            )
-                            : <ion-item-header>
-                                <ion-label>Recent</ion-label>
-                            </ion-item-header>
-                    }
-                    {
-                        this.frequentFoodItems.length > 0 && this.foodItems.length <= 0
-                            ? this.frequentFoodItems.map((foodItem, index) =>
-                                <ion-item-group>
-                                    <ion-item-group>
-                                        {
-                                            index % 2
-                                                ? <ion-item-divider color="tertiary">
-                                                    <ion-label>{foodItem.name} </ion-label>
-                                                </ion-item-divider>
-                                                : <ion-item-divider color="secondary">
-                                                    <ion-label>{foodItem.name} </ion-label>
-                                                </ion-item-divider>
-                                        }
-                                        <ion-item>
-                                            <ion-label>
-                                                {foodItem.servingSize.amount} {foodItem.servingSize.measurement}
-                                            </ion-label>
-                                        </ion-item>
-                                        <ion-item>
-                                            <ion-label>Servings per Container {foodItem.servingPerContainer}</ion-label>
-                                        </ion-item>
-                                        <ion-item>
-                                            <ion-label>{foodItem.calories} calories</ion-label>
-                                        </ion-item>
-                                    </ion-item-group>
-                                </ion-item-group>
-                            )
-                            : ''
-                    }
-                </ion-list>
+                {
+                    this.foodItems.length > 0
+                        ? this.foodItems.map((foodItem, index) =>
+                            <ion-card onClick={_ => this.showSelectionWindow(foodItem)}>
+                                {
+                                    index % 2
+                                        ? <ion-card-header color="secondary">
+                                            <ion-label>{foodNameToUppercase(foodItem.name)} </ion-label>
+                                        </ion-card-header>
+                                        : <ion-card-header color="tertiary">
+                                            <ion-label>{foodNameToUppercase(foodItem.name)} </ion-label>
+                                        </ion-card-header>
+                                }
+                                <ion-item lines="none">
+                                    <ion-label>
+                                        Serving Size {foodItem.servingSize.size} {foodItem.servingSize.measurement}
+                                    </ion-label>
+                                </ion-item>
+                                <ion-item lines="none">
+                                    <ion-label>Servings per Container about {foodItem.servingPerContainer}</ion-label>
+                                </ion-item>
+                                <ion-item lines="none">
+                                    <ion-label>{foodItem.calories} calories</ion-label>
+                                </ion-item>
+                            </ion-card>
+                        )
+                        : <h1>Recent</h1>
+                }
+                {
+                    this.frequentFoodItems.length > 0 && this.foodItems.length <= 0
+                        ? this.frequentFoodItems.map((foodItem, index) =>
+                            <ion-card onClick={_ => this.showSelectionWindow(foodItem)}>
+                                {
+                                    index % 2
+                                        ? <ion-card-header color="tertiary">
+                                            <ion-label>{foodNameToUppercase(foodItem.name)} </ion-label>
+                                        </ion-card-header>
+                                        : <ion-card-header color="secondary">
+                                            <ion-label>{foodNameToUppercase(foodItem.name)} </ion-label>
+                                        </ion-card-header>
+                                }
+                                <ion-item lines="none">
+                                    <ion-label>
+                                        {foodItem.servingSize.size} {foodItem.servingSize.measurement}
+                                    </ion-label>
+                                </ion-item>
+                                <ion-item lines="none">
+                                    <ion-label>Servings per Container {foodItem.servingPerContainer}</ion-label>
+                                </ion-item>
+                                <ion-item lines="none">
+                                    <ion-label>{foodItem.calories} calories</ion-label>
+                                </ion-item>
+                            </ion-card>
+                        )
+                        : ''
+                }
             </ion-content>
             ,
             <ion-footer>
@@ -149,13 +206,13 @@ export class AppFoodList {
                                     <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
                                 </ion-button>
                             </ion-buttons>
-                            <ion-searchbar animated debounce={500} spellcheck={true} autocomplete="on" placeholder="Look for meal or snacks!"></ion-searchbar>
+                            <ion-searchbar animated debounce={500} spellcheck={true} autocomplete="on"></ion-searchbar>
                             <ion-buttons slot="end">
                                 <ion-button onClick={this.getBarcode.bind(this)}>
                                     <ion-icon slot="icon-only" name="barcode"></ion-icon>
                                 </ion-button>
-                                <ion-button href="/food/create">
-                                    Create new food
+                                <ion-button onClick={() => this.presentCreateModal({ mode: 'create' })}>
+                                    Create
                                 </ion-button>
                             </ion-buttons>
                         </ion-toolbar>

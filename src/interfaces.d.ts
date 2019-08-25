@@ -6,24 +6,14 @@ export interface IResponse<T> {
     message: string;
 }
 
-export interface IDaily {
-    date?: Date;
+export interface IEntry {
+    date: Date;
     breakfast: IMeal[];
     breakfastSnack: IMeal[];
     lunch: IMeal[];
     lunchSnack: IMeal[];
     dinner: IMeal[];
     dinnerSnack: IMeal[];
-}
-
-export interface IEntry {
-    date: Date;
-    breakfast: IFoodItem[];
-    breakfastSnack: IFoodItem[];
-    lunch: IFoodItem[];
-    lunchSnack: IFoodItem[];
-    dinner: IFoodItem[];
-    dinnerSnack: IFoodItem[]
 }
 
 interface IMeal {
@@ -39,7 +29,8 @@ interface IMeal {
 }
 
 interface measurement {
-    amount: number;
+    size: number;
+    grams: number;
     measurement: string;
 }
 
@@ -47,6 +38,7 @@ export interface IFoodItem extends INutritionFacts {
     name: string;
     barcode: string;
     picture: string;
+    dateCreated: Date;
 }
 
 export interface INutritionFacts {
@@ -66,7 +58,6 @@ export interface INutritionFacts {
     iron: IAmount;
     magnesium: IAmount;
     manganese: IAmount;
-    dateCreated: string;
     vitamin: {
         A: IAmount;
         B: IAmount;

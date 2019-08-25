@@ -1,7 +1,8 @@
 import { measurements } from './utils';
-import { IFoodItem, IDaily } from "../interfaces";
+import { IFoodItem, IEntry } from "../interfaces";
 
-export const MOCKDAILY: IDaily = {
+export const MOCKDAILY: IEntry = {
+    date: new Date(),
     breakfast: [{
         servingsSize: 7,
         name: 'banana',
@@ -285,7 +286,7 @@ export const MOCKDAILY: IDaily = {
     }]
 };
 
-export const MOCKENTRIES: IDaily[] = [
+export const MOCKENTRIES: IEntry[] = [
     {
         date: new Date('12/03/2019'),
         breakfast: [{
@@ -1419,8 +1420,9 @@ export const MOCKFOODITEMS: IFoodItem[] = [{
     picture: '',
     servingPerContainer: 1,
     servingSize: {
-        amount: 34,
-        measurement: measurements[measurements.pieces]
+        size: 34,
+        grams: 10,
+        measurement: measurements[measurements.piece]
     },
     calories: 50,
     fat: {
@@ -1493,7 +1495,7 @@ export const MOCKFOODITEMS: IFoodItem[] = [{
         percent: 67,
         grams: 79
     },
-    dateCreated: new Date().toString(),
+    dateCreated: new Date(),
     vitamin: {
         A: {
             percent: 0,
@@ -1543,7 +1545,9 @@ export const MOCKFOODITEMS: IFoodItem[] = [{
     picture: '',
     servingPerContainer: 1,
     servingSize: {
-        amount: 4,
+        size: 4,
+
+        grams: 10,
         measurement: measurements[measurements.piece]
     },
     calories: 40,
@@ -1617,7 +1621,7 @@ export const MOCKFOODITEMS: IFoodItem[] = [{
         percent: 0,
         grams: 0
     },
-    dateCreated: new Date().toString(),
+    dateCreated: new Date(),
     vitamin: {
         A: {
             percent: 56,
@@ -1666,7 +1670,8 @@ export const MOCKFOODITEMS: IFoodItem[] = [{
     picture: '',
     servingPerContainer: 1,
     servingSize: {
-        amount: 40,
+        size: 40,
+        grams: 10,
         measurement: measurements[measurements.oz]
     },
     calories: 120,
@@ -1740,7 +1745,7 @@ export const MOCKFOODITEMS: IFoodItem[] = [{
         percent: 0,
         grams: 0
     },
-    dateCreated: new Date().toString(),
+    dateCreated: new Date(),
     vitamin: {
         A: {
             percent: 0,

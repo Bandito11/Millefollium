@@ -1,5 +1,5 @@
 import { Component, h, Listen, State } from "@stencil/core";
-import { IDaily, IMeal } from "../../interfaces";
+import { IEntry, IMeal } from "../../interfaces";
 import { MOCKDAILY, MOCKENTRIES } from "../../helpers/mockData";
 
 @Component({
@@ -8,7 +8,8 @@ import { MOCKDAILY, MOCKENTRIES } from "../../helpers/mockData";
 })
 export class AppHome {
 
-  daily: IDaily = {
+  daily: IEntry = {
+    date: new Date(),
     breakfast: [],
     breakfastSnack: [],
     lunch: [],
@@ -16,7 +17,7 @@ export class AppHome {
     dinner: [],
     dinnerSnack: []
   };
-  @State() pastDailyEntries: IDaily[] = [];
+  @State() pastDailyEntries: IEntry[] = [];
   dailyCalories: number = 0;
   breakfastCalories: number = 0;
   breakfastSnackCalories: number = 0;
@@ -75,7 +76,7 @@ export class AppHome {
     };
   };
 
-  calculateMacros(daily: IDaily) {
+  calculateMacros(daily: IEntry) {
     let totalCalories = 0;
     let totalFat = 0;
     let totalProtein = 0;
@@ -160,7 +161,7 @@ export class AppHome {
     }
   }
 
-  getDailyEntry(): Promise<IDaily> {
+  getDailyEntry(): Promise<IEntry> {
     return new Promise(resolve => {
       const daily = MOCKDAILY;
 
@@ -168,7 +169,7 @@ export class AppHome {
     })
   };
 
-  getPastDailyEntries(): Promise<IDaily[]> {
+  getPastDailyEntries(): Promise<IEntry[]> {
     return new Promise(resolve => {
       const entries = MOCKENTRIES;
       resolve(entries);
@@ -264,7 +265,7 @@ export class AppHome {
             ? <ion-footer>
               <ion-toolbar color="primary">
                 <ion-buttons slot="end">
-                  <ion-button href="." onClick={this.goToList.bind(this)}>
+                  <ion-button onClick={this.goToList.bind(this)}>
                     <ion-icon slot="icon-only" name="add"></ion-icon>
                   </ion-button>
                 </ion-buttons>

@@ -7,14 +7,14 @@
 
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import {
-  IDaily,
+  IEntry,
 } from './interfaces';
 
 export namespace Components {
   interface AppDaily {
     'breakfastCalories': number;
     'breakfastSnackCalories': number;
-    'daily': IDaily;
+    'daily': IEntry;
     'dinnerCalories': number;
     'dinnerSnackCalories': number;
     'lunchCalories': number;
@@ -24,6 +24,7 @@ export namespace Components {
   interface AppFormFood {}
   interface AppHome {}
   interface AppRoot {}
+  interface AppViewFood {}
 }
 
 declare global {
@@ -58,12 +59,19 @@ declare global {
     prototype: HTMLAppRootElement;
     new (): HTMLAppRootElement;
   };
+
+  interface HTMLAppViewFoodElement extends Components.AppViewFood, HTMLStencilElement {}
+  var HTMLAppViewFoodElement: {
+    prototype: HTMLAppViewFoodElement;
+    new (): HTMLAppViewFoodElement;
+  };
   interface HTMLElementTagNameMap {
     'app-daily': HTMLAppDailyElement;
     'app-food-list': HTMLAppFoodListElement;
     'app-form-food': HTMLAppFormFoodElement;
     'app-home': HTMLAppHomeElement;
     'app-root': HTMLAppRootElement;
+    'app-view-food': HTMLAppViewFoodElement;
   }
 }
 
@@ -71,7 +79,7 @@ declare namespace LocalJSX {
   interface AppDaily extends JSXBase.HTMLAttributes<HTMLAppDailyElement> {
     'breakfastCalories'?: number;
     'breakfastSnackCalories'?: number;
-    'daily'?: IDaily;
+    'daily'?: IEntry;
     'dinnerCalories'?: number;
     'dinnerSnackCalories'?: number;
     'lunchCalories'?: number;
@@ -81,6 +89,7 @@ declare namespace LocalJSX {
   interface AppFormFood extends JSXBase.HTMLAttributes<HTMLAppFormFoodElement> {}
   interface AppHome extends JSXBase.HTMLAttributes<HTMLAppHomeElement> {}
   interface AppRoot extends JSXBase.HTMLAttributes<HTMLAppRootElement> {}
+  interface AppViewFood extends JSXBase.HTMLAttributes<HTMLAppViewFoodElement> {}
 
   interface IntrinsicElements {
     'app-daily': AppDaily;
@@ -88,6 +97,7 @@ declare namespace LocalJSX {
     'app-form-food': AppFormFood;
     'app-home': AppHome;
     'app-root': AppRoot;
+    'app-view-food': AppViewFood;
   }
 }
 

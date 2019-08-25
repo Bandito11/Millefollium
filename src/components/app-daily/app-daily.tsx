@@ -1,12 +1,12 @@
 import { Component, h, Prop } from "@stencil/core";
-import { IDaily, IMeal } from "../../interfaces";
+import { IEntry, IMeal } from "../../interfaces";
 
 @Component({
     tag: 'app-daily',
     styleUrl: 'app-daily.css'
 })
 export class AppDaily {
-    @Prop() daily: IDaily;
+    @Prop() daily: IEntry;
     @Prop() breakfastCalories: number;
     @Prop() breakfastSnackCalories: number;
     @Prop() lunchCalories: number;

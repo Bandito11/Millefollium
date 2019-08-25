@@ -1,73 +1,47 @@
 export enum measurements {
   gram = 'gram',
-  grams = 'grams',
   tbsp = 'tbsp',
-  tbsps = 'tbsps',
   cup = 'cup',
-  cups = 'cups',
   pint = 'pint',
-  pints = 'pints',
   quart = 'quart',
   container = 'container',
   kg = 'kg',
   lb = 'lb',
   oz = 'oz',
   slice = 'slice',
-  slices = 'slices',
   large = 'large',
   tsp = 'tsp',
-  tsps = 'tsps',
   package = 'package',
-  packages = 'packages',
   link = 'link',
-  links = 'links',
-  inches = 'inches',
   inch = 'inch',
   medium = 'medium',
   serving = 'serving',
-  servings = 'servings',
   piece = 'piece',
-  pieces = 'pieces',
   bottle = 'bottle',
-  bottles = 'bottles',
   can = 'can',
-  cans = 'cans'
 }
 
 export const DIMENSIONS = [
   'gram',
-  'grams',
   'tbsp',
-  'tbsps',
   'cup',
-  'cups',
   'pint',
-  'pints',
   'quart',
   'container',
   'kg',
   'lb',
   'oz',
   'slice',
-  'slices',
   'large',
   'tsp',
-  'tsps',
   'package',
-  'packages',
   'link',
-  'links',
-  'inches',
   'inch',
   'medium',
   'serving',
-  'servings',
   'piece',
-  'pieces',
   'bottle',
-  'bottles',
   'can',
-  'cans'
 ];
 
 export enum formControls {
@@ -126,5 +100,16 @@ export enum formControls {
   sugarAlcoholTotalPercent = 'sugarAlcoholTotalPercent',
   sugarAlcoholAddedGrams = 'sugarAlcoholAddedGrams',
   sugarAlcoholAddedPercent = 'sugarAlcoholAddedPercent',
+  servingSizeGrams = 'servingSizeGrams'
+}
 
+export function foodNameToUppercase(name: string) {
+  let formattedName;
+  const array = name.split(' ');
+  if (array.length > 0) {
+      formattedName = array.map(value => value[0].toUpperCase() + value.substring(1, value.length)).join(' ')
+  } else {
+      formattedName = name[0].toUpperCase() + name.substring(1, name.length);
+  }
+  return formattedName;
 }

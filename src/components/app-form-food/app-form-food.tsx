@@ -1,8 +1,8 @@
-import { Component, h, State, Listen } from "@stencil/core";
+import { Component, h, State } from "@stencil/core";
 import { IFoodItem } from "../../interfaces";
-import { DIMENSIONS } from '../../helpers/utils';
+import { DIMENSIONS, foodNameToUppercase } from '../../helpers/utils';
 import { formControls } from '../../helpers/utils'
-import { insertOrUpdateFoodItem, deleteFoodItem } from "../../services/db";
+import { insertOrUpdateFoodItem, deleteFoodItem, getFoodItem } from "../../services/db";
 
 @Component({
     tag: 'app-form-food',
@@ -10,379 +10,563 @@ import { insertOrUpdateFoodItem, deleteFoodItem } from "../../services/db";
 })
 export class AppDaily {
 
-    @State() calories;
-    @State() name;
+    @State() calories = 0;
+    @State() name = '';
     dimensions = DIMENSIONS;
     header = '';
-    foodItem: IFoodItem = {
-        name: '',
-        barcode: '',
-        picture: '',
-        servingPerContainer: null,
-        servingSize: {
-            amount: null,
-            measurement: '',
-        },
-        calories: null,
-        fat: {
-            total: {
-                grams: null,
-                percent: null,
-            },
-            saturated: {
-                grams: null,
-                percent: null,
-            },
-            trans: {
-                grams: null,
-                percent: null,
-            },
-            polyunsaturated: {
-                grams: null,
-                percent: null,
-            },
-            monounsaturated: {
-                grams: null,
-                percent: null,
-            },
-        },
-        cholesterol: {
-            grams: null,
-            percent: null,
-        },
-        sodium: {
-            grams: null,
-            percent: null,
-        },
-        potassium: {
-            grams: null,
-            percent: null,
-        },
-        totalCarbohydrates: {
-            grams: null,
-            percent: null,
-        },
-        dietaryFiber: {
-            grams: null,
-            percent: null,
-        },
-        protein: {
-            grams: null,
-            percent: null,
-        },
-        niacin: {
-            grams: null,
-            percent: null,
-        },
-        phosphorus: {
-            grams: null,
-            percent: null,
-        },
-        calcium: {
-            grams: null,
-            percent: null,
-        },
-        iron: {
-            grams: null,
-            percent: null,
-        },
-        magnesium: {
-            grams: null,
-            percent: null,
-        },
-        manganese: {
-            grams: null,
-            percent: null,
-        },
-        dateCreated: '',
-        vitamin: {
-            A: {
-                grams: null,
-                percent: null,
-            },
-            B: {
-                grams: null,
-                percent: null,
-            },
-            C: {
-                grams: null,
-                percent: null,
-            },
-            D: {
-                grams: null,
-                percent: null,
-            },
-            E: {
-                grams: null,
-                percent: null,
-            },
-        },
-        sugar: {
-            added: {
-                grams: null,
-                percent: null,
-            },
-            total: {
-                grams: null,
-                percent: null,
-            }
-        },
-        sugarAlcohol: {
-            added: {
-                grams: null,
-                percent: null,
-            },
-            total: {
-                grams: null,
-                percent: null,
-            }
-        }
-
-    };
+    foodItem: IFoodItem;
     path: string;
 
     componentWillLoad() {
-        this.path = document.location.pathname.split('/')[2];
+        this.calories = 0;
+        this.foodItem = {
+            name: '',
+            barcode: '',
+            picture: '',
+            servingPerContainer: 0,
+            servingSize: {
+                size: 0,
+                grams: 0,
+                measurement: '',
+            },
+            calories: 0,
+            fat: {
+                total: {
+                    grams: 0,
+                    percent: 0,
+                },
+                saturated: {
+                    grams: 0,
+                    percent: 0,
+                },
+                trans: {
+                    grams: 0,
+                    percent: 0,
+                },
+                polyunsaturated: {
+                    grams: 0,
+                    percent: 0,
+                },
+                monounsaturated: {
+                    grams: 0,
+                    percent: 0,
+                },
+            },
+            cholesterol: {
+                grams: 0,
+                percent: 0,
+            },
+            sodium: {
+                grams: 0,
+                percent: 0,
+            },
+            potassium: {
+                grams: 0,
+                percent: 0,
+            },
+            totalCarbohydrates: {
+                grams: 0,
+                percent: 0,
+            },
+            dietaryFiber: {
+                grams: 0,
+                percent: 0,
+            },
+            protein: {
+                grams: 0,
+                percent: 0,
+            },
+            niacin: {
+                grams: 0,
+                percent: 0,
+            },
+            phosphorus: {
+                grams: 0,
+                percent: 0,
+            },
+            calcium: {
+                grams: 0,
+                percent: 0,
+            },
+            iron: {
+                grams: 0,
+                percent: 0,
+            },
+            magnesium: {
+                grams: 0,
+                percent: 0,
+            },
+            manganese: {
+                grams: 0,
+                percent: 0,
+            },
+            dateCreated: null,
+            vitamin: {
+                A: {
+                    grams: 0,
+                    percent: 0,
+                },
+                B: {
+                    grams: 0,
+                    percent: 0,
+                },
+                C: {
+                    grams: 0,
+                    percent: 0,
+                },
+                D: {
+                    grams: 0,
+                    percent: 0,
+                },
+                E: {
+                    grams: 0,
+                    percent: 0,
+                },
+            },
+            sugar: {
+                added: {
+                    grams: 0,
+                    percent: 0,
+                },
+                total: {
+                    grams: 0,
+                    percent: 0,
+                }
+            },
+            sugarAlcohol: {
+                added: {
+                    grams: 0,
+                    percent: 0,
+                },
+                total: {
+                    grams: 0,
+                    percent: 0,
+                }
+            }
+
+        };
+        const modalElement = document.querySelector('ion-modal');
+        this.path = modalElement.componentProps.mode;
         if (this.path === 'create') {
             this.header = 'Add a new food product!'
         } else {
             // Implement get Food Item from DB
-            this.getProductData();
+            this.getProductData(modalElement.componentProps.$loki);
         }
     }
 
-    getProductData() {
-        //TODO: Parameters > id
-        // this.header = `Edit ${this.foodItem.name}!`;
-        this.header = `Edit template!`;
+    getProductData($loki: number) {
+        const response = getFoodItem($loki);
+        if (response.success) {
+            this.foodItem = {
+                ...this.foodItem,
+                ...response.data
+            }
+            this.name = this.foodItem.name;
+            this.calories = this.foodItem.calories;
+            this.header = `Edit ${foodNameToUppercase(this.foodItem.name)}!`;
+        } else {
+            console.error(response.error);
+        }
     }
 
 
     getFormData(opts: { prop: string, value: number }) {
+
         switch (opts.prop) {
             case formControls.servingSizeAmount:
-                this.foodItem.servingSize.amount = parseInt(formControls.servingSizeAmount);
+                this.foodItem.servingSize.size = opts.value
+                if (!this.foodItem.servingSize.size) {
+                    this.foodItem.servingSize.size = 0;
+                }
                 break;
-
+            case formControls.servingSizeGrams:
+                this.foodItem.servingSize.grams = opts.value
+                if (!this.foodItem.servingSize.grams) {
+                    this.foodItem.servingSize.grams = 0;
+                }
+                break;
             case formControls.servingPerContainer:
-                this.foodItem.servingPerContainer = parseInt(formControls.servingPerContainer);
+                this.foodItem.servingPerContainer = opts.value
+                if (!this.foodItem.servingPerContainer) {
+                    this.foodItem.servingPerContainer = 0;
+                }
                 break;
 
             case formControls.totalFatGrams:
-                this.foodItem.fat.total.grams = parseInt(formControls.totalFatGrams);
+                this.foodItem.fat.total.grams = opts.value
+                if (!this.foodItem.fat.total.grams) {
+                    this.foodItem.fat.total.grams = 0;
+                }
                 break;
 
             case formControls.totalFatPercent:
-                this.foodItem.fat.total.percent = parseInt(formControls.totalFatPercent);
+                this.foodItem.fat.total.percent = opts.value
+                if (!this.foodItem.fat.total.percent) {
+                    this.foodItem.fat.total.percent = 0;
+                }
                 break;
 
             case formControls.saturatedFatGrams:
-                this.foodItem.fat.saturated.grams = parseInt(formControls.saturatedFatGrams);
+                this.foodItem.fat.saturated.grams = opts.value
+                if (!this.foodItem.fat.saturated.grams) {
+                    this.foodItem.fat.saturated.grams = 0;
+                }
                 break;
 
             case formControls.saturatedFatPercent:
-                this.foodItem.fat.saturated.percent = parseInt(formControls.saturatedFatPercent);
+                this.foodItem.fat.saturated.percent = opts.value
+                if (!this.foodItem.fat.saturated.percent) {
+                    this.foodItem.fat.saturated.percent = 0;
+                }
                 break;
 
             case formControls.transFatGrams:
-                this.foodItem.fat.trans.grams = parseInt(formControls.transFatGrams);
+                this.foodItem.fat.trans.grams = opts.value
+                if (!this.foodItem.fat.trans.grams) {
+                    this.foodItem.fat.trans.grams = 0;
+                }
                 break;
 
             case formControls.transFatPercent:
-                this.foodItem.fat.trans.percent = parseInt(formControls.transFatPercent);
+                this.foodItem.fat.trans.percent = opts.value
+                if (!this.foodItem.fat.trans.percent) {
+                    this.foodItem.fat.trans.percent = 0;
+                }
                 break;
 
             case formControls.polyunsaturatedFatGrams:
-                this.foodItem.fat.polyunsaturated.grams = parseInt(formControls.polyunsaturatedFatGrams);
+                this.foodItem.fat.polyunsaturated.grams = opts.value
+                if (!this.foodItem.fat.polyunsaturated.grams) {
+                    this.foodItem.fat.polyunsaturated.grams = 0;
+                }
                 break;
 
             case formControls.polyunsaturatedFatPercent:
-                this.foodItem.fat.polyunsaturated.percent = parseInt(formControls.polyunsaturatedFatPercent);
+                this.foodItem.fat.polyunsaturated.percent = opts.value
+                if (!this.foodItem.fat.polyunsaturated.percent) {
+                    this.foodItem.fat.polyunsaturated.percent = 0;
+                }
                 break;
 
             case formControls.monounsaturatedFatGrams:
-                this.foodItem.fat.monounsaturated.grams = parseInt(formControls.monounsaturatedFatGrams);
+                this.foodItem.fat.monounsaturated.grams = opts.value
+                if (!this.foodItem.fat.monounsaturated.grams) {
+                    this.foodItem.fat.monounsaturated.grams = 0;
+                }
                 break;
 
             case formControls.monounsaturatedFatPercent:
-                this.foodItem.fat.monounsaturated.percent = parseInt(formControls.monounsaturatedFatPercent);
+                this.foodItem.fat.monounsaturated.percent = opts.value
+                if (!this.foodItem.fat.monounsaturated.percent) {
+                    this.foodItem.fat.monounsaturated.percent = 0;
+                }
                 break;
 
             case formControls.cholesterolGrams:
-                this.foodItem.cholesterol.grams = parseInt(formControls.cholesterolGrams);
+                this.foodItem.cholesterol.grams = opts.value
+                if (!this.foodItem.cholesterol.grams) {
+                    this.foodItem.cholesterol.grams = 0;
+                }
                 break;
 
             case formControls.cholesterolPercent:
-                this.foodItem.cholesterol.percent = parseInt(formControls.cholesterolPercent);
+                this.foodItem.cholesterol.percent = opts.value
+                if (!this.foodItem.cholesterol.percent) {
+                    this.foodItem.cholesterol.percent = 0;
+                }
                 break;
 
             case formControls.sodiumGrams:
-                this.foodItem.sodium.grams = parseInt(formControls.sodiumGrams);
+                this.foodItem.sodium.grams = opts.value
+                if (!this.foodItem.sodium.grams) {
+                    this.foodItem.sodium.grams = 0;
+                }
                 break;
 
             case formControls.sodiumPercent:
-                this.foodItem.sodium.percent = parseInt(formControls.sodiumPercent);
+                this.foodItem.sodium.percent = opts.value
+                if (!this.foodItem.sodium.percent) {
+                    this.foodItem.sodium.percent = 0;
+                }
                 break;
 
             case formControls.potassiumGrams:
-                this.foodItem.potassium.grams = parseInt(formControls.potassiumGrams);
+                this.foodItem.potassium.grams = opts.value
+                if (!this.foodItem.potassium.grams) {
+                    this.foodItem.potassium.grams = 0;
+                }
                 break;
 
             case formControls.potassiumPercent:
-                this.foodItem.potassium.percent = parseInt(formControls.potassiumPercent);
+                this.foodItem.potassium.percent = opts.value
+                if (!this.foodItem.potassium.percent) {
+                    this.foodItem.potassium.percent = 0;
+                }
                 break;
 
             case formControls.totalCarbohydratesGrams:
-                this.foodItem.totalCarbohydrates.grams = parseInt(formControls.totalCarbohydratesGrams);
+                this.foodItem.totalCarbohydrates.grams = opts.value
+                if (!this.foodItem.totalCarbohydrates.grams) {
+                    this.foodItem.totalCarbohydrates.grams = 0;
+                }
                 break;
 
             case formControls.totalCarbohydratesPercent:
-                this.foodItem.totalCarbohydrates.percent = parseInt(formControls.totalCarbohydratesPercent);
+                this.foodItem.totalCarbohydrates.percent = opts.value
+                if (!this.foodItem.totalCarbohydrates.percent) {
+                    this.foodItem.totalCarbohydrates.percent = 0;
+                }
                 break;
 
             case formControls.dietaryFiberGrams:
-                this.foodItem.dietaryFiber.grams = parseInt(formControls.dietaryFiberGrams);
+                this.foodItem.dietaryFiber.grams = opts.value
+                if (!this.foodItem.dietaryFiber.grams) {
+                    this.foodItem.dietaryFiber.grams = 0;
+                }
                 break;
 
             case formControls.dietaryFiberPercent:
-                this.foodItem.dietaryFiber.percent = parseInt(formControls.dietaryFiberPercent);
+                this.foodItem.dietaryFiber.percent = opts.value
+                if (!this.foodItem.dietaryFiber.percent) {
+                    this.foodItem.dietaryFiber.percent = 0;
+                }
                 break;
 
             case formControls.proteinGrams:
-                this.foodItem.protein.grams = parseInt(formControls.proteinGrams);
+                this.foodItem.protein.grams = opts.value
+                if (!this.foodItem.protein.grams) {
+                    this.foodItem.protein.grams = 0;
+                }
                 break;
 
             case formControls.proteinPercent:
-                this.foodItem.protein.grams = parseInt(formControls.proteinPercent);
+                this.foodItem.protein.percent = opts.value
+                if (!this.foodItem.protein.grams) {
+                    this.foodItem.protein.grams = 0;
+                }
                 break;
 
             case formControls.niacinGrams:
-                this.foodItem.niacin.grams = parseInt(formControls.niacinGrams);
+                this.foodItem.niacin.grams = opts.value
+                if (!this.foodItem.niacin.grams) {
+                    this.foodItem.niacin.grams = 0;
+                }
                 break;
 
             case formControls.niacinPercent:
-                this.foodItem.niacin.percent = parseInt(formControls.niacinPercent);
+                this.foodItem.niacin.percent = opts.value
+                if (!this.foodItem.niacin.percent) {
+                    this.foodItem.niacin.percent = 0;
+                }
                 break;
 
             case formControls.phosphorusGrams:
-                this.foodItem.phosphorus.grams = parseInt(formControls.phosphorusGrams);
+                this.foodItem.phosphorus.grams = opts.value
+                if (!this.foodItem.phosphorus.grams) {
+                    this.foodItem.phosphorus.grams = 0;
+                }
                 break;
 
             case formControls.phosphorusPercent:
-                this.foodItem.phosphorus.percent = parseInt(formControls.phosphorusPercent);
+                this.foodItem.phosphorus.percent = opts.value
+                if (!this.foodItem.phosphorus.percent) {
+                    this.foodItem.phosphorus.percent = 0;
+                }
                 break;
 
             case formControls.calciumGrams:
-                this.foodItem.calcium.grams = parseInt(formControls.calciumGrams);
+                this.foodItem.calcium.grams = opts.value
+                if (!this.foodItem.calcium.grams) {
+                    this.foodItem.calcium.grams = 0;
+                }
                 break;
 
             case formControls.calciumPercent:
-                this.foodItem.calcium.percent = parseInt(formControls.calciumPercent);
+                this.foodItem.calcium.percent = opts.value
+                if (!this.foodItem.calcium.percent) {
+                    this.foodItem.calcium.percent = 0;
+                }
                 break;
 
             case formControls.ironGrams:
-                this.foodItem.iron.grams = parseInt(formControls.ironGrams);
+                this.foodItem.iron.grams = opts.value
+                if (!this.foodItem.iron.grams) {
+                    this.foodItem.iron.grams = 0;
+                }
                 break;
 
             case formControls.ironPercent:
-                this.foodItem.iron.percent = parseInt(formControls.ironPercent);
+                this.foodItem.iron.percent = opts.value
+                if (!this.foodItem.iron.percent) {
+                    this.foodItem.iron.percent = 0;
+                }
                 break;
 
             case formControls.magnesiumGrams:
-                this.foodItem.magnesium.grams = parseInt(formControls.magnesiumGrams);
+                this.foodItem.magnesium.grams = opts.value
+                if (!this.foodItem.magnesium.grams) {
+                    this.foodItem.magnesium.grams = 0;
+                }
                 break;
 
             case formControls.magnesiumPercent:
-                this.foodItem.magnesium.percent = parseInt(formControls.magnesiumPercent);
+                this.foodItem.magnesium.percent = opts.value
+                if (!this.foodItem.magnesium.percent) {
+                    this.foodItem.magnesium.percent = 0;
+                }
                 break;
 
             case formControls.manganeseGrams:
-                this.foodItem.manganese.grams = parseInt(formControls.manganeseGrams);
+                this.foodItem.manganese.grams = opts.value
+                if (!this.foodItem.manganese.grams) {
+                    this.foodItem.manganese.grams = 0;
+                }
                 break;
 
             case formControls.manganesePercent:
-                this.foodItem.manganese.percent = parseInt(formControls.manganesePercent);
+                this.foodItem.manganese.percent = opts.value
+                if (!this.foodItem.manganese.percent) {
+                    this.foodItem.manganese.percent = 0;
+                }
                 break;
 
             case formControls.vitaminAGrams:
-                this.foodItem.vitamin.A.grams = parseInt(formControls.vitaminAGrams);
+                this.foodItem.vitamin.A.grams = opts.value
+                if (!this.foodItem.vitamin.A.grams) {
+                    this.foodItem.vitamin.A.grams = 0;
+                }
                 break;
 
             case formControls.vitaminAPercent:
-                this.foodItem.vitamin.A.grams = parseInt(formControls.vitaminAPercent);
+                this.foodItem.vitamin.A.percent = opts.value
+                if (!this.foodItem.vitamin.A.grams) {
+                    this.foodItem.vitamin.A.grams = 0;
+                }
                 break;
 
             case formControls.vitaminBGrams:
-                this.foodItem.vitamin.B.grams = parseInt(formControls.vitaminBGrams);
+                this.foodItem.vitamin.B.grams = opts.value
+                if (!this.foodItem.vitamin.B.grams) {
+                    this.foodItem.vitamin.B.grams = 0;
+                }
                 break;
 
             case formControls.vitaminBPercent:
-                this.foodItem.vitamin.B.percent = parseInt(formControls.vitaminBPercent);
+                this.foodItem.vitamin.B.percent = opts.value
+                if (!this.foodItem.vitamin.B.percent) {
+                    this.foodItem.vitamin.B.percent = 0;
+                }
                 break;
 
             case formControls.vitaminCGrams:
-                this.foodItem.vitamin.C.grams = parseInt(formControls.vitaminCGrams);
+                this.foodItem.vitamin.C.grams = opts.value
+                if (!this.foodItem.vitamin.C.grams) {
+                    this.foodItem.vitamin.C.grams = 0;
+                }
                 break;
 
             case formControls.vitaminCPercent:
-                this.foodItem.vitamin.C.percent = parseInt(formControls.vitaminCPercent);
+                this.foodItem.vitamin.C.percent = opts.value
+                if (!this.foodItem.vitamin.C.percent) {
+                    this.foodItem.vitamin.C.percent = 0;
+                }
                 break;
 
             case formControls.vitaminDGrams:
-                this.foodItem.vitamin.D.grams = parseInt(formControls.vitaminDGrams);
+                this.foodItem.vitamin.D.grams = opts.value
+                if (!this.foodItem.vitamin.D.grams) {
+                    this.foodItem.vitamin.D.grams = 0;
+                }
                 break;
 
             case formControls.vitaminDPercent:
-                this.foodItem.vitamin.D.percent = parseInt(formControls.vitaminDPercent);
+                this.foodItem.vitamin.D.percent = opts.value
+                if (!this.foodItem.vitamin.D.percent) {
+                    this.foodItem.vitamin.D.percent = 0;
+                }
                 break;
 
             case formControls.vitaminEGrams:
-                this.foodItem.vitamin.E.grams = parseInt(formControls.vitaminEGrams);
+                this.foodItem.vitamin.E.grams = opts.value
+                if (!this.foodItem.vitamin.E.grams) {
+                    this.foodItem.vitamin.E.grams = 0;
+                }
                 break;
 
             case formControls.vitaminEPercent:
-                this.foodItem.vitamin.E.percent = parseInt(formControls.vitaminEPercent);
+                this.foodItem.vitamin.E.percent = opts.value
+                if (!this.foodItem.vitamin.E.percent) {
+                    this.foodItem.vitamin.E.percent = 0;
+                }
                 break;
 
             case formControls.sugarTotalGrams:
-                this.foodItem.sugar.total.grams = parseInt(formControls.sugarTotalGrams);
+                this.foodItem.sugar.total.grams = opts.value
+                if (!this.foodItem.sugar.total.grams) {
+                    this.foodItem.sugar.total.grams = 0;
+                }
                 break;
 
             case formControls.sugarTotalPercent:
-                this.foodItem.sugar.total.percent = parseInt(formControls.sugarTotalPercent);
+                this.foodItem.sugar.total.percent = opts.value
+                if (!this.foodItem.sugar.total.percent) {
+                    this.foodItem.sugar.total.percent = 0;
+                }
                 break;
 
             case formControls.sugarAddedGrams:
-                this.foodItem.sugar.added.grams = parseInt(formControls.sugarAddedGrams);
+                this.foodItem.sugar.added.grams = opts.value
+                if (!this.foodItem.sugar.added.grams) {
+                    this.foodItem.sugar.added.grams = 0;
+                }
                 break;
 
             case formControls.sugarAddedPercent:
-                this.foodItem.sugar.added.percent = parseInt(formControls.sugarAddedPercent);
+                this.foodItem.sugar.added.percent = opts.value
+                if (!this.foodItem.sugar.added.percent) {
+                    this.foodItem.sugar.added.percent = 0;
+                }
                 break;
 
             case formControls.sugarAlcoholTotalGrams:
-                this.foodItem.sugarAlcohol.total.grams = parseInt(formControls.sugarAlcoholTotalGrams);
+                this.foodItem.sugarAlcohol.total.grams = opts.value
+                if (!this.foodItem.sugarAlcohol.total.grams) {
+                    this.foodItem.sugarAlcohol.total.grams = 0;
+                }
                 break;
 
             case formControls.sugarAlcoholTotalPercent:
-                this.foodItem.sugarAlcohol.total.percent = parseInt(formControls.sugarAlcoholTotalPercent);
+                this.foodItem.sugarAlcohol.total.percent = opts.value
+                if (!this.foodItem.sugarAlcohol.total.percent) {
+                    this.foodItem.sugarAlcohol.total.percent = 0;
+                }
                 break;
 
             case formControls.sugarAlcoholAddedGrams:
-                this.foodItem.sugarAlcohol.added.grams = parseInt(formControls.sugarAlcoholAddedGrams);
+                this.foodItem.sugarAlcohol.added.grams = opts.value
+                if (!this.foodItem.sugarAlcohol.added.grams) {
+                    this.foodItem.sugarAlcohol.added.grams = 0;
+                }
                 break;
 
             case formControls.sugarAlcoholAddedPercent:
-                this.foodItem.sugarAlcohol.added.percent = parseInt(formControls.sugarAlcoholAddedPercent);
+                this.foodItem.sugarAlcohol.added.percent = opts.value
+                if (!this.foodItem.sugarAlcohol.added.percent) {
+                    this.foodItem.sugarAlcohol.added.percent = 0;
+                }
                 break;
 
         }
 
     }
 
-    @Listen('ionChange')
-    handleIonChange(ev) {
-        this.foodItem.servingSize.measurement = ev.detail.value;
+    componentDidLoad() {
+        const ionSelect = document.querySelector('ion-select');
+        ionSelect.addEventListener('ionChange', (ev) => {
+            this.foodItem.servingSize.measurement = ev['detail'].value;
+
+        });
     }
 
     getPicture() {
@@ -394,8 +578,17 @@ export class AppDaily {
     }
 
     createEditFoodProd() {
-        const response = insertOrUpdateFoodItem(this.foodItem);
-        if (response) {
+        if (!this.calories) {
+            this.calories = 0;
+        }
+        const foodItem: IFoodItem = {
+            ...this.foodItem,
+            dateCreated: new Date(),
+            name: this.name.toLowerCase(),
+            calories: this.calories
+        };
+        const response = insertOrUpdateFoodItem(foodItem);
+        if (response.success) {
             this.displayMessage({
                 header: 'Success!',
                 message: response.message
@@ -404,13 +597,13 @@ export class AppDaily {
             this.displayMessage({
                 header: 'Error!',
                 message: response.error
-            })
+            });
         }
     }
 
     deleteFoodProd() {
         const response = deleteFoodItem(this.foodItem);
-        if (response) {
+        if (response.success) {
             this.displayMessage({
                 header: 'Success!',
                 message: response.message
@@ -419,8 +612,9 @@ export class AppDaily {
             this.displayMessage({
                 header: 'Error!',
                 message: response.error
-            })
+            });
         }
+
     }
     async displayMessage(opts: {
         header: string,
@@ -428,23 +622,27 @@ export class AppDaily {
         message: string,
         buttons?: string[]
     }) {
+        const alertController = document.querySelector('ion-alert-controller');
         if (!opts.buttons) {
             opts.buttons = ['OK'];
         }
-        const alertController = document.querySelector('ion-alert-controller');
-
         const alert = await alertController.create({
             header: opts.header,
             subHeader: opts.subHeader,
             message: opts.message,
             buttons: opts.buttons
         });
-        return await alert.present();
+        await alert.present();
+        return this.goBack();
+    }
+
+    async goBack() {
+        const modal = document.querySelector('ion-modal-controller');
+        await modal.dismiss();
     }
 
     render() {
         return [
-            <ion-nav></ion-nav>,
             <ion-alert-controller></ion-alert-controller>,
             <div>
                 {
@@ -453,18 +651,18 @@ export class AppDaily {
                         : <ion-header>
                             <ion-toolbar color="primary">
                                 <ion-buttons slot="start">
-                                    <ion-button href="/food/list" >
+                                    <ion-button onClick={() => this.goBack()} >
                                         <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
                                     </ion-button>
                                 </ion-buttons>
                                 {
-                                    this.calories > 0 && this.name
+                                    this.name && (this.calories || this.calories === 0)
                                         ? <ion-buttons slot="end">
                                             {this.path === 'create'
-                                                ? <ion-button onClick={_ => this.createEditFoodProd()}>Create</ion-button>
+                                                ? <ion-button onClick={() => this.createEditFoodProd()}>Create</ion-button>
                                                 : <div>
-                                                    <ion-button>Delete</ion-button>
-                                                    <ion-button onClick={_ => this.createEditFoodProd()}>Edit</ion-button>
+                                                    <ion-button onClick={() => this.deleteFoodProd()}>Delete</ion-button>
+                                                    <ion-button onClick={() => this.createEditFoodProd()}>Edit</ion-button>
                                                 </div>
                                             }
                                         </ion-buttons>
@@ -504,23 +702,23 @@ export class AppDaily {
                         <h3>Nutrition Facts</h3>
                         <ion-item>
                             <ion-label position="floating">Calories</ion-label>
-                            <ion-input value={this.foodItem.calories.toString()} onInput={e => this.calories = e.target['value']} type="number" required></ion-input>
+                            <ion-input value={this.calories.toString()} onInput={e => this.calories = e.target['value']} type="number" required></ion-input>
                         </ion-item>
 
 
                         <ion-item-group>
                             <h5>Servings</h5>
                             <ion-item>
-                                <ion-label position="floating">Per container</ion-label>
-                                <ion-input
-                                    value={this.foodItem.servingPerContainer.toString()}
-                                    onInput={e => this.getFormData({ prop: formControls.servingPerContainer, value: e.target['value'] })}
+                                <ion-label position="floating">Size</ion-label>
+                                <ion-input value={this.foodItem.servingSize.size.toString()} onInput={e => this.getFormData({ prop: formControls.servingSizeAmount, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
                             </ion-item>
                             <ion-item>
-                                <ion-label position="floating">Amount</ion-label>
-                                <ion-input value={this.foodItem.servingSize.amount.toString()} onInput={e => this.getFormData({ prop: formControls.servingSizeAmount, value: e.target['value'] })}
+                                <ion-label position="floating">Grams</ion-label>
+                                <ion-input
+                                    value={this.foodItem.servingSize.grams.toString()}
+                                    onInput={e => this.getFormData({ prop: formControls.servingSizeGrams, value: e.target['value'] })}
                                     type="number">
                                 </ion-input>
                             </ion-item>
@@ -534,7 +732,14 @@ export class AppDaily {
                                         )
                                     }
                                 </ion-select>
-
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Per container</ion-label>
+                                <ion-input
+                                    value={this.foodItem.servingPerContainer.toString()}
+                                    onInput={e => this.getFormData({ prop: formControls.servingPerContainer, value: e.target['value'] })}
+                                    type="number">
+                                </ion-input>
                             </ion-item>
                         </ion-item-group>
 
@@ -657,7 +862,7 @@ export class AppDaily {
                         <ion-item-group>
                             <h5>Sodium</h5>
                             <ion-item>
-                                <ion-label position="floating">Grams</ion-label>
+                                <ion-label position="floating">Milligrams</ion-label>
                                 <ion-input
                                     value={this.foodItem.sodium.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.sodiumGrams, value: e.target['value'] })}
@@ -699,7 +904,7 @@ export class AppDaily {
                         <ion-item-group>
                             <h5>Total Carbohydrates</h5>
                             <ion-item>
-                                <ion-label position="floating">Grams</ion-label>
+                                <ion-label position="floating">Milligrams</ion-label>
                                 <ion-input
                                     value={this.foodItem.totalCarbohydrates.grams.toString()}
                                     onInput={e => this.getFormData({ prop: formControls.totalCarbohydratesGrams, value: e.target['value'] })}
@@ -1073,18 +1278,18 @@ export class AppDaily {
                         ? <ion-footer>
                             <ion-toolbar color="primary">
                                 <ion-buttons slot="start">
-                                    <ion-button href="/food/list">
+                                    <ion-button onClick={() => this.goBack()}>
                                         <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
                                     </ion-button>
                                 </ion-buttons>
                                 {
-                                    this.calories > 0 && this.name
+                                    this.name && this.calories || this.calories === 0 || this.foodItem.calories
                                         ? <ion-buttons slot="end">
                                             {this.path === 'create'
-                                                ? <ion-button onClick={_ => this.createEditFoodProd()}>Create</ion-button>
+                                                ? <ion-button onClick={() => this.createEditFoodProd()}>Create</ion-button>
                                                 : <div>
-                                                    <ion-button>Delete</ion-button>
-                                                    <ion-button onClick={_ => this.createEditFoodProd()}>Edit</ion-button>
+                                                    <ion-button onClick={() => this.deleteFoodProd()}>Delete</ion-button>
+                                                    <ion-button onClick={() => this.createEditFoodProd()}>Edit</ion-button>
                                                 </div>
                                             }
                                         </ion-buttons>
