@@ -1,6 +1,6 @@
 export enum measurements {
   gram = 'gram',
-  tbsp = 'tbsp',
+  tbsp = 'Tbsp',
   cup = 'cup',
   pint = 'pint',
   quart = 'quart',
@@ -10,7 +10,7 @@ export enum measurements {
   oz = 'oz',
   slice = 'slice',
   large = 'large',
-  tsp = 'tsp',
+  tsp = 'Tsp',
   package = 'package',
   link = 'link',
   inch = 'inch',
@@ -19,6 +19,7 @@ export enum measurements {
   piece = 'piece',
   bottle = 'bottle',
   can = 'can',
+  scoop = 'scoop'
 }
 
 export const DIMENSIONS = [
@@ -42,6 +43,7 @@ export const DIMENSIONS = [
   'piece',
   'bottle',
   'can',
+  'scoop'
 ];
 
 export enum formControls {

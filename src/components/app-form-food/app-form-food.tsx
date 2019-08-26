@@ -153,6 +153,13 @@ export class AppDaily {
             // Implement get Food Item from DB
             this.getProductData(modalElement.componentProps.$loki);
         }
+        window.location.hash = '';
+        window.onhashchange = () => this.goBack();
+    }
+
+    async goBack() {
+        const modal = document.querySelector('ion-modal-controller');
+        await modal.dismiss();
     }
 
     getProductData($loki: number) {
@@ -634,11 +641,6 @@ export class AppDaily {
         });
         await alert.present();
         return this.goBack();
-    }
-
-    async goBack() {
-        const modal = document.querySelector('ion-modal-controller');
-        await modal.dismiss();
     }
 
     render() {

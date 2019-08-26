@@ -1,3 +1,5 @@
 node_modules
 .stencil
 www
+.~lock.en.openfoodfacts.org.products.csv#
+en.openfoodfacts.org.products.csv

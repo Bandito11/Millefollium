@@ -16,6 +16,7 @@ export class AppFoodList {
     componentWillLoad() {
         this.getFrequentFoodItems();
     }
+    
     componentDidLoad() {
         const searchBar = document.querySelector('ion-searchbar');
         searchBar.setFocus();
@@ -72,8 +73,7 @@ export class AppFoodList {
             buttons: [
                 {
                     text: 'Cancel',
-                    role: 'cancel',
-
+                    role: 'cancel'
                 },
                 {
                     text: 'View',
@@ -101,7 +101,13 @@ export class AppFoodList {
                     role: 'add',
                     cssClass: 'primary',
                     handler: () => {
-                        //Create a page to add daily food
+                        const modalController = document.querySelector('ion-modal-controller');
+                        modalController.create({
+                            component: 'app-daily-entry',
+                            componentProps: {
+                                $loki: foodItem.$loki
+                            }
+                        }).then(modal => modal.present());
                     }
                 }
             ]

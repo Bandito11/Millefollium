@@ -20,6 +20,7 @@ export namespace Components {
     'lunchCalories': number;
     'lunchSnackCalories': number;
   }
+  interface AppDailyEntry {}
   interface AppFoodList {}
   interface AppFormFood {}
   interface AppHome {}
@@ -34,6 +35,12 @@ declare global {
   var HTMLAppDailyElement: {
     prototype: HTMLAppDailyElement;
     new (): HTMLAppDailyElement;
+  };
+
+  interface HTMLAppDailyEntryElement extends Components.AppDailyEntry, HTMLStencilElement {}
+  var HTMLAppDailyEntryElement: {
+    prototype: HTMLAppDailyEntryElement;
+    new (): HTMLAppDailyEntryElement;
   };
 
   interface HTMLAppFoodListElement extends Components.AppFoodList, HTMLStencilElement {}
@@ -67,6 +74,7 @@ declare global {
   };
   interface HTMLElementTagNameMap {
     'app-daily': HTMLAppDailyElement;
+    'app-daily-entry': HTMLAppDailyEntryElement;
     'app-food-list': HTMLAppFoodListElement;
     'app-form-food': HTMLAppFormFoodElement;
     'app-home': HTMLAppHomeElement;
@@ -85,6 +93,7 @@ declare namespace LocalJSX {
     'lunchCalories'?: number;
     'lunchSnackCalories'?: number;
   }
+  interface AppDailyEntry extends JSXBase.HTMLAttributes<HTMLAppDailyEntryElement> {}
   interface AppFoodList extends JSXBase.HTMLAttributes<HTMLAppFoodListElement> {}
   interface AppFormFood extends JSXBase.HTMLAttributes<HTMLAppFormFoodElement> {}
   interface AppHome extends JSXBase.HTMLAttributes<HTMLAppHomeElement> {}
@@ -93,6 +102,7 @@ declare namespace LocalJSX {
 
   interface IntrinsicElements {
     'app-daily': AppDaily;
+    'app-daily-entry': AppDailyEntry;
     'app-food-list': AppFoodList;
     'app-form-food': AppFormFood;
     'app-home': AppHome;
