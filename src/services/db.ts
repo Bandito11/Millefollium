@@ -1,4 +1,5 @@
-import { IFoodItem, IResponse, IEntry } from './../interfaces.d';
+import { IFoodItem as IFoodProduct, IResponse, IDaily, IEntry } from './../interfaces.d';
+import { dateToString, mealTypes } from '../helpers/utils';
 declare const loki;
 
 const options: Partial<LokiConfigOptions> = {
@@ -9,20 +10,24 @@ const options: Partial<LokiConfigOptions> = {
 
 const db: Loki = new loki('millefollium.db', options);
 
-let foodItemsColl: Collection<IFoodItem>;
-let entriesColl: Collection<IEntry>;
+let foodProductsColl: Collection<IFoodProduct>;
+let dailyColl: Collection<IEntry>;
 
 createCollection();
 
 function createCollection() {
     db.loadDatabase();
-    foodItemsColl = db.getCollection('FoodItems');
-    if (!foodItemsColl) {
-        foodItemsColl = db.addCollection('FoodItems');
+    foodProductsColl = db.getCollection('FoodProducts');
+    if (!foodProductsColl) {
+        foodProductsColl = db.addCollection('FoodProducts');
+    }
+    dailyColl = db.getCollection('DailyItems');
+    if (!dailyColl) {
+        dailyColl = db.addCollection('DailyItems');
     }
 }
 
-export function insertOrUpdateFoodItem(foodItem: IFoodItem): IResponse<IFoodItem> {
+export function insertOrUpdateFoodProduct(foodItem: IFoodProduct): IResponse<IFoodProduct> {
     const response = {
         success: false,
         error: null,
@@ -30,29 +35,48 @@ export function insertOrUpdateFoodItem(foodItem: IFoodItem): IResponse<IFoodItem
         dateStamp: new Date(),
         message: null
     };
-    const result = foodItemsColl.findOne({
-        barcode: foodItem.barcode,
-        name: foodItem.name
-    });
-    if (result) {
-        foodItemsColl.update(result);
+    if (foodItem.hasOwnProperty('$loki')) {
+        const doc = foodProductsColl.update(foodItem);
+        if (!doc) {
+            return {
+                ...response,
+                error: 'Error updating data. Please try again.'
+            }
+        }
         return {
             ...response,
             success: true,
             message: 'Food Item was updated successfully.'
         }
     } else {
-        foodItemsColl.insertOne(foodItem);
-        return {
-            ...response,
-            success: true,
-            message: 'Food Item was added successfully.'
+        const result = foodProductsColl.findOne({
+            barcode: foodItem.barcode,
+            name: foodItem.name
+        });
+        if (result) {
+            return {
+                ...response,
+                error: `Barcode or Food Name already exists. Please search for it and edit the product instead.`
+            }
+        } else {
+            const doc = foodProductsColl.insertOne(foodItem);
+            if (!doc) {
+                return {
+                    ...response,
+                    error: 'Error updating data. Please try again.'
+                }
+            }
+            return {
+                ...response,
+                success: true,
+                message: 'Food Item was added successfully.'
+            }
         }
     }
 }
 
-export function deleteFoodItem(foodItem: IFoodItem) {
-    const response: IResponse<IFoodItem & LokiObj> = {
+export function deleteFoodProduct(foodItem: IFoodProduct) {
+    const response: IResponse<IFoodProduct & LokiObj> = {
         success: false,
         error: `Couldn't find the food product in DB`,
         data: null,
@@ -60,7 +84,7 @@ export function deleteFoodItem(foodItem: IFoodItem) {
         message: null
     };
     try {
-        foodItemsColl.remove(foodItem);
+        foodProductsColl.remove(foodItem);
         return {
             ...response,
             error: null,
@@ -72,15 +96,15 @@ export function deleteFoodItem(foodItem: IFoodItem) {
     }
 }
 
-export function getFoodItem($loki: number) {
-    const response: IResponse<IFoodItem & LokiObj> = {
+export function getFoodProduct($loki: number) {
+    const response: IResponse<IFoodProduct & LokiObj> = {
         success: false,
         error: `Didn't find any results.`,
         data: null,
         dateStamp: new Date(),
         message: null
     };
-    const results = foodItemsColl.get($loki);
+    const results = foodProductsColl.get($loki);
     if (results) {
         return {
             ...response,
@@ -93,8 +117,8 @@ export function getFoodItem($loki: number) {
     }
 }
 
-export function getFoodItems(query): IResponse<(IFoodItem & LokiObj)[]> {
-    const response: IResponse<(IFoodItem & LokiObj)[]> = {
+export function getFoodProducts(query): IResponse<(IFoodProduct & LokiObj)[]> {
+    const response: IResponse<(IFoodProduct & LokiObj)[]> = {
         success: false,
         error: `Didn't find any results.`,
         data: null,
@@ -102,7 +126,7 @@ export function getFoodItems(query): IResponse<(IFoodItem & LokiObj)[]> {
         message: null
     };
 
-    const results = foodItemsColl.find({
+    const results = foodProductsColl.find({
         $or: [{ barcode: query }, { name: { $contains: [query] } }]
     })
     if (results.length > 0) {
@@ -125,11 +149,7 @@ export function addToDaily(entry: IEntry) {
         dateStamp: new Date(),
         message: null
     }
-    const newEntry: IEntry = {
-        ...entry,
-        date: new Date()
-    }
-    const result = entriesColl.insertOne(newEntry);
+    const result = dailyColl.insertOne(entry);
     if (result) {
         return {
             ...response,
@@ -142,29 +162,156 @@ export function addToDaily(entry: IEntry) {
     }
 }
 
-export function getDaily(): IResponse<IEntry> {
+export function editDaily(opts: { servingSize, id: number }) {
     const response: IResponse<IEntry> = {
         success: false,
-        error: null,
+        error: `There was an error editing daily entry.`,
         data: undefined,
         dateStamp: new Date(),
         message: null
+    };
+    const result = dailyColl.get(opts.id);
+    if (result) {
+        const docUpdated = dailyColl.update({
+            ...result,
+            consumedSize: opts.servingSize
+        });
+        if (docUpdated) {
+            return {
+                ...response,
+                error: '',
+                success: true,
+                message: 'Entry was updated.'
+            }
+        } else {
+            return response;
+        }
+    } else {
+        return response;
     }
-    const date = new Date();
-    const today = `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
-    const result = entriesColl.findObjects((entry: IEntry) => {
-        const dailyDate = `${entry.date.getMonth()}/${entry.date.getDate()}/${entry.date.getFullYear()}`;
+}
+
+export function deleteDaily(id: number) {
+    const response: IResponse<IEntry> = {
+        success: false,
+        error: `There was an error deleting daily entry.`,
+        data: undefined,
+        dateStamp: new Date(),
+        message: null
+    };
+    const result = dailyColl.get(id);
+    if (result) {
+        const docUpdated = dailyColl.remove(result);
+        if (docUpdated) {
+            return {
+                ...response,
+                error: '',
+                success: true,
+                message: 'Entry was deleted.'
+            }
+        } else {
+            return response;
+        }
+    } else {
+        return response;
+    }
+}
+
+export function getDaily(date: Date): IResponse<IDaily> {
+    const response: IResponse<IDaily> = {
+        success: false,
+        error: null,
+        data: null,
+        dateStamp: new Date(),
+        message: null
+    };
+    const today = dateToString(date);
+    const result = dailyColl.findObjects((entry: IEntry) => {
+        const dailyDate = dateToString(entry.date);
         if (today === dailyDate) {
             return entry;
         }
     });
-    const latestEntry = result.pop();
     if (result) {
-        return {
-            ...response,
-            error: null,
-            success: true,
-            data: latestEntry
+        let foodProducts = [];
+        for (const entry of result) {
+            const foodProductResult = foodProductsColl.get(parseInt(entry.productId));
+            if (foodProductResult) {
+                foodProducts.push({
+                    id: entry['$loki'],
+                    foodProduct: foodProductResult,
+                    type: entry.type,
+                    calories: parseInt(entry.consumedSize) * parseInt(foodProductResult.calories)
+                });
+            }
+        };
+        if (foodProducts.length > 0) {
+            let data: IDaily = {
+                date: today,
+                calories: '0',
+                breakfast: [],
+                breakfastSnack: [],
+                lunch: [],
+                lunchSnack: [],
+                dinner: [],
+                dinnerSnack: []
+            };
+            for (const foodProduct of foodProducts) {
+                switch (foodProduct.type) {
+                    case mealTypes.breakfast:
+                        data.breakfast.push({
+                            ...foodProduct.foodProduct,
+                            calories: foodProduct.calories,
+                            id: foodProduct.id
+                        });
+                        break;
+                    case mealTypes.breakfastSnack:
+                        data.breakfastSnack.push({
+                            ...foodProduct.foodProduct,
+                            calories: foodProduct.calories,
+                            id: foodProduct.id
+                        });
+                        break;
+                    case mealTypes.lunch:
+                        data.lunch.push({
+                            ...foodProduct.foodProduct,
+                            calories: foodProduct.calories,
+                            id: foodProduct.id
+                        });
+                        break;
+                    case mealTypes.lunchSnack:
+                        data.lunchSnack.push({
+                            ...foodProduct.foodProduct,
+                            calories: foodProduct.calories,
+                            id: foodProduct.id
+                        });
+                        break;
+                    case mealTypes.dinner:
+                        data.dinner.push({
+                            ...foodProduct.foodProduct,
+                            calories: foodProduct.calories,
+                            id: foodProduct.id
+                        });
+                        break;
+                    case mealTypes.dinnerSnack:
+                        data.dinnerSnack.push({
+                            ...foodProduct.foodProduct,
+                            calories: foodProduct.calories,
+                            id: foodProduct.id
+                        });
+                        break;
+                }
+            };
+            return {
+                ...response,
+                success: true,
+                data: { ...data },
+            }
+        } else {
+            return {
+                ...response,
+                error: `There isn't a daily entry today.`
+            };
         }
     } else {
         return {

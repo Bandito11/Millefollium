@@ -1,6 +1,6 @@
 import { Component, h, Listen, State } from "@stencil/core";
-import { IEntry, IMeal } from "../../interfaces";
-import { MOCKDAILY, MOCKENTRIES } from "../../helpers/mockData";
+import { IDaily, IMeal } from "../../interfaces";
+import { getDaily } from "../../services/db";
 
 @Component({
   tag: "app-home",
@@ -8,35 +8,38 @@ import { MOCKDAILY, MOCKENTRIES } from "../../helpers/mockData";
 })
 export class AppHome {
 
-  daily: IEntry = {
-    date: new Date(),
-    breakfast: [],
-    breakfastSnack: [],
-    lunch: [],
-    lunchSnack: [],
-    dinner: [],
-    dinnerSnack: []
-  };
-  @State() pastDailyEntries: IEntry[] = [];
-  dailyCalories: number = 0;
-  breakfastCalories: number = 0;
-  breakfastSnackCalories: number = 0;
-  lunchCalories: number = 0;
-  lunchSnackCalories: number = 0;
-  dinnerCalories: number = 0;
-  dinnerSnackCalories: number = 0;
-  totalFat: string = '0';
-  dailyProtein: string = '0';
-  dailyCarbs: string = '0';
+  @State() daily: IDaily;
+  @State() pastDailyEntries: IDaily[] = [];
+  dailyCalories = 0;
+  breakfastCalories = 0;
+  breakfastSnackCalories = 0;
+  lunchCalories = 0;
+  lunchSnackCalories = 0;
+  dinnerCalories = 0;
+  dinnerSnackCalories = 0;
+  dailyFat = '0';
+  dailyProtein = '0';
+  dailyCarbs = '0';
 
-  async componentWillLoad() {
+  componentWillLoad() {
+    this.initControls();
+  }
+
+  componentDidLoad() {
+    const content = document.querySelector('ion-content');
+    content.scrollEvents = true;
+    document.querySelector('ion-nav').addEventListener('ionNavDidChange', () => {
+      this.initControls();
+    });
+  }
+
+  initControls() {
     try {
-      const data = await this.getDailyEntry();
-      this.daily = data;
-      const macros = this.calculateMacros(data);
+      this.daily = this.getDailyEntry();
+      const macros = this.calculateMacros(this.daily);
       this.dailyCalories = macros.calories;
       this.dailyProtein = macros.protein;
-      this.totalFat = macros.fat;
+      this.dailyFat = macros.fat;
       this.dailyCarbs = macros.carbs;
       this.breakfastCalories = macros.breakfastCalories;
       this.breakfastSnackCalories = macros.breakfastSnackCalories;
@@ -46,37 +49,52 @@ export class AppHome {
       this.dinnerSnackCalories = macros.dinnerSnackCalories;
 
     } catch (error) {
-      console.error(error);
+      this.daily = {
+        date: '',
+        calories: '0',
+        breakfast: [],
+        breakfastSnack: [],
+        lunch: [],
+        lunchSnack: [],
+        dinner: [],
+        dinnerSnack: []
+      };
+      this.dailyCalories = 0;
+      this.breakfastCalories = 0;
+      this.breakfastSnackCalories = 0;
+      this.lunchCalories = 0;
+      this.lunchSnackCalories = 0;
+      this.dinnerCalories = 0;
+      this.dinnerSnackCalories = 0;
+      this.dailyFat = '0';
+      this.dailyProtein = '0';
+      this.dailyCarbs = '0';
+
     }
   }
 
-  componentDidLoad() {
-    const content = document.querySelector('ion-content');
-    content.scrollEvents = true;
+  @Listen('updatedDailyEntry')
+  handleUpdatedDailyEntry() {
+    this.initControls();
   }
-
   @Listen('ionScroll')
   async handleIonScroll(ev) {
     const content = document.querySelector('ion-content');
     const scroll = await content.getScrollElement();
     const scrollTopMax = scroll['scrollTopMax'];
     if (ev['detail']['scrollTop'] === scrollTopMax) {
-      const loadingController = document.querySelector('ion-loading-controller');
-      const loading = await loadingController.create({
-        message: 'Fetching...'
-      });
-
-      await loading.present();
-      this.getPastDailyEntries()
-        .then(data => {
-          this.pastDailyEntries = [...this.pastDailyEntries, ...data];
-          loading.dismiss();
-        })
-        .catch(error => console.error(error));
+      //   const loadingController = document.querySelector('ion-loading-controller');
+      //   const loading = await loadingController.create({
+      //     message: 'Fetching...'
+      //   });
+      //   await loading.present();
+      const entries = this.getPastDailyEntries();
+      this.pastDailyEntries = [...this.pastDailyEntries, ...entries];
+      // loading.dismiss();
     };
   };
 
-  calculateMacros(daily: IEntry) {
+  calculateMacros(daily: IDaily) {
     let totalCalories = 0;
     let totalFat = 0;
     let totalProtein = 0;
@@ -125,9 +143,10 @@ export class AppHome {
     totalCarbs += dinnerSnack.carbs;
 
     totalCalories = breakfastTotalCalories + breakfastSnackTotalCalories + lunchTotalCalories + this.lunchSnackCalories + dinnerTotalCalories + dinnerSnackTotalCalories;
-    totalFat = totalFat * 9 / totalCalories * 100;
-    totalProtein = totalProtein * 4 / totalCalories * 100;
-    totalCarbs = totalCarbs * 4 / totalCalories * 100;
+    totalFat = ((totalFat * 9) / totalCalories) * 100;
+    totalProtein = ((totalProtein * 4) / totalCalories) * 100;
+    totalCarbs = ((totalCarbs * 4) / totalCalories) * 100;
+
     return {
       fat: totalFat.toFixed(0),
       protein: totalProtein.toFixed(0),
@@ -148,10 +167,10 @@ export class AppHome {
     let totalProtein = 0;
     let totalCarbs = 0;
     meals.forEach(meal => {
-      totalCalories += meal.calories;
-      totalFat += meal.fat.total.grams;
-      totalProtein += meal.protein;
-      totalCarbs += meal.totalCarbohydrates.grams;
+      totalCalories += parseInt(meal.calories);
+      totalFat += parseInt(meal.fat.total.grams);
+      totalProtein += parseInt(meal.protein.grams);
+      totalCarbs += parseInt(meal.totalCarbohydrates.grams);
     });
     return {
       calories: totalCalories,
@@ -161,19 +180,17 @@ export class AppHome {
     }
   }
 
-  getDailyEntry(): Promise<IEntry> {
-    return new Promise(resolve => {
-      const daily = MOCKDAILY;
-
-      resolve(daily);
-    })
+  getDailyEntry(): IDaily {
+    const response = getDaily(new Date());
+    if (response.success) {
+      return response.data;
+    } else {
+      throw new Error(response.error);
+    }
   };
 
-  getPastDailyEntries(): Promise<IEntry[]> {
-    return new Promise(resolve => {
-      const entries = MOCKENTRIES;
-      resolve(entries);
-    });
+  getPastDailyEntries(): IDaily[] {
+    return [];
   }
 
   goToList() {
@@ -215,7 +232,7 @@ export class AppHome {
               <ion-label>{this.dailyProtein}% protein</ion-label>
             </ion-item>
             <ion-item>
-              <ion-label>{this.totalFat}% fat</ion-label>
+              <ion-label>{this.dailyFat}% fat</ion-label>
             </ion-item>
           </ion-item-group>
           <ion-item-group>
@@ -233,30 +250,33 @@ export class AppHome {
             >
             </app-daily>
           </ion-item-group>
-          <ion-item-group>
-            <ion-item-divider color="medium">
-              <ion-label>This week:</ion-label>
-            </ion-item-divider>
-            {
-              this.pastDailyEntries.map(daily =>
-                <div>
-                  <div class="ion-text-end">
-                    <h2>{`${daily.date.getDate()}-${daily.date.getMonth()}-${daily.date.getFullYear()}`}</h2>
+          {this.pastDailyEntries.length > 0
+            ? <ion-item-group>
+              <ion-item-divider color="medium">
+                <ion-label>This week:</ion-label>
+              </ion-item-divider>
+              {
+                this.pastDailyEntries.map(daily =>
+                  <div>
+                    <div class="ion-text-end">
+                      <h2>{this.daily.date}</h2>
+                    </div>
+                    <app-daily
+                      daily={daily}
+                      breakfast-calories={this.totalMealMacros(daily.breakfast).calories}
+                      breakfast-snack-Calories={this.totalMealMacros(daily.breakfastSnack).calories}
+                      lunch-calories={this.totalMealMacros(daily.lunch).calories}
+                      lunch-snack-calories={this.totalMealMacros(daily.lunchSnack).calories}
+                      dinner-calories={this.totalMealMacros(daily.dinner).calories}
+                      dinner-snack-calories={this.totalMealMacros(daily.dinnerSnack).calories}
+                    >
+                    </app-daily>
                   </div>
-                  <app-daily
-                    daily={daily}
-                    breakfast-calories={this.totalMealMacros(daily.breakfast).calories}
-                    breakfast-snack-Calories={this.totalMealMacros(daily.breakfastSnack).calories}
-                    lunch-calories={this.totalMealMacros(daily.lunch).calories}
-                    lunch-snack-calories={this.totalMealMacros(daily.lunchSnack).calories}
-                    dinner-calories={this.totalMealMacros(daily.dinner).calories}
-                    dinner-snack-calories={this.totalMealMacros(daily.dinnerSnack).calories}
-                  >
-                  </app-daily>
-                </div>
-              )
-            }
-          </ion-item-group>
+                )
+              }
+            </ion-item-group>
+            : ''
+          }
         </ion-list>
       </ion-content>,
       <div>

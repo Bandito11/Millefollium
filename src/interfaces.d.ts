@@ -3,11 +3,15 @@ export interface IResponse<T> {
     error: string;
     dateStamp: Date;
     data: T;
-    message: string;
+    message: any;
 }
 
-export interface IEntry {
-    date: Date;
+/**
+ * Date Format: MM/DD/YYYY
+ */
+export interface IDaily {
+    date: string;
+    calories: string;
     breakfast: IMeal[];
     breakfastSnack: IMeal[];
     lunch: IMeal[];
@@ -16,21 +20,21 @@ export interface IEntry {
     dinnerSnack: IMeal[];
 }
 
-interface IMeal {
-    name: string;
-    calories: number;
-    fat: IFat;
-    protein: number;
-    dietaryFiber: IAmount;
-    totalCarbohydrates: IAmount;
-    sugar: ISugar;
-    sugarAlcohol: ISugar;
-    servingsSize: number;
+export interface IEntry {
+    date: Date;
+    productId: string;
+    type: string
+    consumedSize: string;
 }
 
-interface measurement {
-    size: number;
-    grams: number;
+interface IMeal extends IFoodItem{
+    id?: number;
+    calories: string;
+}
+
+interface IMeasurement {
+    size: string;
+    grams: string;
     measurement: string;
 }
 
@@ -42,9 +46,9 @@ export interface IFoodItem extends INutritionFacts {
 }
 
 export interface INutritionFacts {
-    servingSize: measurement;
-    servingPerContainer: number;
-    calories: number;
+    servingSize: IMeasurement;
+    servingPerContainer: string;
+    calories: string;
     fat: IFat;
     cholesterol: IAmount;
     sodium: IAmount;
@@ -83,6 +87,6 @@ interface IFat {
 }
 
 interface IAmount {
-    grams: number;
-    percent: number;
+    grams: string;
+    percent: string;
 }

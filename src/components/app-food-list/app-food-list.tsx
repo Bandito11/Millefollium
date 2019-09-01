@@ -1,6 +1,6 @@
 import { Component, h, Listen, State } from '@stencil/core';
 import { IFoodItem } from '../../interfaces';
-import { getFoodItems } from '../../services/db';
+import { getFoodProducts } from '../../services/db';
 import { foodNameToUppercase } from '../../helpers/utils';
 
 @Component({
@@ -16,7 +16,7 @@ export class AppFoodList {
     componentWillLoad() {
         this.getFrequentFoodItems();
     }
-    
+
     componentDidLoad() {
         const searchBar = document.querySelector('ion-searchbar');
         searchBar.setFocus();
@@ -30,7 +30,7 @@ export class AppFoodList {
     queryByNameOrID(value) {
         const query = value;
         if (query) {
-            const response = getFoodItems(query);
+            const response = getFoodProducts(query);
             if (response.success) {
                 this.foodItems = [...response.data];
             }
@@ -76,7 +76,7 @@ export class AppFoodList {
                     role: 'cancel'
                 },
                 {
-                    text: 'View',
+                    text: `View ${foodItem.name}`,
                     role: 'view',
                     cssClass: 'tertiary',
                     handler: async () => {
@@ -84,13 +84,14 @@ export class AppFoodList {
                         const modal = await modalController.create({
                             component: 'app-view-food',
                             componentProps: {
-                                $loki: foodItem.$loki
+                                $loki: foodItem.$loki,
+                                mode: 'create'
                             }
                         });
                         await modal.present();
                     }
                 }, {
-                    text: 'Edit',
+                    text: `Edit ${foodItem.name}?`,
                     cssClass: 'secondary',
                     handler: () => {
                         this.presentCreateModal({ mode: 'edit', $loki: foodItem.$loki });

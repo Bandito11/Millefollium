@@ -7,14 +7,14 @@
 
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import {
-  IEntry,
+  IDaily,
 } from './interfaces';
 
 export namespace Components {
   interface AppDaily {
     'breakfastCalories': number;
     'breakfastSnackCalories': number;
-    'daily': IEntry;
+    'daily': IDaily;
     'dinnerCalories': number;
     'dinnerSnackCalories': number;
     'lunchCalories': number;
@@ -87,11 +87,12 @@ declare namespace LocalJSX {
   interface AppDaily extends JSXBase.HTMLAttributes<HTMLAppDailyElement> {
     'breakfastCalories'?: number;
     'breakfastSnackCalories'?: number;
-    'daily'?: IEntry;
+    'daily'?: IDaily;
     'dinnerCalories'?: number;
     'dinnerSnackCalories'?: number;
     'lunchCalories'?: number;
     'lunchSnackCalories'?: number;
+    'onUpdatedDailyEntry'?: (event: CustomEvent<any>) => void;
   }
   interface AppDailyEntry extends JSXBase.HTMLAttributes<HTMLAppDailyEntryElement> {}
   interface AppFoodList extends JSXBase.HTMLAttributes<HTMLAppFoodListElement> {}

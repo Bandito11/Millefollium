@@ -14,11 +14,11 @@
     "test.watch": "stencil test --spec --e2e --watch"
   },
   "dependencies": {
-    "@ionic/core": "4.7.4",
+    "@ionic/core": "^4.8.1",
     "lokijs": "^1.5.7"
   },
   "devDependencies": {
-    "@stencil/core": "1.2.5",
+    "@stencil/core": "^1.3.2",
     "@types/lokijs": "^1.5.2"
   },
   "repository": {

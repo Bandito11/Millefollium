@@ -1,117 +1,27 @@
-export enum measurements {
-  gram = 'gram',
-  tbsp = 'Tbsp',
-  cup = 'cup',
-  pint = 'pint',
-  quart = 'quart',
-  container = 'container',
-  kg = 'kg',
-  lb = 'lb',
-  oz = 'oz',
-  slice = 'slice',
-  large = 'large',
-  tsp = 'Tsp',
-  package = 'package',
-  link = 'link',
-  inch = 'inch',
-  medium = 'medium',
-  serving = 'serving',
-  piece = 'piece',
-  bottle = 'bottle',
-  can = 'can',
-  scoop = 'scoop'
-}
-
-export const DIMENSIONS = [
-  'gram',
-  'tbsp',
-  'cup',
-  'pint',
-  'quart',
-  'container',
-  'kg',
-  'lb',
-  'oz',
-  'slice',
-  'large',
-  'tsp',
-  'package',
-  'link',
-  'inch',
-  'medium',
-  'serving',
-  'piece',
-  'bottle',
-  'can',
-  'scoop'
-];
-
-export enum formControls {
-  servingSizeAmount = 'servingSizeAmount',
-  servingPerContainer = 'servingPerContainer',
-  calories = 'calories',
-  totalFatGrams = 'totalFatGrams',
-  totalFatPercent = 'totalFatPercent',
-  saturatedFatGrams = 'saturatedFatGrams',
-  saturatedFatPercent = 'saturatedFatPercent',
-  transFatGrams = 'transFatGrams',
-  transFatPercent = 'transFatPercent',
-  polyunsaturatedFatGrams = 'polyunsaturatedFatGrams',
-  polyunsaturatedFatPercent = 'polyunsaturatedFatPercent',
-  monounsaturatedFatGrams = 'monounsaturatedFatGrams',
-  monounsaturatedFatPercent = 'monounsaturatedFatPercent',
-  cholesterolGrams = 'cholesterolGrams',
-  cholesterolPercent = 'cholesterolPercent',
-  sodiumGrams = 'sodiumGrams',
-  sodiumPercent = 'sodiumPercent',
-  potassiumGrams = 'potassiumGrams',
-  potassiumPercent = 'potassiumPercent',
-  totalCarbohydratesGrams = 'totalCarbohydratesGrams',
-  totalCarbohydratesPercent = 'totalCarbohydratesPercent',
-  dietaryFiberGrams = 'dietaryFiberGrams',
-  dietaryFiberPercent = 'dietaryFiberPercent',
-  proteinGrams = 'proteinGrams',
-  proteinPercent = 'proteinPercent',
-  niacinGrams = 'niacinGrams',
-  niacinPercent = 'niacinPercent',
-  phosphorusGrams = 'phosphorusGrams',
-  phosphorusPercent = 'phosphorusPercent',
-  calciumGrams = 'calciumGrams',
-  calciumPercent = 'calciumPercent',
-  ironGrams = 'ironGrams',
-  ironPercent = 'ironPercent',
-  magnesiumGrams = 'magnesiumGrams',
-  magnesiumPercent = 'magnesiumPercent',
-  manganeseGrams = 'manganeseGrams',
-  manganesePercent = 'manganesePercent',
-  vitaminAGrams = 'vitaminAGrams',
-  vitaminAPercent = 'vitaminAPercent',
-  vitaminBGrams = 'vitaminBGrams',
-  vitaminBPercent = 'vitaminBPercent',
-  vitaminCGrams = 'vitaminCGrams',
-  vitaminCPercent = 'vitaminCPercent',
-  vitaminDGrams = 'vitaminDGrams',
-  vitaminDPercent = 'vitaminDPercent',
-  vitaminEGrams = 'vitaminEGrams',
-  vitaminEPercent = 'vitaminEPercent',
-  sugarTotalGrams = 'sugarTotalGrams',
-  sugarTotalPercent = 'sugarTotalPercent',
-  sugarAddedGrams = 'sugarAddedGrams',
-  sugarAddedPercent = 'sugarAddedPercent',
-  sugarAlcoholTotalGrams = 'sugarAlcoholTotalGrams',
-  sugarAlcoholTotalPercent = 'sugarAlcoholTotalPercent',
-  sugarAlcoholAddedGrams = 'sugarAlcoholAddedGrams',
-  sugarAlcoholAddedPercent = 'sugarAlcoholAddedPercent',
-  servingSizeGrams = 'servingSizeGrams'
-}
-
 export function foodNameToUppercase(name: string) {
   let formattedName;
   const array = name.split(' ');
   if (array.length > 0) {
-      formattedName = array.map(value => value[0].toUpperCase() + value.substring(1, value.length)).join(' ')
+    formattedName = array.map(value => value[0].toUpperCase() + value.substring(1, value.length)).join(' ')
   } else {
-      formattedName = name[0].toUpperCase() + name.substring(1, name.length);
+    formattedName = name[0].toUpperCase() + name.substring(1, name.length);
   }
   return formattedName;
+}
+
+/**
+ * Returns date as string in format MM/DD/YYYY
+ * @param date 
+ */
+export function dateToString(date: Date) {
+  return `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+}
+
+export enum mealTypes {
+  breakfast = 'breakfast',
+  breakfastSnack = 'breakfastSnack',
+  lunch = 'lunch',
+  lunchSnack = 'lunchSnack',
+  dinner = 'dinner',
+  dinnerSnack = 'dinnerSnack'
 }

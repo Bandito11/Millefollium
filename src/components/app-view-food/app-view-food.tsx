@@ -1,6 +1,6 @@
 import { Component, h } from '@stencil/core';
 import { IFoodItem } from '../../interfaces';
-import { getFoodItem } from '../../services/db';
+import { getFoodProduct } from '../../services/db';
 import { foodNameToUppercase } from '../../helpers/utils';
 
 
@@ -15,7 +15,7 @@ export class AppViewFood {
     componentWillLoad() {
         const modalElement = document.querySelector('ion-modal');
         const $loki = modalElement.componentProps.$loki;
-        const response = getFoodItem($loki);
+        const response = getFoodProduct($loki);
         if (response.success) {
             this.foodItem = response.data;
         } else {
@@ -82,7 +82,7 @@ export class AppViewFood {
                             <p>{this.foodItem.fat.saturated.percent}%</p>
                         </ion-col>
                     </ion-row>
-                    {this.foodItem.fat.monounsaturated.grams > 0 || this.foodItem.fat.monounsaturated.percent > 0
+                    {this.foodItem.fat.monounsaturated.grams > '0' || this.foodItem.fat.monounsaturated.percent > '0'
                         ? <ion-row>
                             <ion-col class="ion-margin-start">
                                 <p>Monounsaturated Fat {this.foodItem.fat.monounsaturated.grams}g</p>
@@ -94,7 +94,7 @@ export class AppViewFood {
                         : ''
                     }
 
-                    {this.foodItem.fat.polyunsaturated.grams > 0 || this.foodItem.fat.polyunsaturated.percent > 0
+                    {this.foodItem.fat.polyunsaturated.grams > '0' || this.foodItem.fat.polyunsaturated.percent > '0'
                         ? <ion-row>
                             <ion-col class="ion-margin-start">
                                 <p>Polyunsaturated Fat {this.foodItem.fat.polyunsaturated.grams}g</p>
@@ -106,7 +106,7 @@ export class AppViewFood {
                         : ''
                     }
 
-                    {this.foodItem.fat.trans.grams > 0 || this.foodItem.fat.trans.percent > 0
+                    {this.foodItem.fat.trans.grams > '0' || this.foodItem.fat.trans.percent > '0'
                         ? <ion-row>
                             <ion-col class="ion-margin-start">
                                 <p>Trans Fat {this.foodItem.fat.trans.grams}g</p>
@@ -169,7 +169,7 @@ export class AppViewFood {
                         </ion-col>
                     </ion-row>
 
-                    {this.foodItem.potassium.grams > 0 || this.foodItem.potassium.percent > 0
+                    {this.foodItem.potassium.grams > '0' || this.foodItem.potassium.percent > '0'
                         ? <ion-row>
                             <ion-col>
                                 <p><span class="thick">Potassium</span> {this.foodItem.potassium.grams}g</p>
@@ -181,7 +181,7 @@ export class AppViewFood {
                         : ''
                     }
 
-                    {this.foodItem.phosphorus.grams > 0 || this.foodItem.phosphorus.percent > 0
+                    {this.foodItem.phosphorus.grams > '0' || this.foodItem.phosphorus.percent > '0'
                         ? <ion-row>
                             <ion-col>
                                 <p><span class="thick">Phosphorous</span> {this.foodItem.phosphorus.grams}g</p>
@@ -264,7 +264,7 @@ export class AppViewFood {
 
                 </ion-grid>
 
-                <h6>* Percent Daily Values are based on a 2000 calorie diet.</h6>
+                <h6>* Percent Daily Values are based on a 2'0''0''0' calorie diet.</h6>
             </ion-content>,
             <div>
                 {
