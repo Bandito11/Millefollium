@@ -1,4 +1,4 @@
-import { IFoodItem as IFoodProduct, IResponse, IDaily, IEntry } from './../interfaces.d';
+import { IFoodItem as IFoodProduct, IResponse, IDaily, IEntry as IDailyEntry } from './../interfaces.d';
 import { dateToString, mealTypes } from '../helpers/utils';
 declare const loki;
 
@@ -11,7 +11,7 @@ const options: Partial<LokiConfigOptions> = {
 const db: Loki = new loki('millefollium.db', options);
 
 let foodProductsColl: Collection<IFoodProduct>;
-let dailyColl: Collection<IEntry>;
+let dailyEntriesColl: Collection<IDailyEntry>;
 
 createCollection();
 
@@ -21,9 +21,9 @@ function createCollection() {
     if (!foodProductsColl) {
         foodProductsColl = db.addCollection('FoodProducts');
     }
-    dailyColl = db.getCollection('DailyItems');
-    if (!dailyColl) {
-        dailyColl = db.addCollection('DailyItems');
+    dailyEntriesColl = db.getCollection('DailyItems');
+    if (!dailyEntriesColl) {
+        dailyEntriesColl = db.addCollection('DailyItems');
     }
 }
 
@@ -141,15 +141,15 @@ export function getFoodProducts(query): IResponse<(IFoodProduct & LokiObj)[]> {
     }
 }
 
-export function addToDaily(entry: IEntry) {
-    const response: IResponse<IEntry> = {
+export function addToDaily(entry: IDailyEntry) {
+    const response: IResponse<IDailyEntry> = {
         success: false,
         error: `There was an error adding entry to database.`,
         data: undefined,
         dateStamp: new Date(),
         message: null
     }
-    const result = dailyColl.insertOne(entry);
+    const result = dailyEntriesColl.insertOne(entry);
     if (result) {
         return {
             ...response,
@@ -163,16 +163,16 @@ export function addToDaily(entry: IEntry) {
 }
 
 export function editDaily(opts: { servingSize, id: number }) {
-    const response: IResponse<IEntry> = {
+    const response: IResponse<IDailyEntry> = {
         success: false,
         error: `There was an error editing daily entry.`,
         data: undefined,
         dateStamp: new Date(),
         message: null
     };
-    const result = dailyColl.get(opts.id);
+    const result = dailyEntriesColl.get(opts.id);
     if (result) {
-        const docUpdated = dailyColl.update({
+        const docUpdated = dailyEntriesColl.update({
             ...result,
             consumedSize: opts.servingSize
         });
@@ -192,16 +192,16 @@ export function editDaily(opts: { servingSize, id: number }) {
 }
 
 export function deleteDaily(id: number) {
-    const response: IResponse<IEntry> = {
+    const response: IResponse<IDailyEntry> = {
         success: false,
         error: `There was an error deleting daily entry.`,
         data: undefined,
         dateStamp: new Date(),
         message: null
     };
-    const result = dailyColl.get(id);
+    const result = dailyEntriesColl.get(id);
     if (result) {
-        const docUpdated = dailyColl.remove(result);
+        const docUpdated = dailyEntriesColl.remove(result);
         if (docUpdated) {
             return {
                 ...response,
@@ -226,13 +226,8 @@ export function getDaily(date: Date): IResponse<IDaily> {
         message: null
     };
     const today = dateToString(date);
-    const result = dailyColl.findObjects((entry: IEntry) => {
-        const dailyDate = dateToString(entry.date);
-        if (today === dailyDate) {
-            return entry;
-        }
-    });
-    if (result) {
+    const result = dailyEntriesColl.where(entry => today == dateToString(new Date(entry.date)));
+    if (result.length > 0) {
         let foodProducts = [];
         for (const entry of result) {
             const foodProductResult = foodProductsColl.get(parseInt(entry.productId));
@@ -305,7 +300,7 @@ export function getDaily(date: Date): IResponse<IDaily> {
             return {
                 ...response,
                 success: true,
-                data: { ...data },
+                data: { ...data }
             }
         } else {
             return {
@@ -318,5 +313,34 @@ export function getDaily(date: Date): IResponse<IDaily> {
             ...response,
             error: `Couldn't find daily entry.`
         };
+    }
+}
+
+export function getDailyEntries(date: Date[]) {
+    const response: IResponse<IDaily[]> = {
+        success: false,
+        error: 'There was an error retrieving the data.',
+        data: null,
+        dateStamp: new Date(),
+        message: null
+    };
+    let dailyEntries = [];
+    date.forEach(value => {
+        dailyEntries.push(getDaily(value));
+    });
+    if (dailyEntries.length > 0) {
+        response.data = [];
+        dailyEntries.forEach(entry => {
+            if (entry.success) {
+                response.data.push(entry.data)
+            }
+        });
+        return {
+            ...response,
+            success: true,
+            error: null
+        }
+    } else {
+        return response;
     }
 }

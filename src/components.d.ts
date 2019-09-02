@@ -19,6 +19,7 @@ export namespace Components {
     'dinnerSnackCalories': number;
     'lunchCalories': number;
     'lunchSnackCalories': number;
+    'today': string;
   }
   interface AppDailyEntry {}
   interface AppFoodList {}
@@ -93,6 +94,7 @@ declare namespace LocalJSX {
     'lunchCalories'?: number;
     'lunchSnackCalories'?: number;
     'onUpdatedDailyEntry'?: (event: CustomEvent<any>) => void;
+    'today'?: string;
   }
   interface AppDailyEntry extends JSXBase.HTMLAttributes<HTMLAppDailyEntryElement> {}
   interface AppFoodList extends JSXBase.HTMLAttributes<HTMLAppFoodListElement> {}

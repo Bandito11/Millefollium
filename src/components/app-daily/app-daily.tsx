@@ -15,9 +15,8 @@ export class AppDaily {
     @Prop() lunchSnackCalories: number;
     @Prop() dinnerCalories: number;
     @Prop() dinnerSnackCalories: number;
-
+    @Prop() today: string;
     @Event() updatedDailyEntry: EventEmitter;
-    
 
     async showSelectionWindow(meal: IMeal) {
         const actionSheetController = document.querySelector('ion-action-sheet-controller');
@@ -45,7 +44,7 @@ export class AppDaily {
                                     this.deleteDailyEntry(meal.id);
                                     const response = getDaily(new Date(this.daily.date));
                                     if (response.success) {
-                                        this.updatedDailyEntry.emit(response.data)
+                                        this.updatedDailyEntry.emit()
                                     } else {
                                         this.daily = {
                                             ...this.daily,
@@ -145,8 +144,14 @@ export class AppDaily {
                 handler: (e) => {
                     const response = editDaily({ servingSize: e.servingSize, id: id });
                     if (response.success) {
-                        const response = getDaily(new Date(this.daily.date)); if (response.success) {
-                            this.updatedDailyEntry.emit(response.data)
+                        let dailyResponse;
+                        if (this.today) {
+                            dailyResponse = getDaily(new Date(this.today));
+                        } else {
+                            dailyResponse = getDaily(new Date(this.daily.date));
+                        }
+                        if (dailyResponse.success) {
+                            this.updatedDailyEntry.emit()
                         } else {
                             this.daily = {
                                 ...this.daily,

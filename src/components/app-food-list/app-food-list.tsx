@@ -91,7 +91,7 @@ export class AppFoodList {
                         await modal.present();
                     }
                 }, {
-                    text: `Edit ${foodItem.name}?`,
+                    text: `Edit ${foodItem.name}`,
                     cssClass: 'secondary',
                     handler: () => {
                         this.presentCreateModal({ mode: 'edit', $loki: foodItem.$loki });

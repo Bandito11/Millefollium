@@ -39,12 +39,18 @@ export class AppDailyEntry {
     }
 
     addToDaily() {
-        const entry: IEntry = {
+        let entry: IEntry = {
             type: document.querySelector('ion-radio-group').value,
             date: new Date(),
             productId: this.foodItem.$loki.toString(),
             consumedSize: this.servingSizeInput
         };
+        if (!document.querySelector('ion-radio-group').value) {
+            entry = {
+                ...entry,
+                type: mealTypes.breakfast
+            }
+        }
         const response = addToDaily(entry);
         if (response.success) {
             this.displayMessage({

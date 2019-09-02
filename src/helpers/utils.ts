@@ -14,7 +14,7 @@ export function foodNameToUppercase(name: string) {
  * @param date 
  */
 export function dateToString(date: Date) {
-  return `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 }
 
 export enum mealTypes {

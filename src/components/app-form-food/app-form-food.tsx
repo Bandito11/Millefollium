@@ -3,6 +3,16 @@ import { IFoodItem } from "../../interfaces";
 import { foodNameToUppercase } from '../../helpers/utils';
 import { insertOrUpdateFoodProduct, deleteFoodProduct, getFoodProduct } from "../../services/db";
 
+
+
+import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
+
+const { Camera } = Plugins;
+
+
+
+
+
 enum foodFormControls {
     servingSizeAmount = 'servingSizeAmount',
     servingPerContainer = 'servingPerContainer',
@@ -71,8 +81,133 @@ export class AppDaily {
     @State() calories = '0';
     @State() name = '';
     header = '';
-    foodItem: IFoodItem;
-    path: string;
+    foodItem: IFoodItem = {
+        name: '',
+        barcode: '',
+        picture: '',
+        servingPerContainer: '0',
+        servingSize: {
+            size: '0',
+            grams: '0',
+            measurement: '',
+        },
+        calories: '0',
+        fat: {
+            total: {
+                grams: '0',
+                percent: '0',
+            },
+            saturated: {
+                grams: '0',
+                percent: '0',
+            },
+            trans: {
+                grams: '0',
+                percent: '0',
+            },
+            polyunsaturated: {
+                grams: '0',
+                percent: '0',
+            },
+            monounsaturated: {
+                grams: '0',
+                percent: '0',
+            },
+        },
+        cholesterol: {
+            grams: '0',
+            percent: '0',
+        },
+        sodium: {
+            grams: '0',
+            percent: '0',
+        },
+        potassium: {
+            grams: '0',
+            percent: '0',
+        },
+        totalCarbohydrates: {
+            grams: '0',
+            percent: '0',
+        },
+        dietaryFiber: {
+            grams: '0',
+            percent: '0',
+        },
+        protein: {
+            grams: '0',
+            percent: '0',
+        },
+        niacin: {
+            grams: '0',
+            percent: '0',
+        },
+        phosphorus: {
+            grams: '0',
+            percent: '0',
+        },
+        calcium: {
+            grams: '0',
+            percent: '0',
+        },
+        iron: {
+            grams: '0',
+            percent: '0',
+        },
+        magnesium: {
+            grams: '0',
+            percent: '0',
+        },
+        manganese: {
+            grams: '0',
+            percent: '0',
+        },
+        dateCreated: null,
+        vitamin: {
+            A: {
+                grams: '0',
+                percent: '0',
+            },
+            B: {
+                grams: '0',
+                percent: '0',
+            },
+            C: {
+                grams: '0',
+                percent: '0',
+            },
+            D: {
+                grams: '0',
+                percent: '0',
+            },
+            E: {
+                grams: '0',
+                percent: '0',
+            },
+        },
+        sugar: {
+            added: {
+                grams: '0',
+                percent: '0',
+            },
+            total: {
+                grams: '0',
+                percent: '0',
+            }
+        },
+        sugarAlcohol: {
+            added: {
+                grams: '0',
+                percent: '0',
+            },
+            total: {
+                grams: '0',
+                percent: '0',
+            }
+        }
+
+    };
+    path: string = '';
     selectItems = [
         'gram',
         'tbsp',
@@ -96,146 +231,26 @@ export class AppDaily {
         'can',
         'scoop'
     ];
-    componentWillLoad() {
-        this.calories = '0';
-        this.foodItem = {
-            name: '',
-            barcode: '',
-            picture: '',
-            servingPerContainer: '0',
-            servingSize: {
-                size: '0',
-                grams: '0',
-                measurement: '',
-            },
-            calories: '0',
-            fat: {
-                total: {
-                    grams: '0',
-                    percent: '0',
-                },
-                saturated: {
-                    grams: '0',
-                    percent: '0',
-                },
-                trans: {
-                    grams: '0',
-                    percent: '0',
-                },
-                polyunsaturated: {
-                    grams: '0',
-                    percent: '0',
-                },
-                monounsaturated: {
-                    grams: '0',
-                    percent: '0',
-                },
-            },
-            cholesterol: {
-                grams: '0',
-                percent: '0',
-            },
-            sodium: {
-                grams: '0',
-                percent: '0',
-            },
-            potassium: {
-                grams: '0',
-                percent: '0',
-            },
-            totalCarbohydrates: {
-                grams: '0',
-                percent: '0',
-            },
-            dietaryFiber: {
-                grams: '0',
-                percent: '0',
-            },
-            protein: {
-                grams: '0',
-                percent: '0',
-            },
-            niacin: {
-                grams: '0',
-                percent: '0',
-            },
-            phosphorus: {
-                grams: '0',
-                percent: '0',
-            },
-            calcium: {
-                grams: '0',
-                percent: '0',
-            },
-            iron: {
-                grams: '0',
-                percent: '0',
-            },
-            magnesium: {
-                grams: '0',
-                percent: '0',
-            },
-            manganese: {
-                grams: '0',
-                percent: '0',
-            },
-            dateCreated: null,
-            vitamin: {
-                A: {
-                    grams: '0',
-                    percent: '0',
-                },
-                B: {
-                    grams: '0',
-                    percent: '0',
-                },
-                C: {
-                    grams: '0',
-                    percent: '0',
-                },
-                D: {
-                    grams: '0',
-                    percent: '0',
-                },
-                E: {
-                    grams: '0',
-                    percent: '0',
-                },
-            },
-            sugar: {
-                added: {
-                    grams: '0',
-                    percent: '0',
-                },
-                total: {
-                    grams: '0',
-                    percent: '0',
-                }
-            },
-            sugarAlcohol: {
-                added: {
-                    grams: '0',
-                    percent: '0',
-                },
-                total: {
-                    grams: '0',
-                    percent: '0',
-                }
-            }
 
-        };
+    componentWillLoad() {
         this.changeHeader();
         window.location.hash = '';
         window.onhashchange = () => this.goBack();
     }
 
+    componentDidLoad() {
+        const ionSelect = document.querySelector('ion-select');
+        ionSelect.addEventListener('ionChange', (ev) => {
+            this.foodItem.servingSize.measurement = ev['detail'].value;
+
+        });
+    }
     changeHeader() {
         const modalElement = document.querySelector('ion-modal');
         this.path = modalElement.componentProps.mode;
         if (this.path === 'create') {
             this.header = 'Add a new food product!'
         } else {
-            // Implement get Food Item from DB
             this.getProductData(modalElement.componentProps.$loki);
         }
     }
@@ -651,16 +666,24 @@ export class AppDaily {
 
     }
 
-    componentDidLoad() {
-        const ionSelect = document.querySelector('ion-select');
-        ionSelect.addEventListener('ionChange', (ev) => {
-            this.foodItem.servingSize.measurement = ev['detail'].value;
+    @State() imgUrl;
+    async getPicture() {
 
+        const image = await Camera.getPhoto({
+            quality: 100,
+            allowEditing: false,
+            resultType: CameraResultType.Uri,
+            source: CameraSource.Prompt
         });
-    }
+        // image.webPath will contain a path that can be set as an image src. 
+        // You can access the original file using image.path, which can be 
+        // passed to the Filesystem API to read the raw data of the image, 
+        // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
 
-    getPicture() {
-        console.log('click Picture')
+        // Can be set to the src of an image now
+        this.imgUrl = image.webPath
+        console.log(image)
+
     }
 
     getBarcode() {
@@ -671,6 +694,9 @@ export class AppDaily {
         if (!this.calories) {
             this.calories = '0';
         };
+        if (!this.foodItem.servingSize.measurement) {
+            this.foodItem.servingSize.measurement = 'gram';
+        }
         const foodItem: IFoodItem = {
             ...this.foodItem,
             dateCreated: new Date(),
@@ -799,6 +825,7 @@ export class AppDaily {
                     <ion-list>
                         <div>
                             <h1>{this.header}</h1>
+                            <img src={this.imgUrl} />
                             <ion-button size="large" fill="clear" onClick={this.getPicture.bind(this)}>
                                 <ion-icon slot="icon-only" name="camera"></ion-icon>
                             </ion-button>
@@ -1083,7 +1110,7 @@ export class AppDaily {
                                 </ion-input>
                             </ion-item>
                         </ion-item-group>
-                        
+
                         <ion-item-group>
                             <h5>Sugar</h5>
                             <ion-item-group class="ion-margin-horizontal">
