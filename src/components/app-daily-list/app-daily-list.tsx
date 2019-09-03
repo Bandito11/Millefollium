@@ -4,8 +4,8 @@ import { foodNameToUppercase } from "../../helpers/utils";
 import { editDaily, deleteDaily, getDaily } from "../../services/db";
 
 @Component({
-    tag: 'app-daily',
-    styleUrl: 'app-daily.css'
+    tag: 'app-daily-list',
+    styleUrl: 'app-daily-list.css'
 })
 export class AppDaily {
     @Prop() daily: IDaily;
@@ -28,7 +28,7 @@ export class AppDaily {
                     role: 'cancel'
                 },
                 {
-                    text: `Delete ${meal.name} daily entry?`,
+                    text: `Delete ${meal.name}`,
                     cssClass: 'tertiary',
                     handler: async () => {
                         this.askIfWantToSave({
@@ -62,7 +62,7 @@ export class AppDaily {
                         });
                     }
                 }, {
-                    text: `Edit ${meal.name} daily entry?`,
+                    text: `Edit ${meal.name}`,
                     cssClass: 'secondary',
                     handler: () => {
                         this.askIfWantToSave({
@@ -79,6 +79,20 @@ export class AppDaily {
                                 }
                             }]
                         });
+                    }
+                },
+                {
+                    text: `View ${meal.name}`,
+                    cssClass: 'primary',
+                    handler: async () => {
+                        const modalController = document.querySelector('ion-modal-controller');
+                        const modal = await modalController.create({
+                            component: 'app-view-food',
+                            componentProps: {
+                                $loki: meal['$loki']
+                            }
+                        });
+                        modal.present();
                     }
                 }
             ]
@@ -177,7 +191,8 @@ export class AppDaily {
         return (
             <div>
                 <ion-action-sheet-controller></ion-action-sheet-controller>
-                <ion-alert-controller></ion-alert-controller>
+                <ion-alert-controller></ion-alert-controller>,
+                <ion-modal-controller></ion-modal-controller>
                 {this.daily.breakfast.length > 0
                     ? <ion-list lines='none'>
                         <ion-list-header>

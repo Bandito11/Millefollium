@@ -11,7 +11,8 @@ import {
 } from './interfaces';
 
 export namespace Components {
-  interface AppDaily {
+  interface AppDailyEntry {}
+  interface AppDailyList {
     'breakfastCalories': number;
     'breakfastSnackCalories': number;
     'daily': IDaily;
@@ -21,7 +22,6 @@ export namespace Components {
     'lunchSnackCalories': number;
     'today': string;
   }
-  interface AppDailyEntry {}
   interface AppFoodList {}
   interface AppFormFood {}
   interface AppHome {}
@@ -32,16 +32,16 @@ export namespace Components {
 declare global {
 
 
-  interface HTMLAppDailyElement extends Components.AppDaily, HTMLStencilElement {}
-  var HTMLAppDailyElement: {
-    prototype: HTMLAppDailyElement;
-    new (): HTMLAppDailyElement;
-  };
-
   interface HTMLAppDailyEntryElement extends Components.AppDailyEntry, HTMLStencilElement {}
   var HTMLAppDailyEntryElement: {
     prototype: HTMLAppDailyEntryElement;
     new (): HTMLAppDailyEntryElement;
+  };
+
+  interface HTMLAppDailyListElement extends Components.AppDailyList, HTMLStencilElement {}
+  var HTMLAppDailyListElement: {
+    prototype: HTMLAppDailyListElement;
+    new (): HTMLAppDailyListElement;
   };
 
   interface HTMLAppFoodListElement extends Components.AppFoodList, HTMLStencilElement {}
@@ -74,8 +74,8 @@ declare global {
     new (): HTMLAppViewFoodElement;
   };
   interface HTMLElementTagNameMap {
-    'app-daily': HTMLAppDailyElement;
     'app-daily-entry': HTMLAppDailyEntryElement;
+    'app-daily-list': HTMLAppDailyListElement;
     'app-food-list': HTMLAppFoodListElement;
     'app-form-food': HTMLAppFormFoodElement;
     'app-home': HTMLAppHomeElement;
@@ -85,7 +85,8 @@ declare global {
 }
 
 declare namespace LocalJSX {
-  interface AppDaily extends JSXBase.HTMLAttributes<HTMLAppDailyElement> {
+  interface AppDailyEntry extends JSXBase.HTMLAttributes<HTMLAppDailyEntryElement> {}
+  interface AppDailyList extends JSXBase.HTMLAttributes<HTMLAppDailyListElement> {
     'breakfastCalories'?: number;
     'breakfastSnackCalories'?: number;
     'daily'?: IDaily;
@@ -96,7 +97,6 @@ declare namespace LocalJSX {
     'onUpdatedDailyEntry'?: (event: CustomEvent<any>) => void;
     'today'?: string;
   }
-  interface AppDailyEntry extends JSXBase.HTMLAttributes<HTMLAppDailyEntryElement> {}
   interface AppFoodList extends JSXBase.HTMLAttributes<HTMLAppFoodListElement> {}
   interface AppFormFood extends JSXBase.HTMLAttributes<HTMLAppFormFoodElement> {}
   interface AppHome extends JSXBase.HTMLAttributes<HTMLAppHomeElement> {}
@@ -104,8 +104,8 @@ declare namespace LocalJSX {
   interface AppViewFood extends JSXBase.HTMLAttributes<HTMLAppViewFoodElement> {}
 
   interface IntrinsicElements {
-    'app-daily': AppDaily;
     'app-daily-entry': AppDailyEntry;
+    'app-daily-list': AppDailyList;
     'app-food-list': AppFoodList;
     'app-form-food': AppFormFood;
     'app-home': AppHome;

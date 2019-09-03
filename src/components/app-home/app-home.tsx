@@ -246,7 +246,7 @@ export class AppHome {
             <ion-item-divider color="tertiary">
               <ion-label>Calories consumed at:</ion-label>
             </ion-item-divider>
-            <app-daily
+            <app-daily-list
               daily={this.daily}
               breakfast-calories={this.breakfastCalories}
               breakfast-snack-Calories={this.breakfastSnackCalories}
@@ -255,7 +255,7 @@ export class AppHome {
               dinner-calories={this.dinnerCalories}
               dinner-snack-calories={this.dinnerSnackCalories}
             >
-            </app-daily>
+            </app-daily-list>
           </ion-item-group>
           {this.pastDailyEntries.length > 0
             ? <ion-item-group>
@@ -268,7 +268,7 @@ export class AppHome {
                     <div class="ion-text-end">
                       <h2>{daily.date}</h2>
                     </div>
-                    <app-daily
+                    <app-daily-list
                       daily={daily}
                       today={daily.date}
                       breakfast-calories={this.totalMealMacros(daily.breakfast).calories}
@@ -278,7 +278,7 @@ export class AppHome {
                       dinner-calories={this.totalMealMacros(daily.dinner).calories}
                       dinner-snack-calories={this.totalMealMacros(daily.dinnerSnack).calories}
                     >
-                    </app-daily>
+                    </app-daily-list>
                   </div>
                 )
               }

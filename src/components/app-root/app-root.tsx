@@ -6,7 +6,7 @@ import { Component, h } from '@stencil/core';
 })
 export class AppRoot {
 
-  componentWillLoad() {
+  async componentWillLoad() {
     if (navigator.userAgent.toLowerCase().match('electron')) {
       const ionRouter = document.querySelector('ion-router');
       ionRouter.root = window.location.pathname

@@ -76,6 +76,20 @@ export class AppFoodList {
                     role: 'cancel'
                 },
                 {
+                    text: 'Add to Daily',
+                    role: 'submit',
+                    cssClass: 'primary',
+                    handler: () => {
+                        const modalController = document.querySelector('ion-modal-controller');
+                        modalController.create({
+                            component: 'app-daily-entry',
+                            componentProps: {
+                                $loki: foodItem.$loki
+                            }
+                        }).then(modal => modal.present());
+                    }
+                },
+                {
                     text: `View ${foodItem.name}`,
                     role: 'view',
                     cssClass: 'tertiary',
@@ -95,20 +109,6 @@ export class AppFoodList {
                     cssClass: 'secondary',
                     handler: () => {
                         this.presentCreateModal({ mode: 'edit', $loki: foodItem.$loki });
-                    }
-                },
-                {
-                    text: 'Add to Daily',
-                    role: 'add',
-                    cssClass: 'primary',
-                    handler: () => {
-                        const modalController = document.querySelector('ion-modal-controller');
-                        modalController.create({
-                            component: 'app-daily-entry',
-                            componentProps: {
-                                $loki: foodItem.$loki
-                            }
-                        }).then(modal => modal.present());
                     }
                 }
             ]

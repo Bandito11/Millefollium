@@ -6,6 +6,7 @@ import { insertOrUpdateFoodProduct, deleteFoodProduct, getFoodProduct } from "..
 
 
 import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
+import { writeImageFile, readImageFile } from "../../services/filesystem";
 
 const { Camera } = Plugins;
 
@@ -80,6 +81,7 @@ export class AppDaily {
 
     @State() calories = '0';
     @State() name = '';
+    @State() imgUrl;
     header = '';
     foodItem: IFoodItem = {
         name: '',
@@ -245,6 +247,7 @@ export class AppDaily {
 
         });
     }
+
     changeHeader() {
         const modalElement = document.querySelector('ion-modal');
         this.path = modalElement.componentProps.mode;
@@ -260,7 +263,7 @@ export class AppDaily {
         await modal.dismiss();
     }
 
-    getProductData($loki: number) {
+    async getProductData($loki: number) {
         const response = getFoodProduct($loki);
         if (response.success) {
             this.foodItem = {
@@ -270,6 +273,8 @@ export class AppDaily {
             this.name = this.foodItem.name;
             this.calories = this.foodItem.calories;
             this.header = `Edit ${foodNameToUppercase(this.foodItem.name)}!`;
+            const image = await readImageFile(this.foodItem.name);
+            this.imgUrl = image.data;
         } else {
             console.error(response.error);
         }
@@ -666,24 +671,25 @@ export class AppDaily {
 
     }
 
-    @State() imgUrl;
     async getPicture() {
+        if (navigator.userAgent.toLowerCase().match('mobile')) {
+            const image = await Camera.getPhoto({
+                quality: 100,
+                allowEditing: false,
+                resultType: CameraResultType.Uri,
+                source: CameraSource.Prompt
+            });
+            this.imgUrl = image.webPath;
 
-        const image = await Camera.getPhoto({
-            quality: 100,
-            allowEditing: false,
-            resultType: CameraResultType.Uri,
-            source: CameraSource.Prompt
-        });
-        // image.webPath will contain a path that can be set as an image src. 
-        // You can access the original file using image.path, which can be 
-        // passed to the Filesystem API to read the raw data of the image, 
-        // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
-
-        // Can be set to the src of an image now
-        this.imgUrl = image.webPath
-        console.log(image)
-
+        } else {
+            const image = await Camera.getPhoto({
+                quality: 100,
+                allowEditing: false,
+                resultType: CameraResultType.DataUrl,
+                source: CameraSource.Prompt
+            });
+            this.imgUrl = image.dataUrl;
+        }
     }
 
     getBarcode() {
@@ -701,10 +707,12 @@ export class AppDaily {
             ...this.foodItem,
             dateCreated: new Date(),
             name: this.name.toLowerCase(),
-            calories: this.calories
+            calories: this.calories,
+            picture: `images/${this.foodItem.name}.png`
         };
         const response = insertOrUpdateFoodProduct(foodItem);
         if (response.success) {
+            writeImageFile({ name: this.foodItem.name, data: this.imgUrl });
             this.displayMessage({
                 header: 'Success!',
                 message: response.message,
@@ -823,13 +831,13 @@ export class AppDaily {
             <ion-content class="ion-padding">
                 <form>
                     <ion-list>
-                        <div>
-                            <h1>{this.header}</h1>
+                        <h1>{this.header}</h1>
+                        <div  id="button" >
                             <img src={this.imgUrl} />
                             <ion-button size="large" fill="clear" onClick={this.getPicture.bind(this)}>
                                 <ion-icon slot="icon-only" name="camera"></ion-icon>
                             </ion-button>
-                            <p>Take a photo or choose one picture from the album.</p>
+                            {/* <p>Take a photo or choose one picture from the album.</p> */}
                         </div>
                         {
                             this.path === 'edit'

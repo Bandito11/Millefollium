@@ -2,6 +2,7 @@ import { Component, h } from '@stencil/core';
 import { IFoodItem } from '../../interfaces';
 import { getFoodProduct } from '../../services/db';
 import { foodNameToUppercase } from '../../helpers/utils';
+import { readImageFile } from '../../services/filesystem';
 
 
 @Component({
@@ -11,13 +12,16 @@ import { foodNameToUppercase } from '../../helpers/utils';
 export class AppViewFood {
 
     foodItem: IFoodItem;
+    imgUrl: string;
 
-    componentWillLoad() {
+    async componentWillLoad() {
         const modalElement = document.querySelector('ion-modal');
         const $loki = modalElement.componentProps.$loki;
         const response = getFoodProduct($loki);
         if (response.success) {
             this.foodItem = response.data;
+            const image = await readImageFile(this.foodItem.name);
+            this.imgUrl = image.data;
         } else {
             console.error(response.error);
         }
@@ -50,6 +54,7 @@ export class AppViewFood {
             </div>,
             <ion-content class="ion-padding">
                 <h1>{foodNameToUppercase(this.foodItem.name)}</h1>
+                <img src={this.imgUrl} alt={`A picture of ${this.foodItem.name}`} />
                 <p>Serving size {this.foodItem.servingSize.size} {this.foodItem.servingSize.measurement} ({this.foodItem.servingSize.grams}g)</p>
                 <p>Servings per Container about {this.foodItem.servingPerContainer}</p>
 
@@ -264,7 +269,7 @@ export class AppViewFood {
 
                 </ion-grid>
 
-                <h6>* Percent Daily Values are based on a 2'0''0''0' calorie diet.</h6>
+                <h6>* Percent Daily Values are based on a 2000 calorie diet.</h6>
             </ion-content>,
             <div>
                 {
