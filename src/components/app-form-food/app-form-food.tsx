@@ -2,17 +2,10 @@ import { Component, h, State } from "@stencil/core";
 import { IFoodItem } from "../../interfaces";
 import { foodNameToUppercase } from '../../helpers/utils';
 import { insertOrUpdateFoodProduct, deleteFoodProduct, getFoodProduct } from "../../services/db";
-
-
-
 import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
 import { writeImageFile, readImageFile } from "../../services/filesystem";
 
 const { Camera } = Plugins;
-
-
-
-
 
 enum foodFormControls {
     servingSizeAmount = 'servingSizeAmount',
