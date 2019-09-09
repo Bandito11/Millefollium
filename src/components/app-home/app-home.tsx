@@ -208,7 +208,6 @@ export class AppHome {
   render() {
     return [
       <ion-nav></ion-nav>,
-      <ion-loading-controller></ion-loading-controller>,
       <div>
         {
           navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')

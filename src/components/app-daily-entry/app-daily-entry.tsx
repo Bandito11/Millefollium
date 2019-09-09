@@ -2,6 +2,7 @@ import { Component, h } from '@stencil/core';
 import { IFoodItem, IEntry } from '../../interfaces';
 import { getFoodProduct, addToDaily } from '../../services/db';
 import { foodNameToUppercase, mealTypes } from '../../helpers/utils';
+import { alertController, modalController } from '@ionic/core';
 
 @Component({
     tag: 'app-daily-entry',
@@ -34,8 +35,7 @@ export class AppDailyEntry {
     }
 
     async goBack() {
-        const modal = document.querySelector('ion-modal-controller');
-        await modal.dismiss();
+        await modalController.dismiss();
     }
 
     addToDaily() {
@@ -72,7 +72,6 @@ export class AppDailyEntry {
         message: string,
         event?
     }) {
-        const alertController = document.querySelector('ion-alert-controller');
         const alert = await alertController.create({
             header: opts.header,
             subHeader: opts.subHeader,
@@ -90,7 +89,6 @@ export class AppDailyEntry {
     }
 
     async askIfWantToSave() {
-        const alertController = document.querySelector('ion-alert-controller');
         const alert = await alertController.create({
             header: 'Warning!',
             message: `Do you want to save ${this.foodItem.name}?`,
@@ -110,7 +108,6 @@ export class AppDailyEntry {
 
     render() {
         return [
-            <ion-alert-controller></ion-alert-controller>,
             <ion-header>
                 {
                     navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')

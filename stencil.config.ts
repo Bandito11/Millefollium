@@ -5,7 +5,7 @@ import { Config } from '@stencil/core';
 export const config: Config = {
   outputTargets: [{
     type: 'www',
-    serviceWorker: null
+    // serviceWorker: null
   }],
   globalScript: 'src/global/app.ts',
   globalStyle: 'src/global/app.css',
@@ -20,7 +20,11 @@ export const config: Config = {
     },
     {
       src: '/Users/estebanmorales/Projects/Millefollium/node_modules/lokijs/build/',
-      dest: 'libs'
+      dest: 'loki'
+    },
+    {
+      src: '/Users/estebanmorales/Projects/Millefollium/node_modules/@ericblade/quagga2/dist/',
+      dest: 'quagga'
     }
   ]
 };

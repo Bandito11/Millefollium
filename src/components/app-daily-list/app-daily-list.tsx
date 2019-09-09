@@ -2,6 +2,7 @@ import { Component, h, Prop, Event, EventEmitter } from "@stencil/core";
 import { IDaily, IMeal } from "../../interfaces";
 import { foodNameToUppercase } from "../../helpers/utils";
 import { editDaily, deleteDaily, getDaily } from "../../services/db";
+import { actionSheetController, alertController, modalController } from "@ionic/core";
 
 @Component({
     tag: 'app-daily-list',
@@ -19,7 +20,6 @@ export class AppDaily {
     @Event() updatedDailyEntry: EventEmitter;
 
     async showSelectionWindow(meal: IMeal) {
-        const actionSheetController = document.querySelector('ion-action-sheet-controller');
         const actionSheet = await actionSheetController.create({
             header: foodNameToUppercase(meal.name),
             buttons: [
@@ -85,7 +85,6 @@ export class AppDaily {
                     text: `View ${meal.name}`,
                     cssClass: 'primary',
                     handler: async () => {
-                        const modalController = document.querySelector('ion-modal-controller');
                         const modal = await modalController.create({
                             component: 'app-view-food',
                             componentProps: {
@@ -106,7 +105,6 @@ export class AppDaily {
         message: string,
         event?
     }) {
-        const alertController = document.querySelector('ion-alert-controller');
         const alert = await alertController.create({
             header: opts.header,
             subHeader: opts.subHeader,
@@ -131,13 +129,11 @@ export class AppDaily {
     }
 
     async askIfWantToSave(options: { header: string, message: string, buttons }) {
-        const alertController = document.querySelector('ion-alert-controller');
         const alert = await alertController.create(options);
         await alert.present();
     }
 
     async editDailyEntry(id: number) {
-        const alertController = document.querySelector('ion-alert-controller');
         const servingSize = 1;
         const alert = await alertController.create({
             header: 'Change the serving size!',
@@ -190,9 +186,6 @@ export class AppDaily {
     render() {
         return (
             <div>
-                <ion-action-sheet-controller></ion-action-sheet-controller>
-                <ion-alert-controller></ion-alert-controller>,
-                <ion-modal-controller></ion-modal-controller>
                 {this.daily.breakfast.length > 0
                     ? <ion-list lines='none'>
                         <ion-list-header>

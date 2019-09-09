@@ -3,6 +3,7 @@ import { IFoodItem } from '../../interfaces';
 import { getFoodProduct } from '../../services/db';
 import { foodNameToUppercase } from '../../helpers/utils';
 import { readImageFile } from '../../services/filesystem';
+import { modalController } from '@ionic/core';
 
 
 @Component({
@@ -30,8 +31,7 @@ export class AppViewFood {
     }
 
     goBack() {
-        const modal = document.querySelector('ion-modal-controller');
-        return modal.dismiss();
+        return modalController.dismiss();
     }
 
     render() {

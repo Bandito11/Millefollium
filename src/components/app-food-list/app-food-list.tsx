@@ -2,6 +2,8 @@ import { Component, h, Listen, State } from '@stencil/core';
 import { IFoodItem } from '../../interfaces';
 import { getFoodProducts } from '../../services/db';
 import { foodNameToUppercase } from '../../helpers/utils';
+import { actionSheetController, modalController } from '@ionic/core';
+import { scan, stopScan } from '../../services/quagga';
 
 @Component({
     tag: 'app-food-list',
@@ -48,26 +50,29 @@ export class AppFoodList {
         ionNav.pop();
     }
 
-    getBarcode() {
+    async getBarcode() {
         const ionSearch = document.querySelector('ion-searchbar');
-        ionSearch.value = 'test1';
+        try {
+            const resultObject = await scan(document.querySelector('#food-list-barcode'));
+            ionSearch.value = resultObject.codeResult.code;
+            this.queryByNameOrID(resultObject.codeResult.code);
+        } catch (error) {
+            console.error(error);
+        }
+        document.querySelector('#food-list-barcode').innerHTML = stopScan();
     }
 
     async presentCreateModal(componentProps: { $loki?: number, mode: string }) {
         const ionSearch = document.querySelector('ion-searchbar');
-        const modalController = document.querySelector('ion-modal-controller');
-        // create the modal with the `modal-page` component
         const modal = await modalController.create({
             component: 'app-form-food',
             componentProps: componentProps
         });
         ionSearch.value = '';
-        // present the modal
         await modal.present();
     }
 
     async showSelectionWindow(foodItem: (IFoodItem & LokiObj)) {
-        const actionSheetController = document.querySelector('ion-action-sheet-controller');
         const actionSheet = await actionSheetController.create({
             header: foodNameToUppercase(foodItem.name),
             buttons: [
@@ -80,7 +85,6 @@ export class AppFoodList {
                     role: 'submit',
                     cssClass: 'primary',
                     handler: () => {
-                        const modalController = document.querySelector('ion-modal-controller');
                         modalController.create({
                             component: 'app-daily-entry',
                             componentProps: {
@@ -94,7 +98,6 @@ export class AppFoodList {
                     role: 'view',
                     cssClass: 'tertiary',
                     handler: async () => {
-                        const modalController = document.querySelector('ion-modal-controller');
                         const modal = await modalController.create({
                             component: 'app-view-food',
                             componentProps: {
@@ -118,8 +121,6 @@ export class AppFoodList {
 
     render() {
         return [
-            <ion-action-sheet-controller></ion-action-sheet-controller>,
-            <ion-modal-controller></ion-modal-controller>,
             <ion-header>
                 {
                     navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
@@ -173,6 +174,7 @@ export class AppFoodList {
                         )
                         : <h1>Recent</h1>
                 }
+                <div id="food-list-barcode"></div>
                 {
                     this.frequentFoodItems.length > 0 && this.foodItems.length <= 0
                         ? this.frequentFoodItems.map((foodItem, index) =>

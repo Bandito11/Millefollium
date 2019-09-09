@@ -4,6 +4,8 @@ import { foodNameToUppercase } from '../../helpers/utils';
 import { insertOrUpdateFoodProduct, deleteFoodProduct, getFoodProduct } from "../../services/db";
 import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
 import { writeImageFile, readImageFile } from "../../services/filesystem";
+import { alertController, modalController } from "@ionic/core";
+import { scan, stopScan } from "../../services/quagga";
 
 const { Camera } = Plugins;
 
@@ -252,8 +254,7 @@ export class AppDaily {
     }
 
     async goBack() {
-        const modal = document.querySelector('ion-modal-controller');
-        await modal.dismiss();
+        await modalController.dismiss();
     }
 
     async getProductData($loki: number) {
@@ -685,10 +686,6 @@ export class AppDaily {
         }
     }
 
-    getBarcode() {
-        console.log('click Barcode')
-    }
-
     createEditFoodProd() {
         if (!this.calories) {
             this.calories = '0';
@@ -742,7 +739,6 @@ export class AppDaily {
         message: string,
         event?
     }) {
-        const alertController = document.querySelector('ion-alert-controller');
         const alert = await alertController.create({
             header: opts.header,
             subHeader: opts.subHeader,
@@ -760,7 +756,6 @@ export class AppDaily {
     }
 
     async askIfWantToSave(control?: string) {
-        const alertController = document.querySelector('ion-alert-controller');
         let message;
         if (control === 'create') {
             message = 'Do you want to save this product?'
@@ -790,9 +785,19 @@ export class AppDaily {
         await alert.present();
     }
 
+    async getBarcode() {
+        try {
+            const resultObject = await scan(document.querySelector('#form-food-barcode'));
+            document.querySelector('ion-input').value = resultObject.codeResult.code;
+            this.foodItem.barcode = resultObject.codeResult.code;
+        } catch (error) {
+            console.error(error);
+        }
+        document.querySelector('#form-food-barcode').innerHTML = stopScan();
+    }
+
     render() {
         return [
-            <ion-alert-controller></ion-alert-controller>,
             <div>
                 {
                     navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
@@ -825,25 +830,19 @@ export class AppDaily {
                 <form>
                     <ion-list>
                         <h1>{this.header}</h1>
-                        <div  id="button" >
+                        <div id="button" >
                             <img src={this.imgUrl} />
                             <ion-button size="large" fill="clear" onClick={this.getPicture.bind(this)}>
                                 <ion-icon slot="icon-only" name="camera"></ion-icon>
                             </ion-button>
-                            {/* <p>Take a photo or choose one picture from the album.</p> */}
                         </div>
-                        {
-                            this.path === 'edit'
-                                ? <ion-item>
-                                    <ion-input value={this.foodItem.barcode} type="text" readonly></ion-input>
-                                </ion-item>
-                                : <ion-item>
-                                    <ion-input type="text" readonly></ion-input>
-                                    <ion-button size="large" fill="clear" onClick={this.getBarcode.bind(this)}>
-                                        <ion-icon slot="icon-only" name="barcode"></ion-icon>
-                                    </ion-button>
-                                </ion-item>
-                        }
+                        <ion-item>
+                            <ion-input type="text" value={this.foodItem.barcode} readonly></ion-input>
+                            <ion-button size="large" fill="clear" onClick={this.getBarcode.bind(this)}>
+                                <ion-icon slot="icon-only" name="barcode"></ion-icon>
+                            </ion-button>
+                        </ion-item>
+                        <div id="form-food-barcode"></div>
                         <ion-item>
                             <ion-label position="floating">Name</ion-label>
                             <ion-input value={this.foodItem.name} onInput={e => this.name = e.target['value']} type="text" required></ion-input>
