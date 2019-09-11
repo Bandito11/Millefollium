@@ -1,12 +1,12 @@
 import { Component, h, State } from "@stencil/core";
-import { IFoodItem } from "../../interfaces";
+import { IFoodProduct } from "../../interfaces";
 import { foodNameToUppercase } from '../../helpers/utils';
 import { insertOrUpdateFoodProduct, deleteFoodProduct, getFoodProduct } from "../../services/db";
-import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
 import { writeImageFile, readImageFile } from "../../services/filesystem";
 import { alertController, modalController } from "@ionic/core";
 import { scan, stopScan } from "../../services/quagga";
 
+import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
 const { Camera } = Plugins;
 
 enum foodFormControls {
@@ -78,7 +78,7 @@ export class AppDaily {
     @State() name = '';
     @State() imgUrl;
     header = '';
-    foodItem: IFoodItem = {
+    foodItem: IFoodProduct = {
         name: '',
         barcode: '',
         picture: '',
@@ -693,7 +693,7 @@ export class AppDaily {
         if (!this.foodItem.servingSize.measurement) {
             this.foodItem.servingSize.measurement = 'gram';
         }
-        const foodItem: IFoodItem = {
+        const foodItem: IFoodProduct = {
             ...this.foodItem,
             dateCreated: new Date(),
             name: this.name.toLowerCase(),
@@ -702,7 +702,9 @@ export class AppDaily {
         };
         const response = insertOrUpdateFoodProduct(foodItem);
         if (response.success) {
-            writeImageFile({ name: this.foodItem.name, data: this.imgUrl });
+            if (this.imgUrl) {
+                writeImageFile({ name: this.foodItem.name, data: this.imgUrl });
+            }
             this.displayMessage({
                 header: 'Success!',
                 message: response.message,

@@ -1,5 +1,5 @@
 import { Component, h } from '@stencil/core';
-import { IFoodItem } from '../../interfaces';
+import { IFoodProduct } from '../../interfaces';
 import { getFoodProduct } from '../../services/db';
 import { foodNameToUppercase } from '../../helpers/utils';
 import { readImageFile } from '../../services/filesystem';
@@ -12,7 +12,7 @@ import { modalController } from '@ionic/core';
 })
 export class AppViewFood {
 
-    foodItem: IFoodItem;
+    foodItem: IFoodProduct;
     imgUrl: string;
 
     async componentWillLoad() {

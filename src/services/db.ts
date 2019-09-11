@@ -1,31 +1,32 @@
-import { IFoodItem as IFoodProduct, IResponse, IDaily, IEntry as IDailyEntry } from './../interfaces.d';
+import {  IResponse, IDaily, IEntry as IDailyEntry, IFoodProduct } from './../interfaces.d';
 import { dateToString, mealTypes } from '../helpers/utils';
+import { CapacitorStorageAdapter } from './adapter';
 declare const loki;
 
-const options: Partial<LokiConfigOptions> = {
-    autoload: true,
-    autosave: true,
-    autoloadCallback: createCollection
-}
+const capacitorStorageAdapter = new CapacitorStorageAdapter();
 
-const db: Loki = new loki('millefollium.db', options);
+const partioningAdapter = new loki.LokiPartitioningAdapter(capacitorStorageAdapter, { paging: true });
 
 let foodProductsColl: Collection<IFoodProduct>;
 let dailyEntriesColl: Collection<IDailyEntry>;
 
-createCollection();
-
-function createCollection() {
-    db.loadDatabase();
-    foodProductsColl = db.getCollection('FoodProducts');
-    if (!foodProductsColl) {
-        foodProductsColl = db.addCollection('FoodProducts');
-    }
-    dailyEntriesColl = db.getCollection('DailyItems');
-    if (!dailyEntriesColl) {
-        dailyEntriesColl = db.addCollection('DailyItems');
+const options: Partial<LokiConfigOptions> = {
+    autosave: true,
+    autoload: true,
+    adapter: partioningAdapter,
+    autoloadCallback: () => {
+        foodProductsColl = db.getCollection('FoodProducts');
+        if (!foodProductsColl) {
+            foodProductsColl = db.addCollection('FoodProducts');
+        };
+        dailyEntriesColl = db.getCollection('DailyItems');
+        if (!dailyEntriesColl) {
+            dailyEntriesColl = db.addCollection('DailyItems');
+        }
     }
 }
+
+const db: Loki = new loki('millefollium.db', options);
 
 export function insertOrUpdateFoodProduct(foodItem: IFoodProduct): IResponse<IFoodProduct> {
     const response = {
@@ -42,7 +43,7 @@ export function insertOrUpdateFoodProduct(foodItem: IFoodProduct): IResponse<IFo
                 ...response,
                 error: 'Error updating data. Please try again.'
             }
-        }
+        };
         return {
             ...response,
             success: true,
@@ -65,7 +66,7 @@ export function insertOrUpdateFoodProduct(foodItem: IFoodProduct): IResponse<IFo
                     ...response,
                     error: 'Error updating data. Please try again.'
                 }
-            }
+            };
             return {
                 ...response,
                 success: true,
@@ -128,7 +129,7 @@ export function getFoodProducts(query): IResponse<(IFoodProduct & LokiObj)[]> {
 
     const results = foodProductsColl.find({
         $or: [{ barcode: query }, { name: { $contains: [query] } }]
-    })
+    });
     if (results.length > 0) {
         return {
             ...response,

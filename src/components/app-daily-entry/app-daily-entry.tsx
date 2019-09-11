@@ -1,5 +1,5 @@
 import { Component, h } from '@stencil/core';
-import { IFoodItem, IEntry } from '../../interfaces';
+import { IFoodProduct, IEntry } from '../../interfaces';
 import { getFoodProduct, addToDaily } from '../../services/db';
 import { foodNameToUppercase, mealTypes } from '../../helpers/utils';
 import { alertController, modalController } from '@ionic/core';
@@ -10,7 +10,7 @@ import { alertController, modalController } from '@ionic/core';
 })
 export class AppDailyEntry {
 
-    foodItem: IFoodItem & LokiObj;
+    foodItem: IFoodProduct & LokiObj;
     servingSizeInput = '1';
     radioItems = [
         { label: 'Breakfast', value: mealTypes.breakfast },

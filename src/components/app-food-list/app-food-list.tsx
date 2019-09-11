@@ -1,5 +1,5 @@
 import { Component, h, Listen, State } from '@stencil/core';
-import { IFoodItem } from '../../interfaces';
+import { IFoodProduct } from '../../interfaces';
 import { getFoodProducts } from '../../services/db';
 import { foodNameToUppercase } from '../../helpers/utils';
 import { actionSheetController, modalController } from '@ionic/core';
@@ -12,8 +12,8 @@ import { scan, stopScan } from '../../services/quagga';
 
 export class AppFoodList {
 
-    @State() foodItems: (IFoodItem & LokiObj)[] = [];
-    @State() frequentFoodItems: (IFoodItem & LokiObj)[] = [];
+    @State() foodItems: (IFoodProduct & LokiObj)[] = [];
+    @State() frequentFoodItems: (IFoodProduct & LokiObj)[] = [];
 
     componentWillLoad() {
         this.getFrequentFoodItems();
@@ -72,7 +72,7 @@ export class AppFoodList {
         await modal.present();
     }
 
-    async showSelectionWindow(foodItem: (IFoodItem & LokiObj)) {
+    async showSelectionWindow(foodItem: (IFoodProduct & LokiObj)) {
         const actionSheet = await actionSheetController.create({
             header: foodNameToUppercase(foodItem.name),
             buttons: [

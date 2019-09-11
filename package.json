@@ -18,6 +18,7 @@
     "@ericblade/quagga2": "0.0.2",
     "@ionic/core": "^4.9.0",
     "@ionic/pwa-elements": "^1.4.1",
+    "capacitor-data-storage-sqlite": "^1.2.1",
     "lokijs": "^1.5.7"
   },
   "devDependencies": {

@@ -27,7 +27,7 @@ export interface IEntry {
     consumedSize: string;
 }
 
-interface IMeal extends IFoodItem{
+interface IMeal extends IFoodProduct{
     id?: number;
     calories: string;
 }
@@ -38,7 +38,7 @@ interface IMeasurement {
     measurement: string;
 }
 
-export interface IFoodItem extends INutritionFacts {
+export interface IFoodProduct extends INutritionFacts {
     name: string;
     barcode: string;
     picture: string;
