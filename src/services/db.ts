@@ -312,7 +312,7 @@ export function getDaily(date: Date): IResponse<IDaily> {
     } else {
         return {
             ...response,
-            error: `Couldn't find daily entry.`
+            error: `Didn't find daily entry.`
         };
     }
 }
