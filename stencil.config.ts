@@ -1,5 +1,5 @@
 import { Config } from '@stencil/core';
-
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 // https://stenciljs.com/docs/config
 
 export const config: Config = {
@@ -26,5 +26,8 @@ export const config: Config = {
       src: '/Users/estebanmorales/Projects/Millefollium/node_modules/@ericblade/quagga2/dist/',
       dest: 'quagga'
     }
+  ],
+  plugins: [
+    nodePolyfills(),
   ]
 };
