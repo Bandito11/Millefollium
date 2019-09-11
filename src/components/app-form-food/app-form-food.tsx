@@ -1427,12 +1427,12 @@ export class AppDaily {
                         ? <ion-footer>
                             <ion-toolbar color="primary">
                                 <ion-buttons slot="start">
-                                    <ion-button onClick={() => this.goBack()}>
+                                    <ion-button onClick={() => this.goBack()} >
                                         <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
                                     </ion-button>
                                 </ion-buttons>
                                 {
-                                    this.name && this.calories || this.calories === '0' || this.foodItem.calories
+                                    this.name && (this.calories || this.calories === '0')
                                         ? <ion-buttons slot="end">
                                             {this.path === 'create'
                                                 ? <ion-button onClick={() => this.askIfWantToSave('create')}>Create</ion-button>
