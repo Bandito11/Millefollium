@@ -25,6 +25,10 @@ export const config: Config = {
     {
       src: '/Users/estebanmorales/Projects/Millefollium/node_modules/@ericblade/quagga2/dist/',
       dest: 'quagga'
+    },
+    {
+      src: '/Users/estebanmorales/Projects/Millefollium/node_modules/localforage/dist',
+      dest: 'localforage'
     }
   ],
   plugins: [

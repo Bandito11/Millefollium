@@ -2,17 +2,17 @@ import { CapacitorDataStorageSqlite } from 'capacitor-data-storage-sqlite';
 
 /**
  * A loki persistence adapter which persists to web browser's local storage object
- * @constructor CapacitorStorageAdapter
+ * @constructor CapacitorDataStorageLokiAdapter
  */
-export function CapacitorStorageAdapter() { }
+export function CapacitorDataStorageLokiAdapter() { }
 
 /**
  * loadDatabase() - Load data from IonicStorage
  * @param {string} dbname - the name of the database to load
  * @param {function} callback - the callback to handle the result
- * @memberof CapacitorStorageAdapter
+ * @memberof CapacitorDataStorageLokiAdapter
  */
-CapacitorStorageAdapter.prototype.loadDatabase = function loadDatabase(dbname, callback) {
+CapacitorDataStorageLokiAdapter.prototype.loadDatabase = function loadDatabase(dbname, callback) {
     CapacitorDataStorageSqlite.get({ key: dbname })
         .then(data => {
             callback(data.value);
@@ -24,9 +24,9 @@ CapacitorStorageAdapter.prototype.loadDatabase = function loadDatabase(dbname, c
  * might want to expand this to avoid dataloss on partial save
  * @param {string} dbname - the filename of the database to load
  * @param {function} callback - the callback to handle the result
- * @memberof CapacitorStorageAdapter
+ * @memberof CapacitorDataStorageLokiAdapter
  */
-CapacitorStorageAdapter.prototype.saveDatabase = function saveDatabase(dbname, dbstring, callback) {
+CapacitorDataStorageLokiAdapter.prototype.saveDatabase = function saveDatabase(dbname, dbstring, callback) {
     CapacitorDataStorageSqlite.set({ key: dbname, value: dbstring });
     callback(null);
 };
@@ -36,9 +36,9 @@ CapacitorStorageAdapter.prototype.saveDatabase = function saveDatabase(dbname, d
  * can't be deleted
  * @param {string} dbname - the filename of the database to delete
  * @param {function} callback - the callback to handle the result
- * @memberof CapacitorStorageAdapter
+ * @memberof CapacitorDataStorageLokiAdapter
  */
-CapacitorStorageAdapter.prototype.deleteDatabase = function deleteDatabase(dbname, callback) {
+CapacitorDataStorageLokiAdapter.prototype.deleteDatabase = function deleteDatabase(dbname, callback) {
     CapacitorDataStorageSqlite.remove({ key: dbname });
     callback(null);
 };

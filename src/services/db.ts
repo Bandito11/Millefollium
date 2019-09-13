@@ -1,10 +1,10 @@
-import {  IResponse, IDaily, IEntry as IDailyEntry, IFoodProduct } from './../interfaces.d';
+import { IResponse, IDaily, IEntry as IDailyEntry, IFoodProduct } from './../interfaces.d';
 import { dateToString, mealTypes } from '../helpers/utils';
-import { CapacitorStorageAdapter } from './adapter';
+import { CapacitorFileLokiAdapter } from './capacitor-file-loki-adapter';
 import loki from 'lokijs';
 
-const capacitorStorageAdapter = new CapacitorStorageAdapter();
-const partioningAdapter = new loki.LokiPartitioningAdapter(capacitorStorageAdapter, { paging: true });
+const capacitorFileLokiAdapter = new CapacitorFileLokiAdapter();
+const partioningAdapter = new loki.LokiPartitioningAdapter(capacitorFileLokiAdapter, { paging: true });
 
 let foodProductsColl: Collection<IFoodProduct>;
 let dailyEntriesColl: Collection<IDailyEntry>;
@@ -12,7 +12,6 @@ let dailyEntriesColl: Collection<IDailyEntry>;
 const options: Partial<LokiConfigOptions> = {
     autosave: true,
     autoload: true,
-    adapter: partioningAdapter,
     autoloadCallback: () => {
         foodProductsColl = db.getCollection('FoodProducts');
         if (!foodProductsColl) {
@@ -22,7 +21,8 @@ const options: Partial<LokiConfigOptions> = {
         if (!dailyEntriesColl) {
             dailyEntriesColl = db.addCollection('DailyItems');
         }
-    }
+    },
+    adapter: partioningAdapter
 }
 
 const db: Loki = new loki('millefollium.db', options);
