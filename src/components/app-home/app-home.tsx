@@ -154,7 +154,7 @@ export class AppHome {
       this.daily = response.data;
       this.calculateMacros();
     } else {
-      console.error(response.error);
+      // console.error(response.error);
     }
   };
 

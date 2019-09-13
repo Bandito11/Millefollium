@@ -1,187 +1,60 @@
-import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
-
-const { Filesystem } = Plugins;
-
-import localforage from 'localforage';
+import { Filesystem, FilesystemDirectory, FilesystemEncoding } from "@capacitor/core";
 
 let directoryName = 'database';
 
-//Create custom driver for localforage
-const capacitorFileDriver = {
-    _driver: 'capacitorFileDriver',
-    _initStorage: async function (options) {
-        const self = this;
-        const dbInfo = {};
-        if (options) {
-            for (var i in options) {
-                dbInfo[i] = options[i];
-            }
-        }
-
-        self._dbInfo = dbInfo;
-
-        try {
-            await Filesystem.readdir({
-                path: directoryName,
-                directory: FilesystemDirectory.Documents
-            });
-        } catch (e) {
-            try {
-                await Filesystem.mkdir({
-                    path: directoryName,
-                    directory: FilesystemDirectory.Documents,
-                    createIntermediateDirectories: false // like mkdir -p
-                });
-            } catch (e) {
-                console.error('Unable to make directory', e);
-            }
-        }
-    },
-    clear: async function (callback): Promise<any> {
-        try {
-            let result = await Filesystem.rmdir({
-                path: directoryName,
-                directory: FilesystemDirectory.Documents
-            });
-            callback(result)
-        } catch (e) {
-            callback('Unable to remove directory', e);
-        }
-    },
-    getItem: async function (key): Promise<any> {
-        try {
-            let contents = await Filesystem.readFile({
-                path: `${directoryName}/${key}.txt`,
-                directory: FilesystemDirectory.Documents,
-                encoding: FilesystemEncoding.UTF8
-            });
-            return Promise.resolve(contents.data);
-        } catch (error) {
-            return Promise.reject(error);
-        }
-    },
-    iterate: async function (iteratorCallback, successCallback): Promise<any> {
-        try {
-            let result = await Filesystem.readdir({
-                path: directoryName,
-                directory: FilesystemDirectory.Documents
-            });
-            if (result.files.length === 0) {
-                iteratorCallback(undefined);
-            } else {
-                let iterationNumber = 0;
-                let value = '';
-                let key = '';
-                for (const fileName of result.files) {
-                    let contents = await Filesystem.readFile({
-                        path: `${directoryName}/${fileName}`,
-                        directory: FilesystemDirectory.Documents,
-                        encoding: FilesystemEncoding.UTF8
-                    });
-                    iterationNumber++;
-                    iteratorCallback(contents.data, fileName, iterationNumber);
-                    key = fileName;
-                    value = contents.data;
-                };
-                successCallback(value, key, iterationNumber);
-            }
-        } catch (e) {
-            iteratorCallback(undefined);
-        }
-
-    },
-    key: async function (n, callback): Promise<any> {
-        try {
-            let result = await Filesystem.readdir({
-                path: directoryName,
-                directory: FilesystemDirectory.Documents
-            });
-            callback(result.files[n]);
-        } catch (e) {
-            callback('Unable to read dir', e);
-        }
-    },
-    keys: async function (callback): Promise<any> {
-        try {
-            let result = await Filesystem.readdir({
-                path: directoryName,
-                directory: FilesystemDirectory.Documents
-            });
-            callback(result.files);
-        } catch (e) {
-            callback('Unable to read dir', e);
-        }
-
-    },
-    length: async function (callback): Promise<any> {
-        try {
-            let result = await Filesystem.readdir({
-                path: directoryName,
-                directory: FilesystemDirectory.Documents
-            });
-            callback(result.files.length);
-        } catch (e) {
-            callback('Unable to read dir', e);
-        }
-    },
-    removeItem: async function (key): Promise<any> {
-        try {
-            const result = await Filesystem.deleteFile({
-                path: `${directoryName}/${key}.txt`,
-                directory: FilesystemDirectory.Documents
-            });
-            return Promise.resolve(result);
-        } catch (error) {
-            return Promise.reject(error);
-        }
-
-    },
-    setItem: async function (key, value): Promise<any> {
-        try {
-            const result = await Filesystem.writeFile({
-                path: `${directoryName}/${key}.txt`,
-                data: value,
-                directory: FilesystemDirectory.Documents,
-                encoding: FilesystemEncoding.UTF8
-            });
-            return Promise.resolve(result);
-        } catch (e) {
-            return Promise.reject('Unable to write file' + e);
-        }
+async function createDirectory() {
+    try {
+        await Filesystem.mkdir({
+            path: directoryName,
+            directory: FilesystemDirectory.Documents,
+            createIntermediateDirectories: false // like mkdir -p
+        });
+    } catch (e) {
+        console.error('Unable to make directory', e);
     }
 }
 
-localforage.defineDriver(capacitorFileDriver);
-
-localforage.config({
-    driver: ['capacitorFileDriver', localforage.INDEXEDDB, localforage.WEBSQL, localforage.LOCALSTORAGE]
-});
+createDirectory();
 
 export function CapacitorFileLokiAdapter() { }
 
-CapacitorFileLokiAdapter.prototype.loadDatabase = function loadDatabase(dbname, callback) {
-    localforage.getItem(dbname)
-        .then(data => callback(data))
-        .catch(error => {
-            console.error(error);
-            callback(null);
+CapacitorFileLokiAdapter.prototype.loadDatabase = async function loadDatabase(dbname, callback) {
+    try {
+        let contents = await Filesystem.readFile({
+            path: `${directoryName}/${dbname}.txt`,
+            directory: FilesystemDirectory.Documents,
+            encoding: FilesystemEncoding.UTF8
         });
+        callback(contents.data);
+    } catch (error) {
+        callback(new Error(error));
+    }
+
 };
 
 
-CapacitorFileLokiAdapter.prototype.saveDatabase = function saveDatabase(dbname, dbstring, callback) {
-    localforage.setItem(dbname, dbstring)
-        .catch(e => {
-            console.error(e);
+CapacitorFileLokiAdapter.prototype.saveDatabase = async function saveDatabase(dbname, dbstring, callback) {
+    try {
+        await Filesystem.writeFile({
+            path: `${directoryName}/${dbname}.txt`,
+            data: dbstring,
+            directory: FilesystemDirectory.Documents,
+            encoding: FilesystemEncoding.UTF8
         });
-    callback(null);
+        callback(null);
+    } catch (e) {
+        callback(new Error('Unable to write file' + e));
+    }
 };
 
-CapacitorFileLokiAdapter.prototype.deleteDatabase = function deleteDatabase(dbname, callback) {
-    localforage.removeItem(dbname)
-        .then(value => console.log(value))
-        .catch(e => {
-            console.error(e);
+CapacitorFileLokiAdapter.prototype.deleteDatabase = async function deleteDatabase(dbname, callback) {
+    try {
+        await Filesystem.deleteFile({
+            path: `${directoryName}/${dbname}.txt`,
+            directory: FilesystemDirectory.Documents
         });
-    callback(null);
+        callback(null);
+    } catch (error) {
+        callback(new Error(error));
+    }
 };

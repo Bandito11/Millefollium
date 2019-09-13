@@ -21,7 +21,12 @@ export class AppViewFood {
         const response = getFoodProduct($loki);
         if (response.success) {
             this.foodItem = response.data;
-            const image = await readImageFile(this.foodItem.name);
+            let image;
+            try {
+                image = await readImageFile(this.foodItem.name);
+            } catch (error) {
+                image = '';
+            }
             this.imgUrl = image.data;
         } else {
             console.error(response.error);

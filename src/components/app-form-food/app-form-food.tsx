@@ -267,7 +267,12 @@ export class AppDaily {
             this.name = this.foodItem.name;
             this.calories = this.foodItem.calories;
             this.header = `Edit ${foodNameToUppercase(this.foodItem.name)}!`;
-            const image = await readImageFile(this.foodItem.name);
+            let image;
+            try {
+                image = await readImageFile(this.foodItem.name);
+            } catch (error) {
+                image = '';
+            }
             this.imgUrl = image.data;
         } else {
             console.error(response.error);
