@@ -4,7 +4,7 @@ const { Filesystem } = Plugins;
 
 import localforage from 'localforage';
 
-let directoryName = 'database';
+const directoryName = 'database';
 
 //Create custom driver for localforage
 const capacitorFileDriver = {
@@ -148,3 +148,14 @@ localforage.defineDriver(capacitorFileDriver);
 localforage.config({
     driver: ['capacitorFileDriver', localforage.INDEXEDDB, localforage.WEBSQL, localforage.LOCALSTORAGE]
 });
+
+export const capacitorStorage = {
+    set: localforage.setItem,
+    get: localforage.getItem,
+    remove: localforage.removeItem,
+    key: localforage.key,
+    keys: localforage.keys,
+    length: localforage.length,
+    clear: localforage.clear,
+    iterate: localforage.iterate
+};
