@@ -38,7 +38,7 @@ const capacitorFileDriver = {
             });
             callback(result)
         } catch (e) {
-            callback('Unable to remove directory', e);
+            callback(e);
         }
     },
     getItem: async function (key): Promise<any> {
