@@ -27,7 +27,7 @@ const capacitorFileDriver = {
                 createIntermediateDirectories: false // like mkdir -p
             });
         } catch (e) {
-            console.error('Unable to make directory', e);
+            console.error(e);
         }
     },
     clear: async function (callback): Promise<any> {
