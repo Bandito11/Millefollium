@@ -27,7 +27,7 @@ const capacitorFileDriver = {
                 createIntermediateDirectories: false // like mkdir -p
             });
         } catch (e) {
-            console.error('Unable to make directory', e);
+            console.error(e);
         }
     },
     clear: async function (callback): Promise<any> {
@@ -38,7 +38,7 @@ const capacitorFileDriver = {
             });
             callback(result)
         } catch (e) {
-            callback('Unable to remove directory', e);
+            callback(e);
         }
     },
     getItem: async function (key): Promise<any> {
