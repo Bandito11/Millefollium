@@ -9,6 +9,10 @@ export const config: Config = {
   }],
   globalScript: 'src/global/app.ts',
   globalStyle: 'src/global/app.css',
+  bundles: [
+    { components: ['app-home'] },
+    { components: ['app-food-list', 'app-form-food', 'app-view-food'] }
+  ],
   copy: [
     {
       src: 'services/workers',

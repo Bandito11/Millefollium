@@ -5,3 +5,4 @@ import '@ionic/core';
 // setupConfig({
 //   mode: 'ios'
 // });
+
