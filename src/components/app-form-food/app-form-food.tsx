@@ -229,10 +229,13 @@ export class AppDaily {
         'scoop'
     ];
 
+    toggleBarcode = true;
+
     componentWillLoad() {
         this.changeHeader();
         window.location.hash = '';
         window.onhashchange = () => this.goBack();
+        // this.imgUrl = '/assets/images/91079.jpg'
     }
 
     componentDidLoad() {
@@ -793,14 +796,20 @@ export class AppDaily {
     }
 
     async getBarcode() {
-        try {
-            const resultObject = await scan(document.querySelector('#form-food-barcode'));
-            document.querySelector('ion-input').value = resultObject.codeResult.code;
-            this.foodItem.barcode = resultObject.codeResult.code;
-        } catch (error) {
-            console.error(error);
+        if (this.toggleBarcode) {
+            try {
+                this.toggleBarcode = false;
+                const resultObject = await scan(document.querySelector('#form-food-barcode'));
+                document.querySelector('ion-input').value = resultObject.codeResult.code;
+                this.foodItem.barcode = resultObject.codeResult.code;
+            } catch (error) {
+                console.error(error);
+            }
+            document.querySelector('#form-food-barcode').innerHTML = stopScan();
+        } else {
+            document.querySelector('#form-food-barcode').innerHTML = stopScan();
+            this.toggleBarcode = true;
         }
-        document.querySelector('#form-food-barcode').innerHTML = stopScan();
     }
 
     render() {
@@ -839,7 +848,7 @@ export class AppDaily {
                         <h1>{this.header}</h1>
                         <div id="button" >
                             <img src={this.imgUrl} />
-                            <ion-button size="large" fill="clear" onClick={this.getPicture.bind(this)}>
+                            <ion-button size="large" onClick={this.getPicture.bind(this)}>
                                 <ion-icon slot="icon-only" name="camera"></ion-icon>
                             </ion-button>
                         </div>

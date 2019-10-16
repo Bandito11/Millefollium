@@ -4,8 +4,7 @@ import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 export const config: Config = {
   outputTargets: [{
-    type: 'www',
-    serviceWorker: null
+    type: 'www'
   }],
   globalScript: 'src/global/app.ts',
   globalStyle: 'src/global/app.css',

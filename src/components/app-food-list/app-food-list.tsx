@@ -4,6 +4,7 @@ import { getFoodProducts } from '../../services/db';
 import { foodNameToUppercase } from '../../helpers/utils';
 import { actionSheetController, modalController } from '@ionic/core';
 import { scan, stopScan } from '../../services/quagga';
+import { CapacitorDataStorageSqlite } from 'capacitor-data-storage-sqlite';
 
 @Component({
     tag: 'app-food-list',
@@ -14,14 +15,10 @@ export class AppFoodList {
 
     @State() foodItems: (IFoodProduct & LokiObj)[] = [];
     @State() frequentFoodItems: (IFoodProduct & LokiObj)[] = [];
+    toggleBarcode = true;
 
     componentWillLoad() {
         this.getFrequentFoodItems();
-    }
-
-    componentDidLoad() {
-        const searchBar = document.querySelector('ion-searchbar');
-        searchBar.setFocus();
     }
 
     @Listen('ionChange')
@@ -34,15 +31,48 @@ export class AppFoodList {
         if (query) {
             const response = getFoodProducts(query);
             if (response.success) {
-                this.foodItems = [...response.data];
+                this.foodItems = response.data;
+                // let frequentItems = [];
+                if (this.frequentFoodItems.length > 0) {
+                    response.data.forEach(data => {
+                        let found;
+                        this.frequentFoodItems.forEach(food => {
+                            if (data.name === food.name) {
+                                found = true;
+                            }
+                        });
+                        if (!found) {
+                            this.frequentFoodItems = [...this.frequentFoodItems, data];
+                        }
+                    });
+                } else {
+                    this.frequentFoodItems = response.data;
+                }
+                if (this.frequentFoodItems.length > 9) {
+                    for (let i = 0; i < this.frequentFoodItems.length - 9; i++) {
+                        this.frequentFoodItems.pop();
+                    }
+                }
             }
         } else {
             this.foodItems = [];
         }
+        const frequentFoodItems = [];
+        this.frequentFoodItems.forEach(food => {
+            frequentFoodItems.push(JSON.stringify(food));
+        });
+        CapacitorDataStorageSqlite.set({ key: 'frequentFoodItems', value: frequentFoodItems.toString() });
     }
 
     getFrequentFoodItems() {
-        // this.frequentFoodItems = [...MOCKFOODITEMS.reverse()];
+        CapacitorDataStorageSqlite.get({ key: 'frequentFoodItems' }).then(data => {
+            if (data) {
+                const array = data.value.split(',');
+                array.forEach(food => {
+                    this.frequentFoodItems = [...this.frequentFoodItems, JSON.parse(food)];
+                });
+            }
+        });
     }
 
     goBack() {
@@ -51,15 +81,21 @@ export class AppFoodList {
     }
 
     async getBarcode() {
-        const ionSearch = document.querySelector('ion-searchbar');
-        try {
-            const resultObject = await scan(document.querySelector('#food-list-barcode'));
-            ionSearch.value = resultObject.codeResult.code;
-            this.queryByNameOrID(resultObject.codeResult.code);
-        } catch (error) {
-            console.error(error);
+        if (this.toggleBarcode) {
+            this.toggleBarcode = false;
+            try {
+                const ionSearch = document.querySelector('ion-searchbar');
+                const resultObject = await scan(document.querySelector('#food-list-barcode'));
+                ionSearch.value = resultObject.codeResult.code;
+                this.queryByNameOrID(resultObject.codeResult.code);
+            } catch (error) {
+                console.error(error);
+            }
+            document.querySelector('#food-list-barcode').innerHTML = stopScan();
+        } else {
+            this.toggleBarcode = true;
+            document.querySelector('#food-list-barcode').innerHTML = stopScan();
         }
-        document.querySelector('#food-list-barcode').innerHTML = stopScan();
     }
 
     async presentCreateModal(componentProps: { $loki?: number, mode: string }) {

@@ -11,7 +11,8 @@
     "build": "stencil build",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watch"
+    "test.watch": "stencil test --spec --e2e --watch",
+    "deploy": "stencil build && firebase deploy"
   },
   "dependencies": {
     "@capacitor/core": "^1.2.1",
