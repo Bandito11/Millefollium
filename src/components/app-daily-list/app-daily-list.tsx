@@ -41,22 +41,7 @@ export class AppDaily {
                             }, {
                                 text: 'OK',
                                 handler: () => {
-                                    this.deleteDailyEntry(meal.id);
-                                    const response = getDaily(new Date(this.daily.date));
-                                    if (response.success) {
-                                        this.updatedDailyEntry.emit()
-                                    } else {
-                                        this.daily = {
-                                            ...this.daily,
-                                            breakfast: [],
-                                            breakfastSnack: [],
-                                            lunch: [],
-                                            lunchSnack: [],
-                                            dinner: [],
-                                            dinnerSnack: []
-                                        };
-                                        this.updatedDailyEntry.emit(this.daily);
-                                    }
+                                    this.deleteDailyEntry(meal.id);                               
                                 }
                             }]
                         });
@@ -123,7 +108,9 @@ export class AppDaily {
 
     deleteDailyEntry(id: number) {
         const response = deleteDaily(id);
-        if (!response.success) {
+        if (response.success) {
+            this.updatedDailyEntry.emit();            
+        } else {
             console.error(response.error);
         }
     }
@@ -171,7 +158,8 @@ export class AppDaily {
                                 lunchSnack: [],
                                 dinner: [],
                                 dinnerSnack: []
-                            }
+                            };
+                            this.updatedDailyEntry.emit();
                         }
                     } else {
                         console.error(response.error);
