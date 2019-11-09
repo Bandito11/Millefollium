@@ -4,7 +4,13 @@
   height: auto;
 }
 
-#button ion-button {
+/* #button ion-button {
+  position: absolute;
+  right: 45%;
+  top: 50%;
+} */
+
+#button ion-fab {
   position: absolute;
   right: 45%;
   top: 50%;

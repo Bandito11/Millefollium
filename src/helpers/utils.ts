@@ -1,3 +1,4 @@
+
 export function foodNameToUppercase(name: string) {
   let formattedName;
   const array = name.split(' ');

@@ -41,7 +41,7 @@ export class AppDaily {
                             }, {
                                 text: 'OK',
                                 handler: () => {
-                                    this.deleteDailyEntry(meal.id);                               
+                                    this.deleteDailyEntry(meal);
                                 }
                             }]
                         });
@@ -60,7 +60,7 @@ export class AppDaily {
                             }, {
                                 text: 'OK',
                                 handler: () => {
-                                    this.editDailyEntry(meal.id);
+                                    this.editDailyEntry(meal);
                                 }
                             }]
                         });
@@ -73,7 +73,7 @@ export class AppDaily {
                         const modal = await modalController.create({
                             component: 'app-view-food',
                             componentProps: {
-                                $loki: meal['$loki']
+                                foodProduct: meal
                             }
                         });
                         modal.present();
@@ -106,10 +106,10 @@ export class AppDaily {
         await alert.present();
     }
 
-    deleteDailyEntry(id: number) {
-        const response = deleteDaily(id);
+    deleteDailyEntry(meal: IMeal) {
+        const response = deleteDaily(meal);
         if (response.success) {
-            this.updatedDailyEntry.emit();            
+            this.updatedDailyEntry.emit();
         } else {
             console.error(response.error);
         }
@@ -120,7 +120,7 @@ export class AppDaily {
         await alert.present();
     }
 
-    async editDailyEntry(id: number) {
+    async editDailyEntry(meal: IMeal) {
         const servingSize = 1;
         const alert = await alertController.create({
             header: 'Change the serving size!',
@@ -134,12 +134,12 @@ export class AppDaily {
             ],
             buttons: [{
                 text: 'Cancel',
-                role: 'cancel',
+                role: 'cancel', 
                 cssClass: 'secondary'
             }, {
                 text: 'Ok',
                 handler: (e) => {
-                    const response = editDaily({ servingSize: e.servingSize, id: id });
+                    const response = editDaily({ servingSize: e.servingSize, foodProduct: meal });
                     if (response.success) {
                         let dailyResponse;
                         if (this.today) {
@@ -147,9 +147,7 @@ export class AppDaily {
                         } else {
                             dailyResponse = getDaily(new Date(this.daily.date));
                         }
-                        if (dailyResponse.success) {
-                            this.updatedDailyEntry.emit()
-                        } else {
+                        if (!dailyResponse.success) {
                             this.daily = {
                                 ...this.daily,
                                 breakfast: [],
@@ -159,8 +157,8 @@ export class AppDaily {
                                 dinner: [],
                                 dinnerSnack: []
                             };
-                            this.updatedDailyEntry.emit();
                         }
+                        this.updatedDailyEntry.emit();
                     } else {
                         console.error(response.error);
                     }

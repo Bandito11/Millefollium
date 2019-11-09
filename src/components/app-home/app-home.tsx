@@ -8,7 +8,16 @@ import { getDaily, getDailyEntries } from "../../services/db";
 })
 export class AppHome {
 
-  @State() daily: IDaily;
+  @State() daily: IDaily = {
+    calories: '0',
+    breakfast: [],
+    breakfastSnack: [],
+    lunch: [],
+    lunchSnack: [],
+    dinner: [],
+    dinnerSnack: [],
+    date: ''
+  };
   @State() pastDailyEntries: IDaily[] = [];
   dailyCalories = 0;
   breakfastCalories = 0;
@@ -24,19 +33,15 @@ export class AppHome {
   dates: Date[] = [];
 
   componentWillLoad() {
-    // this.getDailyEntry();
-    document.querySelector('ion-nav').addEventListener('ionNavDidChange', () => {
-      this.getDailyEntry();
-    });
     this.getPastDailyEntries();
   }
 
   componentDidLoad() {
     const content = document.querySelector('ion-content');
     content.scrollEvents = true;
-    // document.querySelector('ion-nav').addEventListener('ionNavDidChange', () => {
-    //   this.getDailyEntry();
-    // });
+    document.querySelector('ion-nav').addEventListener('ionNavDidChange', () => {
+      this.getDailyEntry();
+    });
   }
 
   @Listen('updatedDailyEntry')
@@ -157,7 +162,20 @@ export class AppHome {
       this.daily = response.data;
       this.calculateMacros();
     } else {
-      // console.error(response.error);
+      this.daily = {
+        calories: '0',
+        breakfast: [],
+        breakfastSnack: [],
+        lunch: [],
+        lunchSnack: [],
+        dinner: [],
+        dinnerSnack: [],
+        date: ''
+      };
+      this.dailyCalories = 0;
+      this.dailyCarbs = '0';
+      this.dailyFat = '0';
+      this.dailyProtein = '0';
     }
   };
 

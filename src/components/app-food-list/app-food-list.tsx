@@ -4,7 +4,7 @@ import { getFoodProducts } from '../../services/db';
 import { foodNameToUppercase } from '../../helpers/utils';
 import { actionSheetController, modalController } from '@ionic/core';
 import { scan, stopScan } from '../../services/quagga';
-import { CapacitorDataStorageSqlite } from 'capacitor-data-storage-sqlite';
+declare const localforage;
 
 @Component({
     tag: 'app-food-list',
@@ -32,7 +32,6 @@ export class AppFoodList {
             const response = getFoodProducts(query);
             if (response.success) {
                 this.foodItems = response.data;
-                // let frequentItems = [];
                 if (this.frequentFoodItems.length > 0) {
                     response.data.forEach(data => {
                         let found;
@@ -57,20 +56,19 @@ export class AppFoodList {
         } else {
             this.foodItems = [];
         }
-        const frequentFoodItems = [];
+        let frequentFoodItems = [];
         this.frequentFoodItems.forEach(food => {
             frequentFoodItems.push(JSON.stringify(food));
         });
-        CapacitorDataStorageSqlite.set({ key: 'frequentFoodItems', value: frequentFoodItems.toString() });
+        localforage.setItem('frequentFoodItems', frequentFoodItems);
     }
 
     getFrequentFoodItems() {
-        CapacitorDataStorageSqlite.get({ key: 'frequentFoodItems' }).then(data => {
-            if (data) {
-                const array = data.value.split(',');
-                array.forEach(food => {
-                    this.frequentFoodItems = [...this.frequentFoodItems, JSON.parse(food)];
-                });
+        localforage.getItem('frequentFoodItems', (err, value: string[]) => {
+            if (err) {
+                console.error(err);
+            } else {
+                this.frequentFoodItems = value.map(foodProduct => JSON.parse(foodProduct));
             }
         });
     }
@@ -108,9 +106,9 @@ export class AppFoodList {
         await modal.present();
     }
 
-    async showSelectionWindow(foodItem: (IFoodProduct & LokiObj)) {
+    async showSelectionWindow(foodProduct: (IFoodProduct & LokiObj)) {
         const actionSheet = await actionSheetController.create({
-            header: foodNameToUppercase(foodItem.name),
+            header: foodNameToUppercase(foodProduct.name),
             buttons: [
                 {
                     text: 'Cancel',
@@ -124,30 +122,30 @@ export class AppFoodList {
                         modalController.create({
                             component: 'app-daily-entry',
                             componentProps: {
-                                $loki: foodItem.$loki
+                                foodProduct: foodProduct
                             }
                         }).then(modal => modal.present());
                     }
                 },
                 {
-                    text: `View ${foodItem.name}`,
+                    text: `View ${foodProduct.name}`,
                     role: 'view',
                     cssClass: 'tertiary',
                     handler: async () => {
                         const modal = await modalController.create({
                             component: 'app-view-food',
                             componentProps: {
-                                $loki: foodItem.$loki,
+                                foodProduct: foodProduct,
                                 mode: 'create'
                             }
                         });
                         await modal.present();
                     }
                 }, {
-                    text: `Edit ${foodItem.name}`,
+                    text: `Edit ${foodProduct.name}`,
                     cssClass: 'secondary',
                     handler: () => {
-                        this.presentCreateModal({ mode: 'edit', $loki: foodItem.$loki });
+                        this.presentCreateModal({ mode: 'edit', $loki: foodProduct.$loki });
                     }
                 }
             ]

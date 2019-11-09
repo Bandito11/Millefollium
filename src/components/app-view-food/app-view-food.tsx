@@ -1,6 +1,5 @@
 import { Component, h } from '@stencil/core';
 import { IFoodProduct } from '../../interfaces';
-import { getFoodProduct } from '../../services/db';
 import { foodNameToUppercase } from '../../helpers/utils';
 import { readImageFile } from '../../services/filesystem';
 import { modalController } from '@ionic/core';
@@ -17,20 +16,14 @@ export class AppViewFood {
 
     async componentWillLoad() {
         const modalElement = document.querySelector('ion-modal');
-        const $loki = modalElement.componentProps.$loki;
-        const response = getFoodProduct($loki);
-        if (response.success) {
-            this.foodItem = response.data;
-            let image;
-            try {
-                image = await readImageFile(this.foodItem.name);
-            } catch (error) {
-                image = '';
-            }
-            this.imgUrl = image.data;
-        } else {
-            console.error(response.error);
+        this.foodItem = modalElement.componentProps.foodProduct;
+        let image;
+        try {
+            image = await readImageFile(this.foodItem.name);
+        } catch (error) {
+            image = '';
         }
+        this.imgUrl = image.data;
         window.location.hash = '';
         window.onhashchange = () => this.goBack();
     }

@@ -241,7 +241,6 @@ export class AppDaily {
         const ionSelect = document.querySelector('ion-select');
         ionSelect.addEventListener('ionChange', (ev) => {
             this.foodItem.servingSize.measurement = ev['detail'].value;
-
         });
     }
 
@@ -673,7 +672,16 @@ export class AppDaily {
     }
 
     async getPicture() {
-        if (navigator.userAgent.toLowerCase().match('mobile')) {
+        // if (navigator.userAgent.toLowerCase().match('mobile')) {
+        //     const image = await Camera.getPhoto({
+        //         quality: 100,
+        //         allowEditing: false,
+        //         resultType: CameraResultType.Uri,
+        //         source: CameraSource.Prompt
+        //     });
+        //     this.imgUrl = image.webPath;
+
+        // } else {
             const image = await Camera.getPhoto({
                 quality: 100,
                 allowEditing: false,
@@ -681,16 +689,7 @@ export class AppDaily {
                 source: CameraSource.Prompt
             });
             this.imgUrl = image.webPath;
-
-        } else {
-            const image = await Camera.getPhoto({
-                quality: 100,
-                allowEditing: false,
-                resultType: CameraResultType.DataUrl,
-                source: CameraSource.Prompt
-            });
-            this.imgUrl = image.dataUrl;
-        }
+        // }
     }
 
     createEditFoodProd() {
@@ -710,7 +709,8 @@ export class AppDaily {
         const response = insertOrUpdateFoodProduct(foodItem);
         if (response.success) {
             if (this.imgUrl) {
-                writeImageFile({ name: this.foodItem.name, data: this.imgUrl });
+                const dataURL = `data:image/png; charset=utf8, ${encodeURIComponent(this.imgUrl)}`;
+                writeImageFile({ name: this.foodItem.name, data: dataURL });
             }
             this.displayMessage({
                 header: 'Success!',
@@ -847,9 +847,14 @@ export class AppDaily {
                         <h1>{this.header}</h1>
                         <div id="button" >
                             <img src={this.imgUrl} />
-                            <ion-button size="large" onClick={this.getPicture.bind(this)}>
+                            <ion-fab>
+                                <ion-fab-button onClick={this.getPicture.bind(this)}>
+                                    <ion-icon name="camera"></ion-icon>
+                                </ion-fab-button>
+                            </ion-fab>
+                            {/* <ion-button fill="outline" size="large" onClick={this.getPicture.bind(this)}>
                                 <ion-icon slot="icon-only" name="camera"></ion-icon>
-                            </ion-button>
+                            </ion-button> */}
                         </div>
                         <ion-item>
                             <ion-input type="text" value={this.foodItem.barcode} readonly></ion-input>

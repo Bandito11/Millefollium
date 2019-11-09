@@ -1,6 +1,6 @@
 import { Component, h } from '@stencil/core';
-import { IFoodProduct, IEntry } from '../../interfaces';
-import { getFoodProduct, addToDaily } from '../../services/db';
+import { IFoodProduct, IDailyEntry } from '../../interfaces';
+import { addToDaily } from '../../services/db';
 import { foodNameToUppercase, mealTypes } from '../../helpers/utils';
 import { alertController, modalController } from '@ionic/core';
 
@@ -23,13 +23,8 @@ export class AppDailyEntry {
 
     componentWillLoad() {
         const modalElement = document.querySelector('ion-modal');
-        const $loki = modalElement.componentProps.$loki;
-        const response = getFoodProduct($loki);
-        if (response.success) {
-            this.foodItem = response.data;
-        } else {
-            console.error(response.error);
-        }
+        const foodProduct = modalElement.componentProps.foodProduct;
+        this.foodItem = foodProduct;
         window.location.hash = '';
         window.onhashchange = () => this.goBack();
     }
@@ -39,10 +34,10 @@ export class AppDailyEntry {
     }
 
     addToDaily() {
-        let entry: IEntry = {
+        let entry: IDailyEntry = {
             type: document.querySelector('ion-radio-group').value,
             date: new Date(),
-            productId: this.foodItem.$loki.toString(),
+            foodProduct: this.foodItem,
             consumedSize: this.servingSizeInput
         };
         if (!document.querySelector('ion-radio-group').value) {
