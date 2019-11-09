@@ -235,7 +235,6 @@ export class AppDaily {
         this.changeHeader();
         window.location.hash = '';
         window.onhashchange = () => this.goBack();
-        // this.imgUrl = '/assets/images/91079.jpg'
     }
 
     componentDidLoad() {
