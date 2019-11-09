@@ -24,16 +24,19 @@ export class AppHome {
   dates: Date[] = [];
 
   componentWillLoad() {
-    this.getDailyEntry();
+    // this.getDailyEntry();
+    document.querySelector('ion-nav').addEventListener('ionNavDidChange', () => {
+      this.getDailyEntry();
+    });
+    this.getPastDailyEntries();
   }
 
   componentDidLoad() {
     const content = document.querySelector('ion-content');
     content.scrollEvents = true;
-    document.querySelector('ion-nav').addEventListener('ionNavDidChange', () => {
-      this.getDailyEntry();
-    });
-    this.getPastDailyEntries();
+    // document.querySelector('ion-nav').addEventListener('ionNavDidChange', () => {
+    //   this.getDailyEntry();
+    // });
   }
 
   @Listen('updatedDailyEntry')
@@ -60,52 +63,52 @@ export class AppHome {
 
 
   calculateMacros() {
-    let totalCalories = 0;
-    let totalFat = 0;
-    let totalProtein = 0;
-    let totalCarbs = 0;
-    let breakfastTotalCalories = 0;
-    let breakfastSnackTotalCalories = 0;
-    let lunchTotalCalories = 0;
-    let lunchSnackTotalCalories = 0;
-    let dinnerTotalCalories = 0;
-    let dinnerSnackTotalCalories = 0;
+    let totalCalories;
+    let totalFat;
+    let totalProtein;
+    let totalCarbs;
+    let breakfastTotalCalories;
+    let breakfastSnackTotalCalories;
+    let lunchTotalCalories;
+    let lunchSnackTotalCalories;
+    let dinnerTotalCalories;
+    let dinnerSnackTotalCalories;
 
     const breakfast = this.totalMealMacros(this.daily.breakfast);
-    breakfastTotalCalories += breakfast.calories;
-    totalFat += breakfast.fat;
-    totalProtein += breakfast.protein;
-    totalCarbs += breakfast.carbs;
+    breakfastTotalCalories = breakfast.calories;
+    totalFat = breakfast.fat;
+    totalProtein = breakfast.protein;
+    totalCarbs = breakfast.carbs;
 
     const breakfastSnack = this.totalMealMacros(this.daily.breakfastSnack);
-    breakfastSnackTotalCalories += breakfastSnack.calories;
-    totalFat += breakfastSnack.fat;
-    totalProtein += breakfastSnack.protein;
-    totalCarbs += breakfastSnack.carbs;
+    breakfastSnackTotalCalories = breakfastSnack.calories;
+    totalFat = breakfastSnack.fat;
+    totalProtein = breakfastSnack.protein;
+    totalCarbs = breakfastSnack.carbs;
 
     const lunch = this.totalMealMacros(this.daily.lunch);
-    lunchTotalCalories += lunch.calories;
-    totalFat += lunch.fat;
-    totalProtein += lunch.protein;
-    totalCarbs += lunch.carbs;
+    lunchTotalCalories = lunch.calories;
+    totalFat = lunch.fat;
+    totalProtein = lunch.protein;
+    totalCarbs = lunch.carbs;
 
     const lunchSnack = this.totalMealMacros(this.daily.lunchSnack);
-    lunchSnackTotalCalories += lunchSnack.calories;
-    totalFat += lunchSnack.fat;
-    totalProtein += lunchSnack.protein;
-    totalCarbs += lunchSnack.carbs;
+    lunchSnackTotalCalories = lunchSnack.calories;
+    totalFat = lunchSnack.fat;
+    totalProtein = lunchSnack.protein;
+    totalCarbs = lunchSnack.carbs;
 
     const dinner = this.totalMealMacros(this.daily.dinner);
-    dinnerTotalCalories += dinner.calories;
-    totalFat += dinner.fat;
-    totalProtein += dinner.protein;
-    totalCarbs += dinner.carbs;
+    dinnerTotalCalories = dinner.calories;
+    totalFat = dinner.fat;
+    totalProtein = dinner.protein;
+    totalCarbs = dinner.carbs;
 
     const dinnerSnack = this.totalMealMacros(this.daily.dinnerSnack);
-    dinnerSnackTotalCalories += dinnerSnack.calories;
-    totalFat += dinnerSnack.fat;
-    totalProtein += dinnerSnack.protein;
-    totalCarbs += dinnerSnack.carbs;
+    dinnerSnackTotalCalories = dinnerSnack.calories;
+    totalFat = dinnerSnack.fat;
+    totalProtein = dinnerSnack.protein;
+    totalCarbs = dinnerSnack.carbs;
 
     totalCalories = breakfastTotalCalories + breakfastSnackTotalCalories + lunchTotalCalories + this.lunchSnackCalories + dinnerTotalCalories + dinnerSnackTotalCalories;
     if (totalCalories > 0) {
