@@ -1,4 +1,4 @@
-import { IResponse, IDaily, IEntry, IFoodProduct, IDailyEntry } from './../interfaces.d';
+import { IResponse, IDaily, IFoodProduct, IDailyEntry } from './../interfaces.d';
 import { dateToString, mealTypes } from '../helpers/utils';
 import { CapacitorFileLokiAdapter } from './capacitor-file-loki-adapter';
 import loki from 'lokijs';
@@ -8,7 +8,6 @@ const partioningAdapter = new loki.LokiPartitioningAdapter(capacitorFileLokiAdap
 
 let foodProductsColl: Collection<IFoodProduct>;
 let dailyEntriesColl: Collection<IDailyEntry>;
-// let dailyEntriesColl: Collection<IEntry>;
 
 const options: Partial<LokiConfigOptions> = {
     autosave: true,
@@ -122,29 +121,6 @@ export function getFoodProducts(query): IResponse<(IFoodProduct & LokiObj)[]> {
     }
 }
 
-
-//TODO: TO DELETE
-export function getFoodProduct($loki: number) {
-    const response: IResponse<IFoodProduct & LokiObj> = {
-        success: false,
-        error: `Didn't find any results.`,
-        data: null,
-        dateStamp: new Date(),
-        message: null
-    };
-    const results = foodProductsColl.get($loki);
-    if (results) {
-        return {
-            ...response,
-            error: null,
-            success: true,
-            data: results
-        }
-    } else {
-        return response;
-    }
-}
-
 export function addToDaily(entry: IDailyEntry) {
     const response: IResponse<undefined> = {
         success: false,
@@ -166,30 +142,8 @@ export function addToDaily(entry: IDailyEntry) {
     }
 }
 
-//TODO: TO DELETE
-// export function addToDaily(entry: IEntry) {
-//     const response: IResponse<IEntry> = {
-//         success: false,
-//         error: `There was an error adding entry to database.`,
-//         data: undefined,
-//         dateStamp: new Date(),
-//         message: null
-//     }
-//     const result = dailyEntriesColl.insertOne(entry);
-//     if (result) {
-//         return {
-//             ...response,
-//             error: null,
-//             success: true,
-//             message: `Entry was added!`
-//         }
-//     } else {
-//         return response;
-//     }
-// }
-
 export function editDaily(opts: { servingSize, foodProduct: IFoodProduct }) {
-    const response: IResponse<IEntry> = {
+    const response: IResponse<undefined> = {
         success: false,
         error: `There was an error editing daily entry.`,
         data: undefined,
@@ -220,7 +174,7 @@ export function editDaily(opts: { servingSize, foodProduct: IFoodProduct }) {
 }
 
 export function deleteDaily(foodProduct: IFoodProduct) {
-    const response: IResponse<null> = {
+    const response: IResponse<undefined> = {
         success: false,
         error: `There was an error deleting daily entry.`,
         data: undefined,
@@ -319,88 +273,6 @@ export function getDaily(date: Date): IResponse<IDaily> {
                     break;
             }
         });
-        //TODO: DELETE COMMENTED
-        // let foodProducts = [];
-        // for (const entry of result) {
-        //     const foodProductResult = foodProductsColl.get(parseInt(entry.productId));
-        //     if (foodProductResult) {
-        //         foodProducts.push({
-        //             id: entry['$loki'],
-        //             foodProduct: foodProductResult,
-        //             type: entry.type,
-        //             calories: parseInt(entry.consumedSize) * parseInt(foodProductResult.calories)
-        //         });
-        //     }
-        // };
-        // if (foodProducts.length > 0) {
-        //     let data: IDaily = {
-        //         date: today,
-        //         calories: '0',
-        //         breakfast: [],
-        //         breakfastSnack: [],
-        //         lunch: [],
-        //         lunchSnack: [],
-        //         dinner: [],
-        //         dinnerSnack: []
-        //     };
-        //     for (const foodProduct of foodProducts) {
-        //         switch (foodProduct.type) {
-        //             case mealTypes.breakfast:
-        //                 data.breakfast.push({
-        //                     ...foodProduct.foodProduct,
-        //                     calories: foodProduct.calories,
-        //                     id: foodProduct.id
-        //                 });
-        //                 break;
-        //             case mealTypes.breakfastSnack:
-        //                 data.breakfastSnack.push({
-        //                     ...foodProduct.foodProduct,
-        //                     calories: foodProduct.calories,
-        //                     id: foodProduct.id
-        //                 });
-        //                 break;
-        //             case mealTypes.lunch:
-        //                 data.lunch.push({
-        //                     ...foodProduct.foodProduct,
-        //                     calories: foodProduct.calories,
-        //                     id: foodProduct.id
-        //                 });
-        //                 break;
-        //             case mealTypes.lunchSnack:
-        //                 data.lunchSnack.push({
-        //                     ...foodProduct.foodProduct,
-        //                     calories: foodProduct.calories,
-        //                     id: foodProduct.id
-        //                 });
-        //                 break;
-        //             case mealTypes.dinner:
-        //                 data.dinner.push({
-        //                     ...foodProduct.foodProduct,
-        //                     calories: foodProduct.calories,
-        //                     id: foodProduct.id
-        //                 });
-        //                 break;
-        //             case mealTypes.dinnerSnack:
-        //                 data.dinnerSnack.push({
-        //                     ...foodProduct.foodProduct,
-        //                     calories: foodProduct.calories,
-        //                     id: foodProduct.id
-        //                 });
-        //                 break;
-        //         }
-        //     };
-        //     return {
-        //         ...response,
-        //         success: true,
-        //         data: { ...data }
-        //     }
-        // } else {
-        //     return {
-        //         ...response,
-        //         error: `There isn't a daily entry today.`
-        //     };
-        // }
-
         return {
             ...response,
             success: true,

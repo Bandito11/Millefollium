@@ -1,5 +1,5 @@
 import { Component, h, Listen, State } from '@stencil/core';
-import { IFoodProduct } from '../../interfaces';
+import { IFoodProduct, IUSDA } from '../../interfaces';
 import { getFoodProducts } from '../../services/db';
 import { foodNameToUppercase } from '../../helpers/utils';
 import { actionSheetController, modalController } from '@ionic/core';
@@ -16,9 +16,17 @@ export class AppFoodList {
     @State() foodItems: (IFoodProduct & LokiObj)[] = [];
     @State() frequentFoodItems: (IFoodProduct & LokiObj)[] = [];
     toggleBarcode = true;
-
+    foodDataWorker;
+    usdaData: IUSDA[];
+    
     componentWillLoad() {
         this.getFrequentFoodItems();
+        if (typeof (this.foodDataWorker) == "undefined") {
+            this.foodDataWorker = new Worker("workers/usda-file.js");
+        }
+        this.foodDataWorker.onmessage = function (event) {
+            this.usdaData = event.data;
+        };
     }
 
     @Listen('ionChange')
@@ -96,7 +104,7 @@ export class AppFoodList {
         }
     }
 
-    async presentCreateModal(componentProps: { $loki?: number, mode: string }) {
+    async presentCreateModal(componentProps: { foodProduct?: IFoodProduct, mode: string }) {
         const ionSearch = document.querySelector('ion-searchbar');
         const modal = await modalController.create({
             component: 'app-form-food',
@@ -145,7 +153,7 @@ export class AppFoodList {
                     text: `Edit ${foodProduct.name}`,
                     cssClass: 'secondary',
                     handler: () => {
-                        this.presentCreateModal({ mode: 'edit', $loki: foodProduct.$loki });
+                        this.presentCreateModal({ mode: 'edit', foodProduct: foodProduct });
                     }
                 }
             ]

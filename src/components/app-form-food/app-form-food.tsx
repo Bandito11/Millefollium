@@ -1,7 +1,7 @@
 import { Component, h, State } from "@stencil/core";
 import { IFoodProduct } from "../../interfaces";
 import { foodNameToUppercase } from '../../helpers/utils';
-import { insertOrUpdateFoodProduct, deleteFoodProduct, getFoodProduct } from "../../services/db";
+import { insertOrUpdateFoodProduct, deleteFoodProduct } from "../../services/db";
 import { writeImageFile, readImageFile } from "../../services/filesystem";
 import { alertController, modalController } from "@ionic/core";
 import { scan, stopScan } from "../../services/quagga";
@@ -244,27 +244,13 @@ export class AppDaily {
         });
     }
 
-    changeHeader() {
+    async changeHeader() {
         const modalElement = document.querySelector('ion-modal');
         this.path = modalElement.componentProps.mode;
         if (this.path === 'create') {
             this.header = 'Add a new food product!'
         } else {
-            this.getProductData(modalElement.componentProps.$loki);
-        }
-    }
-
-    async goBack() {
-        await modalController.dismiss();
-    }
-
-    async getProductData($loki: number) {
-        const response = getFoodProduct($loki);
-        if (response.success) {
-            this.foodItem = {
-                ...this.foodItem,
-                ...response.data
-            }
+            this.foodItem = modalElement.componentProps.foodProduct;
             this.name = this.foodItem.name;
             this.calories = this.foodItem.calories;
             this.header = `Edit ${foodNameToUppercase(this.foodItem.name)}!`;
@@ -275,9 +261,25 @@ export class AppDaily {
                 image = '';
             }
             this.imgUrl = image.data;
-        } else {
-            console.error(response.error);
         }
+    }
+
+    async goBack() {
+        await modalController.dismiss();
+    }
+
+    async getProductData(foodProduct: IFoodProduct) {
+        this.foodItem = foodProduct;
+        this.name = this.foodItem.name;
+        this.calories = this.foodItem.calories;
+        this.header = `Edit ${foodNameToUppercase(this.foodItem.name)}!`;
+        let image;
+        try {
+            image = await readImageFile(this.foodItem.name);
+        } catch (error) {
+            image = '';
+        }
+        this.imgUrl = image.data;
     }
 
 
@@ -682,13 +684,13 @@ export class AppDaily {
         //     this.imgUrl = image.webPath;
 
         // } else {
-            const image = await Camera.getPhoto({
-                quality: 100,
-                allowEditing: false,
-                resultType: CameraResultType.Uri,
-                source: CameraSource.Prompt
-            });
-            this.imgUrl = image.webPath;
+        const image = await Camera.getPhoto({
+            quality: 100,
+            allowEditing: false,
+            resultType: CameraResultType.Uri,
+            source: CameraSource.Prompt
+        });
+        this.imgUrl = image.webPath;
         // }
     }
 
