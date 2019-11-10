@@ -33,19 +33,17 @@ export class AppFoodList {
     }
 
     componentDidLoad() {
-        const content = document.querySelector('ion-content');
+        const content = document.querySelector<HTMLIonContentElement>('#food-list-content');
         content.scrollEvents = true;
-    }
+        content.addEventListener('ionScroll', async (ev) => {
+            const scroll = await content.getScrollElement();
+            const scrollTopMax = scroll['scrollTopMax'];
+            if (ev['detail']['scrollTop'] === scrollTopMax) {
+                this.generateFoodProducts();
+            };
 
-    @Listen('ionScroll')
-    async handleIonScroll(ev) {
-        const content = document.querySelector('ion-content');
-        const scroll = await content.getScrollElement();
-        const scrollTopMax = scroll['scrollTopMax'];
-        if (ev['detail']['scrollTop'] === scrollTopMax) {
-            this.generateFoodProducts();
-        };
-    };
+        });
+    }
 
     @Listen('ionChange')
     handleIonChange(ev) {
@@ -57,11 +55,11 @@ export class AppFoodList {
             name: '',
             barcode: '',
             picture: '',
-            servingPerContainer: '0',
+            servingPerContainer: '1',
             servingSize: {
                 size: '0',
-                grams: '0',
-                measurement: '',
+                grams: '100',
+                measurement: 'gram',
             },
             calories: '0',
             fat: {
@@ -278,18 +276,21 @@ export class AppFoodList {
     }
 
     generateFoodProducts() {
-        for (let i = this.currentIndex; i < this.currentIndex + 10; i++) {
-            this.foodProducts = [this.unfilteredFoodProducts[i], ...this.foodProducts];
+        if (this.foodProducts.length > 0) {
+            for (let i = this.currentIndex; i < this.currentIndex + 10; i++) {
+                this.foodProducts.unshift(this.unfilteredFoodProducts[i]);
+            }
+            this.currentIndex += 10;
+            this.foodProducts = this.foodProducts;
         }
-        this.currentIndex += 10;
     }
 
-    queryByNameOrId(value) {
-        const query = value;
+    queryByNameOrId(query) {
         if (query) {
-            const checkIfBarcodeANumber = parseInt(value);
+            this.unfilteredFoodProducts = [];
+            const checkIfBarcodeANumber = parseInt(query);
             if ((checkIfBarcodeANumber != NaN || typeof checkIfBarcodeANumber != 'number') && usdaData) {
-                this.unfilteredFoodProducts = this.queryUSDAByName(value);
+                this.unfilteredFoodProducts = this.queryUSDAByName(query);
             };
             const response = getFoodProducts(query);
             if (response.success) {
@@ -307,6 +308,7 @@ export class AppFoodList {
             }
             this.generateFrequentFoodProducts();
         } else {
+            this.foodProducts.length = 0;
             this.foodProducts = [];
         }
     }
@@ -321,20 +323,25 @@ export class AppFoodList {
                     }
                 });
                 if (!found) {
-                    this.frequentFoodProducts = [data, ...this.frequentFoodProducts];
+                    this.frequentFoodProducts.unshift(data);
                 }
             });
         } else {
             this.frequentFoodProducts = this.foodProducts;
         }
         if (this.frequentFoodProducts.length > 9) {
-            this.frequentFoodProducts.splice(0, this.frequentFoodProducts.length - 10)
+            this.frequentFoodProducts.length = 10;
         }
-        let frequentFoodProducts = [];
-        this.frequentFoodProducts.forEach(food => {
-            frequentFoodProducts.push(JSON.stringify(food));
-        });
-        localforage.setItem('frequentFoodProducts', frequentFoodProducts);
+        if (this.frequentFoodProducts.length > 0) {
+            let frequentFoodProducts = [];
+            this.frequentFoodProducts.forEach(food => {
+                frequentFoodProducts.push(JSON.stringify(food));
+            });
+            localforage.setItem('frequentFoodProducts', frequentFoodProducts);
+        } else {
+            localforage.setItem('frequentFoodProducts', []);
+        }
+
     }
 
     getFrequentFoodProducts() {
@@ -457,7 +464,7 @@ export class AppFoodList {
                 }
             </ion-header>
             ,
-            <ion-content class="ion-padding">
+            <ion-content id="food-list-content" class="ion-padding">
                 {
                     this.foodProducts.length > 0
                         ? this.foodProducts.map((foodItem, index) =>
