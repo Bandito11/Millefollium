@@ -111,7 +111,7 @@ export interface IUSDA {
     fat: number;// (g)
     carbohydrates: number;// (g)
     ash: number;// (g)
-    calories;
+    calories: number;
     starch: number;// (g)
     sucrose: number;// (g)
     glucose: number;// (g)
@@ -129,7 +129,7 @@ export interface IUSDA {
     iron: number; // (mg)
     magnesium: number; // (mg)
     phosphorus: number; // (mg)
-    potasssium: number; // (mg)
+    potassium: number; // (mg)
     sodium: number; // (mg)
     zinc: number; // (mg)
     cupper: number; // (mg)

@@ -56,13 +56,7 @@ export class AppHome {
     const scroll = await content.getScrollElement();
     const scrollTopMax = scroll['scrollTopMax'];
     if (ev['detail']['scrollTop'] === scrollTopMax) {
-      //   const loadingController = document.querySelector('ion-loading-controller');
-      //   const loading = await loadingController.create({
-      //     message: 'Fetching...'
-      //   });
-      //   await loading.present();
       this.getPastDailyEntries();
-      // loading.dismiss();
     };
   };
 

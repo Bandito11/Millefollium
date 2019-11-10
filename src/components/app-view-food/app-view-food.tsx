@@ -13,17 +13,20 @@ export class AppViewFood {
 
     foodItem: IFoodProduct;
     imgUrl: string;
+    ifUSDA: boolean;
 
     async componentWillLoad() {
         const modalElement = document.querySelector('ion-modal');
         this.foodItem = modalElement.componentProps.foodProduct;
+        this.ifUSDA = modalElement.componentProps.ifUSDA;
         let image;
         try {
-            image = await readImageFile(this.foodItem.name);
+            const contents = await readImageFile(this.foodItem.name);
+            image = contents.data;
         } catch (error) {
             image = '';
         }
-        this.imgUrl = image.data;
+        this.imgUrl = image;
         window.location.hash = '';
         window.onhashchange = () => this.goBack();
     }
@@ -204,7 +207,7 @@ export class AppViewFood {
 
                     <ion-row>
                         <ion-col>
-                            <p>Vitamin A</p>
+                            <p><span class="thick">Vitamin A</span> {this.foodItem.vitamin.A.grams}g</p>
                         </ion-col>
                         <ion-col class="ion-text-center ion-margin-start">
                             <p>{this.foodItem.vitamin.A.percent}%</p>
@@ -213,7 +216,7 @@ export class AppViewFood {
 
                     <ion-row>
                         <ion-col>
-                            <p>Vitamin C</p>
+                            <p><span class="thick">Vitamin C</span> {this.foodItem.vitamin.C.grams}g</p>
                         </ion-col>
                         <ion-col class="ion-text-center ion-margin-start">
                             <p>{this.foodItem.vitamin.C.percent}%</p>
@@ -222,7 +225,7 @@ export class AppViewFood {
 
                     <ion-row>
                         <ion-col>
-                            <p>Calcium</p>
+                            <p><span class="thick">Calcium</span> {this.foodItem.calcium.grams}g</p>
                         </ion-col>
                         <ion-col class="ion-text-center ion-margin-start">
                             <p>{this.foodItem.calcium.percent}%</p>
@@ -231,7 +234,7 @@ export class AppViewFood {
 
                     <ion-row>
                         <ion-col>
-                            <p>Iron</p>
+                            <p><span class="thick">Iron</span> {this.foodItem.iron.grams}g</p>
                         </ion-col>
                         <ion-col class="ion-text-center ion-margin-start">
                             <p>{this.foodItem.iron.percent}%</p>
@@ -240,7 +243,7 @@ export class AppViewFood {
 
                     <ion-row>
                         <ion-col>
-                            <p>Niacin</p>
+                            <p><span class="thick">Niacin</span> {this.foodItem.niacin.grams}g</p>
                         </ion-col>
                         <ion-col class="ion-text-center ion-margin-start">
                             <p>{this.foodItem.niacin.percent}%</p>
@@ -249,7 +252,7 @@ export class AppViewFood {
 
                     <ion-row>
                         <ion-col>
-                            <p>Vitamin D</p>
+                            <p><span class="thick">Vitamin D</span> {this.foodItem.vitamin.D.grams}g</p>
                         </ion-col>
                         <ion-col class="ion-text-center ion-margin-start">
                             <p>{this.foodItem.vitamin.D.percent}%</p>
@@ -258,7 +261,7 @@ export class AppViewFood {
 
                     <ion-row>
                         <ion-col>
-                            <p>Vitamin E</p>
+                            <p><span class="thick">Vitamin E</span> {this.foodItem.vitamin.E.grams}g</p>
                         </ion-col>
                         <ion-col class="ion-text-center ion-margin-start">
                             <p>{this.foodItem.vitamin.E.percent}%</p>
@@ -268,6 +271,11 @@ export class AppViewFood {
                 </ion-grid>
 
                 <h6>* Percent Daily Values are based on a 2000 calorie diet.</h6>
+                {
+                    this.ifUSDA ?
+                        <h6>** Data taken from USDA does not have daily percent calculated</h6>
+                        : ''
+                }
             </ion-content>,
             <div>
                 {

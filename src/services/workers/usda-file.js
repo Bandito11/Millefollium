@@ -34,7 +34,7 @@ fetch(`/assets/${fileName}`)
                     iron: 0,
                     magnesium: 0,
                     phosphorus: 0,
-                    potasssium: 0,
+                    potassium: 0,
                     sodium: 0,
                     zinc: 0,
                     cupper: 0,
