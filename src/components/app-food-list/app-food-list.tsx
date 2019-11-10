@@ -38,7 +38,7 @@ export class AppFoodList {
     }
 
     @Listen('ionScroll')
-    async handleThisIonScroll(ev) {
+    async handleIonScroll(ev) {
         const content = document.querySelector('ion-content');
         const scroll = await content.getScrollElement();
         const scrollTopMax = scroll['scrollTopMax'];
