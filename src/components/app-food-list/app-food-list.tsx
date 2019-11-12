@@ -41,7 +41,6 @@ export class AppFoodList {
             if (ev['detail']['scrollTop'] === scrollTopMax) {
                 this.generateFoodProducts();
             };
-
         });
     }
 
