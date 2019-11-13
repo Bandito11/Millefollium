@@ -62,9 +62,9 @@ export class AppFoodList {
             picture: '',
             servingPerContainer: '1',
             servingSize: {
-                size: '0',
+                size: '1',
                 grams: '100',
-                measurement: 'gram',
+                measurement: 'serving',
             },
             calories: '0',
             fat: {
