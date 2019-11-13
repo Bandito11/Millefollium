@@ -293,7 +293,7 @@ export class AppFoodList {
             };
             const response = getFoodProducts(query);
             if (response.success) {
-                this.unfilteredFoodProducts = [...response.data, ...this.unfilteredFoodProducts];
+                this.unfilteredFoodProducts = response.data;
             }
             this.foodProducts = [];
             if (this.unfilteredFoodProducts.length > 9) {
