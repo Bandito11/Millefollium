@@ -37,8 +37,16 @@ export class AppHome {
   }
 
   componentDidLoad() {
-    const content = document.querySelector('ion-content');
+    const content = document.querySelector<HTMLIonContentElement>('#home-content');
     content.scrollEvents = true;
+    content.addEventListener('ionScroll', async (ev) => {
+      const scroll = await content.getScrollElement();
+      const scrollTopMax = scroll['scrollTopMax'];
+      if (ev['detail']['scrollTop'] === scrollTopMax) {
+        this.getPastDailyEntries();
+      };
+    });
+    
     document.querySelector('ion-nav').addEventListener('ionNavDidChange', () => {
       this.getDailyEntry();
     });
@@ -50,16 +58,15 @@ export class AppHome {
     this.refreshPastDailyEntries();
   }
 
-  @Listen('ionScroll')
-  async handleIonScroll(ev) {
-    const content = document.querySelector('ion-content');
-    const scroll = await content.getScrollElement();
-    const scrollTopMax = scroll['scrollTopMax'];
-    if (ev['detail']['scrollTop'] === scrollTopMax) {
-      this.getPastDailyEntries();
-    };
-  };
-
+  // @Listen('ionScroll')
+  // async handleIonScroll(ev) {
+  //   const content = document.querySelector('ion-content');
+  //   const scroll = await content.getScrollElement();
+  //   const scrollTopMax = scroll['scrollTopMax'];
+  //   if (ev['detail']['scrollTop'] === scrollTopMax) {
+  //     this.getPastDailyEntries();
+  //   };
+  // };
 
   calculateMacros() {
     let totalCalories;
@@ -238,7 +245,7 @@ export class AppHome {
             </ion-header>
         }
       </div>,
-      <ion-content class="ion-padding">
+      <ion-content id="home-content" class="ion-padding">
         <h1>Today</h1>
         <h3>{this.dailyCalories} calories consumed</h3>
         <ion-list lines="none">
