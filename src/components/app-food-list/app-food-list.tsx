@@ -39,7 +39,13 @@ export class AppFoodList {
             const scroll = await content.getScrollElement();
             const scrollTopMax = scroll['scrollTopMax'];
             if (ev['detail']['scrollTop'] === scrollTopMax) {
-                this.generateFoodProducts();
+                if (this.foodProducts.length > 0) {
+                    for (let i = this.currentIndex; i < this.currentIndex + 10; i++) {
+                        this.foodProducts.unshift(this.unfilteredFoodProducts[i]);
+                    }
+                    this.currentIndex += 10;
+                    this.foodProducts = this.foodProducts;
+                }
             };
         });
     }
@@ -272,16 +278,6 @@ export class AppFoodList {
             }
         });
         return usdaProducts;
-    }
-
-    generateFoodProducts() {
-        if (this.foodProducts.length > 0) {
-            for (let i = this.currentIndex; i < this.currentIndex + 10; i++) {
-                this.foodProducts.unshift(this.unfilteredFoodProducts[i]);
-            }
-            this.currentIndex += 10;
-            this.foodProducts = this.foodProducts;
-        }
     }
 
     queryByNameOrId(query) {
