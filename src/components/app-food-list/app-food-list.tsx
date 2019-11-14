@@ -16,7 +16,7 @@ let usdaData: IUSDA[] = [];
 export class AppFoodList {
 
     @State() foodProducts: IFoodProduct[] = [];
-    @State() frequentFoodProducts: (IFoodProduct)[] = [];
+    @State() frequentFoodProducts: IFoodProduct[] = [];
     unfilteredFoodProducts: IFoodProduct[] = [];
     toggleBarcode = true;
     foodDataWorker;
@@ -44,7 +44,7 @@ export class AppFoodList {
                         this.foodProducts.unshift(this.unfilteredFoodProducts[i]);
                     }
                     this.currentIndex += 10;
-                    this.foodProducts = this.foodProducts;
+                    this.foodProducts = [...this.foodProducts];
                 }
             };
         });
@@ -299,7 +299,7 @@ export class AppFoodList {
                 }
                 this.currentIndex += 10;
             } else {
-                this.foodProducts = this.unfilteredFoodProducts;
+                this.foodProducts = [...this.unfilteredFoodProducts];
             }
             this.generateFrequentFoodProducts();
         } else {
@@ -322,7 +322,7 @@ export class AppFoodList {
                 }
             });
         } else {
-            this.frequentFoodProducts = this.foodProducts;
+            this.frequentFoodProducts = [...this.foodProducts];
         }
         if (this.frequentFoodProducts.length > 9) {
             this.frequentFoodProducts.length = 10;
