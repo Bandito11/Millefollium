@@ -10,7 +10,8 @@ let usdaData: IUSDA[] = [];
 
 @Component({
     tag: 'app-food-list',
-    styleUrl: 'app-food-list.css'
+    styleUrl: 'app-food-list.css',
+    assetsDir: 'workers'
 })
 
 export class AppFoodList {
@@ -24,8 +25,8 @@ export class AppFoodList {
 
     componentWillLoad() {
         this.getFrequentFoodProducts();
-        if (typeof (this.foodDataWorker) == "undefined") {
-            this.foodDataWorker = new Worker("workers/usda-file.js");
+        if (typeof (this.foodDataWorker) == 'undefined') {
+            this.foodDataWorker = new Worker('workers/usda-file.js');
         }
         this.foodDataWorker.onmessage = function (event) {
             usdaData = event.data;

@@ -43,6 +43,12 @@ export function insertOrUpdateFoodProduct(foodItem: IFoodProduct): IResponse<IFo
                 error: 'Error updating data. Please try again.'
             }
         };
+        dailyEntriesColl.updateWhere(data => data.foodProduct.name === doc.name, result => {
+            result.foodProduct = {
+                ...doc
+            };
+            return result;
+        });
         return {
             ...response,
             success: true,
