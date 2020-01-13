@@ -42,10 +42,9 @@ export class AppFoodList {
             if (ev['detail']['scrollTop'] === scrollTopMax) {
                 if (this.foodProducts.length > 0) {
                     for (let i = this.currentIndex; i < this.currentIndex + 10; i++) {
-                        this.foodProducts.unshift(this.unfilteredFoodProducts[i]);
+                        this.foodProducts.= [this.unfilteredFoodProducts[i], ...this.foodProducts];
                     }
                     this.currentIndex += 10;
-                    this.foodProducts = [...this.foodProducts];
                 }
             };
         });
