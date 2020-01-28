@@ -293,7 +293,7 @@ export class AppHome {
                       daily={daily}
                       today={daily.date}
                       breakfast-calories={this.totalMealMacros(daily.breakfast).calories}
-                      breakfast-snack-Calories={this.totalMealMacros(daily.breakfastSnack).calories}
+                      breakfast-snack-calories={this.totalMealMacros(daily.breakfastSnack).calories}
                       lunch-calories={this.totalMealMacros(daily.lunch).calories}
                       lunch-snack-calories={this.totalMealMacros(daily.lunchSnack).calories}
                       dinner-calories={this.totalMealMacros(daily.dinner).calories}
