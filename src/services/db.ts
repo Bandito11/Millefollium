@@ -21,6 +21,16 @@ const options: Partial<LokiConfigOptions> = {
         if (!dailyEntriesColl) {
             dailyEntriesColl = db.addCollection('DailyItems');
         }
+        if (foodProductsColl.count() < 100) {
+            let foodDataWorker;
+            if (typeof (foodDataWorker) == "undefined") {
+                foodDataWorker = new Worker("workers/usda-file.js");
+            }
+            foodDataWorker.onmessage = function (event) {
+                const usda: IFoodProduct[] = event.data;
+                usda.forEach(product => insertOrUpdateFoodProduct(product));
+            };
+        }
     },
     adapter: partioningAdapter
 }
