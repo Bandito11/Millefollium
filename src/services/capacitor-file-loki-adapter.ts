@@ -49,7 +49,7 @@ async function createLocalDirectory(opts: { dbName: string }) {
         return readLocalFile({ dbName: opts.dbName });
     } catch (e) {
         try {
-            return await readLocalFile({ dbName: opts.dbName });
+            return readLocalFile({ dbName: opts.dbName });
         } catch (error) {
             throw error;
         }
