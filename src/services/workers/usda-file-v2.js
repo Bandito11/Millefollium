@@ -89,7 +89,7 @@ function createUSDAArray(data: string): IUSDA[] {
     return foodData;
 }
 
-function createUSDAObject(foodData) {
+function createUSDAObject(foodData): IFoodProduct[] {
     const foodProduct: IFoodProduct = {
         name: '',
         barcode: '',
