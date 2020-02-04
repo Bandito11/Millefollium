@@ -1,55 +1,35 @@
 import { Filesystem, FilesystemDirectory, FilesystemEncoding } from "@capacitor/core";
 
-let directoryName = 'database';
-
-async function createDirectory() {
-    try {
-        let contents = await Filesystem.mkdir({
-            path: directoryName,
-            directory: FilesystemDirectory.Documents,
-            createIntermediateDirectories: false // like mkdir -p
-        });
-        console.log(`File created in: `, contents);
-    } catch (e) {
-        console.error(e);
-    }
-}
-
-createDirectory();
+const directoryName = 'database';
 
 export function CapacitorFileLokiAdapter() { }
 
-CapacitorFileLokiAdapter.prototype.loadDatabase = async function loadDatabase(dbname, callback) {
+CapacitorFileLokiAdapter.prototype.loadDatabase = async function (dbName: string, callback: Function) {
     try {
-        let contents = await Filesystem.readFile({
-            path: `${directoryName}/${dbname}.db`,
-            directory: FilesystemDirectory.Documents,
-            encoding: FilesystemEncoding.UTF8
-        });
-        callback(contents.data);
+        callback(await createLocalDirectory({ dbName: dbName }));
     } catch (error) {
         callback(new Error(error));
     }
 };
 
-CapacitorFileLokiAdapter.prototype.saveDatabase = async function saveDatabase(dbname, dbstring, callback) {
+CapacitorFileLokiAdapter.prototype.saveDatabase = async function (dbName: string, dbString: string, callback: Function) {
     try {
         await Filesystem.writeFile({
-            path: `${directoryName}/${dbname}.db`,
-            data: dbstring,
+            path: `${directoryName}/${dbName}.txt`,
+            data: dbString,
             directory: FilesystemDirectory.Documents,
             encoding: FilesystemEncoding.UTF8
         });
-        callback(null);
-    } catch (e) {
-        callback(new Error('Unable to write file' + e));
+        callback(null)
+    } catch (error) {
+        callback(new Error(error));
     }
 };
 
-CapacitorFileLokiAdapter.prototype.deleteDatabase = async function deleteDatabase(dbname, callback) {
+CapacitorFileLokiAdapter.prototype.deleteDatabase = async function deleteDatabase(dbName: string, callback: Function) {
     try {
         await Filesystem.deleteFile({
-            path: `${directoryName}/${dbname}.db`,
+            path: `${directoryName}/${dbName}.txt`,
             directory: FilesystemDirectory.Documents
         });
         callback(null);
@@ -57,3 +37,35 @@ CapacitorFileLokiAdapter.prototype.deleteDatabase = async function deleteDatabas
         callback(new Error(error));
     }
 };
+
+
+async function createLocalDirectory(opts: { dbName: string }) {
+    try {
+        await Filesystem.mkdir({
+            path: directoryName,
+            directory: FilesystemDirectory.Documents,
+            recursive: false // like mkdir -p
+        });
+        return readLocalFile({ dbName: opts.dbName });
+    } catch (e) {
+        try {
+            return await readLocalFile({ dbName: opts.dbName });
+        } catch (error) {
+            throw error;
+        }
+    }
+}
+
+async function readLocalFile(opts: { dbName: string }) {
+    try {
+        const lokiDBContents = await Filesystem.readFile({
+            path: `${directoryName}/${opts.dbName}.txt`,
+            directory: FilesystemDirectory.Documents,
+            encoding: FilesystemEncoding.UTF8
+        });
+        return lokiDBContents.data;
+    } catch (error) {
+        throw error;
+    }
+
+}
