@@ -3,8 +3,7 @@ import { dateToString, mealTypes } from '../helpers/utils';
 import { CapacitorFileLokiAdapter } from './capacitor-file-loki-adapter';
 import loki from 'lokijs';
 
-const capacitorFileLokiAdapter = new CapacitorFileLokiAdapter();
-const partioningAdapter = new loki.LokiPartitioningAdapter(capacitorFileLokiAdapter, { paging: true });
+const partioningAdapter = new loki.LokiPartitioningAdapter(new CapacitorFileLokiAdapter(), { paging: true });
 
 let foodProductsColl: Collection<IFoodProduct>;
 let dailyEntriesColl: Collection<IDailyEntry>;
