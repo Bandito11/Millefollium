@@ -22,12 +22,11 @@ const options: Partial<LokiConfigOptions> = {
         }
         if (foodProductsColl.count() < 100) {
             let foodDataWorker;
-            if (typeof (foodDataWorker) == "undefined") {
+            if (typeof (foodDataWorker) == undefined) {
                 foodDataWorker = new Worker("workers/usda-file.js");
+                foodDataWorker.onmessage = event =>
+                   event.data.forEach((product: IFoodProduct[]) => insertOrUpdateFoodProduct(product));            
             }
-            foodDataWorker.onmessage = function (event) {
-                event.data.forEach(( product: IFoodProduct[]) => insertOrUpdateFoodProduct(product));
-            };
         }
     },
     adapter: partioningAdapter
