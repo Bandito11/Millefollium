@@ -26,8 +26,7 @@ const options: Partial<LokiConfigOptions> = {
                 foodDataWorker = new Worker("workers/usda-file.js");
             }
             foodDataWorker.onmessage = function (event) {
-                const usda: IFoodProduct[] = event.data;
-                usda.forEach(product => insertOrUpdateFoodProduct(product));
+                event.data.forEach(( product: IFoodProduct[]) => insertOrUpdateFoodProduct(product));
             };
         }
     },
