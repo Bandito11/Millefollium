@@ -1,12 +1,12 @@
 import { Component, h, Listen, State } from '@stencil/core';
-import { IFoodProduct, IUSDA } from '../../interfaces';
+import { IFoodProduct } from '../../interfaces';
 import { getFoodProducts } from '../../services/db';
 import { foodNameToUppercase } from '../../helpers/utils';
 import { actionSheetController, modalController } from '@ionic/core';
 import { scan, stopScan } from '../../services/quagga';
 declare const localforage;
 
-let usdaData: IUSDA[] = [];
+// let usdaData: IUSDA[] = [];
 
 @Component({
     tag: 'app-food-list',
@@ -283,7 +283,7 @@ export class AppFoodList {
     queryByNameOrId(query) {
         if (query) {
             this.unfilteredFoodProducts = [];
-            const checkIfBarcodeANumber = parseInt(query);
+            // const checkIfBarcodeANumber = parseInt(query);
 //            if ((checkIfBarcodeANumber != NaN || typeof checkIfBarcodeANumber != 'number') && usdaData) {
 //                this.unfilteredFoodProducts = this.queryUSDAByName(query);
 //            };

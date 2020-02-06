@@ -2,7 +2,7 @@ const errorMessage = `Couldn't retrieve data from file.`;
 const fileName = 'USDA-SR28-V1.csv';
 fetch(`/assets/${fileName}`)
     .then(res => res.ok ? res.text() : errorMessage)
-    .then((data: string) => {
+    .then((data) => {
         if (data.startsWith(errorMessage)) {
             console.log(data);
         } else {
@@ -18,7 +18,7 @@ fetch(`/assets/${fileName}`)
 //   TODO: Do something with event
 // };
 
-function createUSDAArray(data: string): IUSDA[] {
+function createUSDAArray(data){
     const temp = data.split(`\n`);
     const foodData = temp.map((rows) => {
         const usda = {
@@ -89,8 +89,8 @@ function createUSDAArray(data: string): IUSDA[] {
     return foodData;
 }
 
-function createUSDAObject(foodData): IFoodProduct[] {
-    const foodProduct: IFoodProduct = {
+function createUSDAObject(foodData) {
+    const foodProduct = {
         name: '',
         barcode: '',
         picture: '',
@@ -216,7 +216,7 @@ function createUSDAObject(foodData): IFoodProduct[] {
         }
 
     };
-    const usdaProducts: (IFoodProduct)[] = [];
+    const usdaProducts = [];
     foodData.forEach(product => {
         usdaProducts.push({
             ...foodProduct,

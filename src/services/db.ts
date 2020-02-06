@@ -19,13 +19,11 @@ const options: Partial<LokiConfigOptions> = {
         dailyEntriesColl = db.getCollection('DailyItems');
         if (!dailyEntriesColl) {
             dailyEntriesColl = db.addCollection('DailyItems');
-        }
-        if (foodProductsColl.count() < 100) {
-            let foodDataWorker;
-            if (typeof (foodDataWorker) == undefined) {
-                foodDataWorker = new Worker("workers/usda-file.js");
-                foodDataWorker.onmessage = event =>
-                   event.data.forEach((product: IFoodProduct[]) => insertOrUpdateFoodProduct(product));            
+        };
+        if (foodProductsColl.count() < 6348) {
+            let foodDataWorker = new Worker("workers/usda-file-v2.js")
+            if (typeof (foodDataWorker) !== undefined) {
+                foodDataWorker.onmessage = event => event.data.forEach((product: IFoodProduct) => insertOrUpdateFoodProduct(product));
             }
         }
     },
