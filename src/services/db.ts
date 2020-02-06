@@ -21,9 +21,12 @@ const options: Partial<LokiConfigOptions> = {
             dailyEntriesColl = db.addCollection('DailyItems');
         };
         if (foodProductsColl.count() < 6348) {
-            let foodDataWorker = new Worker("workers/usda-file-v2.js")
+            let foodDataWorker = new Worker('workers/usda-file-v2.js')
             if (typeof (foodDataWorker) !== undefined) {
-                foodDataWorker.onmessage = event => event.data.forEach((product: IFoodProduct) => insertOrUpdateFoodProduct(product));
+                foodDataWorker.onmessage = event => {
+                    event.data.forEach((product: IFoodProduct) => insertOrUpdateFoodProduct(product)
+                    foodDataWorker.terminate();
+                     }); 
             }
         }
     },
