@@ -24,7 +24,7 @@ const options: Partial<LokiConfigOptions> = {
             let foodDataWorker = new Worker('/workers/usda-file-v2.js')
             if (typeof (foodDataWorker) !== undefined) {
                 foodDataWorker.onmessage = event => {
-                    event.data.forEach((product: IFoodProduct) => insertOrUpdateFoodProduct(product);
+                    event.data.forEach((product: IFoodProduct) => insertOrUpdateFoodProduct(product));
                     foodDataWorker.terminate();
                 };
             }
