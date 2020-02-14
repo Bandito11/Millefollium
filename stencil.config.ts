@@ -14,10 +14,6 @@ export const config: Config = {
       dest: 'workers'
     },
     {
-      src: '/Users/estebanmorales/Projects/Millefollium/node_modules/@ionic/pwa-elements/dist/ionicpwaelements',
-      dest: 'ionicpwaelements'
-    },
-    {
       src: '/Users/estebanmorales/Projects/Millefollium/node_modules/lokijs/build/',
       dest: 'loki'
     },
