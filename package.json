@@ -15,17 +15,17 @@
     "deploy": "stencil build && firebase deploy"
   },
   "dependencies": {
-    "@capacitor/core": "^1.4.0",
-    "@capacitor/ios": "^1.4.0",
+    "@capacitor/core": "^1.5.0",
+    "@capacitor/ios": "^1.5.0",
     "@ericblade/quagga2": "0.0.2",
     "@ionic/core": "^4.11.10",
-    "@ionic/pwa-elements": "^1.4.1",
+    "@ionic/pwa-elements": "^1.4.2",
     "localforage": "^1.7.3",
     "lokijs": "^1.5.8"
   },
   "devDependencies": {
-    "@capacitor/cli": "^1.4.0",
-    "@stencil/core": "^1.8.6",
+    "@capacitor/cli": "^1.5.0",
+    "@stencil/core": "^1.8.8",
     "@types/lokijs": "^1.5.3",
     "rollup-plugin-node-polyfills": "^0.2.1"
   },
