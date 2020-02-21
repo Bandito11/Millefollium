@@ -25,7 +25,6 @@ const options: Partial<LokiConfigOptions> = {
             if (typeof (foodDataWorker) !== undefined) {
                 foodDataWorker.onmessage = event => {
                     event.data.forEach((product: IFoodProduct) => insertOrUpdateFoodProduct(product));
-                    foodDataWorker.terminate();
                 };
             }
         }
