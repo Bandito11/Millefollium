@@ -11,7 +11,13 @@ let dailyEntriesColl: Collection<IDailyEntry>;
 const options: Partial<LokiConfigOptions> = {
     autosave: true,
     autoload: true,
-    autoloadCallback: () => {
+    autoloadCallback: _loadDatabase,
+    adapter: partioningAdapter
+}
+
+const db: Loki = new loki('millefollium.db', options);
+
+function _loadDatabase() {
         foodProductsColl = db.getCollection('FoodProducts');
         if (!foodProductsColl) {
             foodProductsColl = db.addCollection('FoodProducts');
@@ -28,11 +34,7 @@ const options: Partial<LokiConfigOptions> = {
                 };
             }
         }
-    },
-    adapter: partioningAdapter
-}
-
-const db: Loki = new loki('millefollium.db', options);
+    }
 
 export function insertOrUpdateFoodProduct(foodItem: IFoodProduct): IResponse<IFoodProduct> {
     const response = {
