@@ -14,16 +14,8 @@ export const config: Config = {
       dest: 'workers'
     },
     {
-      src: '/Users/estebanmorales/Projects/Millefollium/node_modules/lokijs/build/',
-      dest: 'loki'
-    },
-    {
-      src: '/Users/estebanmorales/Projects/Millefollium/node_modules/@ericblade/quagga2/dist/',
-      dest: 'quagga'
-    },
-    {
-      src: '/Users/estebanmorales/Projects/Millefollium/node_modules/localforage/dist',
-      dest: 'localforage'
+      src: '../node_modules/lokijs/build/lokijs.min.js',
+      dest: 'lokijs.min.js'
     }
   ],
   plugins: [

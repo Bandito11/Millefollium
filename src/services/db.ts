@@ -1,8 +1,7 @@
 import { IResponse, IDaily, IFoodProduct, IDailyEntry } from './../interfaces.d';
 import { dateToString, mealTypes } from '../helpers/utils';
 import { CapacitorFileLokiAdapter } from './capacitor-file-loki-adapter';
-import loki from 'lokijs';
-
+declare const loki;
 const partioningAdapter = new loki.LokiPartitioningAdapter(new CapacitorFileLokiAdapter(), { paging: true });
 
 let foodProductsColl: Collection<IFoodProduct>;
@@ -15,26 +14,26 @@ const options: Partial<LokiConfigOptions> = {
     adapter: partioningAdapter
 }
 
-const db: Loki = new loki('millefollium.db', options);
+const db: Loki = new loki('millefollium.db', options) as Loki;
 
 function _loadDatabase() {
-        foodProductsColl = db.getCollection('FoodProducts');
-        if (!foodProductsColl) {
-            foodProductsColl = db.addCollection('FoodProducts');
-        };
-        dailyEntriesColl = db.getCollection('DailyItems');
-        if (!dailyEntriesColl) {
-            dailyEntriesColl = db.addCollection('DailyItems');
-        };
-        if (foodProductsColl.count() < 6348) {
-            let foodDataWorker = new Worker('/workers/usda-file-v2.js')
-            if (typeof (foodDataWorker) !== undefined) {
-                foodDataWorker.onmessage = event => {
-                    event.data.forEach((product: IFoodProduct) => insertOrUpdateFoodProduct(product));
-                };
-            }
+    foodProductsColl = db.getCollection('FoodProducts');
+    if (!foodProductsColl) {
+        foodProductsColl = db.addCollection('FoodProducts');
+    };
+    dailyEntriesColl = db.getCollection('DailyItems');
+    if (!dailyEntriesColl) {
+        dailyEntriesColl = db.addCollection('DailyItems');
+    };
+    if (foodProductsColl.count() < 6348) {
+        let foodDataWorker = new Worker('/workers/usda-file-v2.js')
+        if (typeof (foodDataWorker) !== undefined) {
+            foodDataWorker.onmessage = event => {
+                event.data.forEach((product: IFoodProduct) => insertOrUpdateFoodProduct(product));
+            };
         }
     }
+}
 
 export function insertOrUpdateFoodProduct(foodItem: IFoodProduct): IResponse<IFoodProduct> {
     const response = {

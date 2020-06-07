@@ -16,7 +16,7 @@ async function getImageDirectory() {
             ret = await Filesystem.mkdir({
                 path: 'images',
                 directory: FilesystemDirectory.Documents,
-                createIntermediateDirectories: false // like mkdir -p
+                recursive: false // like mkdir -p
             });
         } catch (error) {
             console.error('Unable to make directory', error);

@@ -1,7 +1,0 @@
-{
-  "appId": "com.tra.tro",
-  "appName": "No name",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "www"
-}

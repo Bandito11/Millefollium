@@ -24,7 +24,7 @@ const capacitorFileDriver = {
             await Filesystem.mkdir({
                 path: directoryName,
                 directory: FilesystemDirectory.Documents,
-                createIntermediateDirectories: false // like mkdir -p
+                recursive: false // like mkdir -p
             });
         } catch (e) {
             console.error(e);
