@@ -28,25 +28,10 @@ export interface IDailyEntry {
     foodProduct: IFoodProduct
 }
 
-//TODO: To delete
-// export interface IEntry {
-//     date: Date;
-//     productId: string;
-//     type: string
-//     consumedSize: string;
-// }
-
-interface IMeal extends IFoodProduct {
+export interface IMeal extends IFoodProduct {
     id?: number;
     calories: string;
 }
-
-//TODO: To delete
-// interface IMeasurement {
-//     size: string;
-//     grams: string;
-//     measurement: string;
-// }
 
 export interface IFoodProduct extends INutritionFacts {
     name: string;
@@ -56,11 +41,7 @@ export interface IFoodProduct extends INutritionFacts {
 }
 
 export interface INutritionFacts {
-    servingSize: {
-        size: string;
-        grams: string;
-        measurement: string;
-    };
+    servingSize: IServingSize;
     servingPerContainer: string;
     calories: string;
     fat: {
@@ -82,15 +63,31 @@ export interface INutritionFacts {
     iron: IAmount;
     magnesium: IAmount;
     manganese: IAmount;
-    vitamin: {
-        A: IAmount;
-        B: IAmount;
-        C: IAmount;
-        D: IAmount;
-        E: IAmount;
-    };
+    vitamin: IVitamin;
     sugar: ISugar;
     sugarAlcohol: ISugar;
+}
+
+export interface IVitamin {
+    A: IAmount;
+    B: IAmount;
+    C: IAmount;
+    D: IAmount;
+    E: IAmount;
+}
+
+export interface IServingSize  {
+    size: string;
+    grams: string;
+    measurement: string;
+}
+
+export interface IFat {
+    total: IAmount;
+    saturated: IAmount;
+    trans: IAmount;
+    polyunsaturated: IAmount;
+    monounsaturated: IAmount;
 }
 
 interface ISugar {
