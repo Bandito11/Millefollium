@@ -12,13 +12,11 @@ export const config: Config = {
     {
       src: 'services/workers',
       dest: 'workers'
-    },
-    {
-      src: '../node_modules/lokijs/build/lokijs.min.js',
-      dest: 'lokijs.min.js'
     }
   ],
-  plugins: [
-    nodePolyfills(),
-  ]
-};
+  rollupPlugins: {
+    after: [
+      nodePolyfills(),
+    ]
+  }
+}

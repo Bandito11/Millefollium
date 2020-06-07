@@ -1,7 +1,8 @@
 import { IResponse, IDaily, IFoodProduct, IDailyEntry } from './../interfaces.d';
 import { dateToString, mealTypes } from '../helpers/utils';
 import { CapacitorFileLokiAdapter } from './capacitor-file-loki-adapter';
-declare const loki;
+import loki from 'lokijs';
+
 const partioningAdapter = new loki.LokiPartitioningAdapter(new CapacitorFileLokiAdapter(), { paging: true });
 
 let foodProductsColl: Collection<IFoodProduct>;
