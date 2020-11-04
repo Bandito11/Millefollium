@@ -1,6 +1,6 @@
 import { Component, h, Prop, Event, EventEmitter } from "@stencil/core";
-import { IDaily, IMeal } from "../../interfaces";
-import { foodNameToUppercase } from "../../helpers/utils";
+import {  oldIDaily, oldIMeal } from "../../interfaces";
+import { toUpperCase } from "../../helpers/utils";
 import { editDaily, deleteDaily, getDaily } from "../../services/db";
 import { actionSheetController, alertController, modalController } from "@ionic/core";
 
@@ -9,7 +9,7 @@ import { actionSheetController, alertController, modalController } from "@ionic/
     styleUrl: 'app-daily-list.css'
 })
 export class AppDaily {
-    @Prop() daily: IDaily;
+    @Prop() daily: oldIDaily;
     @Prop() breakfastCalories: number;
     @Prop() breakfastSnackCalories: number;
     @Prop() lunchCalories: number;
@@ -19,9 +19,9 @@ export class AppDaily {
     @Prop() today: string;
     @Event() updatedDailyEntry: EventEmitter;
 
-    async showSelectionWindow(meal: IMeal) {
+    async showSelectionWindow(meal: oldIMeal) {
         const actionSheet = await actionSheetController.create({
-            header: foodNameToUppercase(meal.name),
+            header: toUpperCase(meal.name),
             buttons: [
                 {
                     text: 'Cancel',
@@ -106,7 +106,7 @@ export class AppDaily {
         await alert.present();
     }
 
-    deleteDailyEntry(meal: IMeal) {
+    deleteDailyEntry(meal: oldIMeal) {
         const response = deleteDaily(meal);
         if (response.success) {
             this.updatedDailyEntry.emit();
@@ -120,7 +120,7 @@ export class AppDaily {
         await alert.present();
     }
 
-    async editDailyEntry(meal: IMeal) {
+    async editDailyEntry(meal: oldIMeal) {
         const servingSize = 1;
         const alert = await alertController.create({
             header: 'Change the serving size!',
@@ -182,9 +182,9 @@ export class AppDaily {
                                 {this.breakfastCalories} calories consumed
                             </ion-label>
                         </ion-item>
-                        {this.daily.breakfast.map((meal: IMeal) =>
+                        {this.daily.breakfast.map((meal: oldIMeal) =>
                             <ion-item onClick={() => this.showSelectionWindow(meal)}>
-                                <ion-label class='ion-text-wrap'>{foodNameToUppercase(meal.name)}</ion-label>
+                                <ion-label class='ion-text-wrap'>{toUpperCase(meal.name)}</ion-label>
                                 <ion-label class='ion-text-wrap'>{meal.calories} calories</ion-label>
                             </ion-item>
                         )}
@@ -202,9 +202,9 @@ export class AppDaily {
                                 {this.breakfastSnackCalories} calories consumed
                             </ion-label>
                         </ion-item>
-                        {this.daily.breakfastSnack.map((meal: IMeal) =>
+                        {this.daily.breakfastSnack.map((meal: oldIMeal) =>
                             <ion-item onClick={() => this.showSelectionWindow(meal)}>
-                                <ion-label class='ion-text-wrap'>{foodNameToUppercase(meal.name)}</ion-label>
+                                <ion-label class='ion-text-wrap'>{toUpperCase(meal.name)}</ion-label>
                                 <ion-label class='ion-text-wrap'>{meal.calories} calories</ion-label>
                             </ion-item>
                         )}
@@ -223,9 +223,9 @@ export class AppDaily {
                             </ion-label>
                         </ion-item>
 
-                        {this.daily.lunch.map((meal: IMeal) =>
+                        {this.daily.lunch.map((meal: oldIMeal) =>
                             <ion-item onClick={() => this.showSelectionWindow(meal)}>
-                                <ion-label class='ion-text-wrap'>{foodNameToUppercase(meal.name)}</ion-label>
+                                <ion-label class='ion-text-wrap'>{toUpperCase(meal.name)}</ion-label>
                                 <ion-label class='ion-text-wrap'>{meal.calories} calories</ion-label>
                             </ion-item>
                         )}
@@ -244,9 +244,9 @@ export class AppDaily {
                             </ion-label>
                         </ion-item>
 
-                        {this.daily.lunchSnack.map((meal: IMeal) =>
+                        {this.daily.lunchSnack.map((meal: oldIMeal) =>
                             <ion-item onClick={() => this.showSelectionWindow(meal)}>
-                                <ion-label class='ion-text-wrap'>{foodNameToUppercase(meal.name)}</ion-label>
+                                <ion-label class='ion-text-wrap'>{toUpperCase(meal.name)}</ion-label>
                                 <ion-label class='ion-text-wrap'>{meal.calories} calories</ion-label>
                             </ion-item>
                         )}
@@ -265,9 +265,9 @@ export class AppDaily {
                             </ion-label>
                         </ion-item>
 
-                        {this.daily.dinner.map((meal: IMeal) =>
+                        {this.daily.dinner.map((meal: oldIMeal) =>
                             <ion-item onClick={() => this.showSelectionWindow(meal)}>
-                                <ion-label class='ion-text-wrap'>{foodNameToUppercase(meal.name)}</ion-label>
+                                <ion-label class='ion-text-wrap'>{toUpperCase(meal.name)}</ion-label>
                                 <ion-label class='ion-text-wrap'>{meal.calories} calories</ion-label>
                             </ion-item>
                         )}
@@ -286,9 +286,9 @@ export class AppDaily {
                             </ion-label>
                         </ion-item>
 
-                        {this.daily.dinnerSnack.map((meal: IMeal) =>
+                        {this.daily.dinnerSnack.map((meal: oldIMeal) =>
                             <ion-item onClick={() => this.showSelectionWindow(meal)}>
-                                <ion-label class='ion-text-wrap'>{foodNameToUppercase(meal.name)}</ion-label>
+                                <ion-label class='ion-text-wrap'>{toUpperCase(meal.name)}</ion-label>
                                 <ion-label class='ion-text-wrap'>{meal.calories} calories</ion-label>
                             </ion-item>
                         )}

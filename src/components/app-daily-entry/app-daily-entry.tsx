@@ -1,7 +1,7 @@
 import { Component, h } from '@stencil/core';
-import { IFoodProduct, IDailyEntry } from '../../interfaces';
+import { IFoodProduct } from '../../interfaces';
 import { addToDaily } from '../../services/db';
-import { foodNameToUppercase, mealTypes } from '../../helpers/utils';
+import { toUpperCase, mealTypes } from '../../helpers/utils';
 import { alertController, modalController } from '@ionic/core';
 
 @Component({
@@ -34,7 +34,7 @@ export class AppDailyEntry {
     }
 
     addToDaily() {
-        let entry: IDailyEntry = {
+        let entry: any = {
             type: document.querySelector('ion-radio-group').value,
             date: new Date(),
             foodProduct: this.foodItem,
@@ -110,16 +110,14 @@ export class AppDailyEntry {
                         :
                         <ion-toolbar color="primary">
                             <ion-buttons slot="start">
-                                <ion-button onClick={() => this.goBack()}>
-                                    <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-                                </ion-button>
+                                <ion-back-button></ion-back-button>
                             </ion-buttons>
                         </ion-toolbar>
                 }
             </ion-header>
             ,
             <ion-content class="ion-padding">
-                <h1>{foodNameToUppercase(this.foodItem.name)}</h1>
+                <h1>{toUpperCase(this.foodItem.name)}</h1>
                 <form>
                     <ion-list lines="none">
                         <ion-item>

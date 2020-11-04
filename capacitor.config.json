@@ -1,5 +1,5 @@
 {
-  "appId": "com.tra.tro",
+  "appId": "food.tracker",
   "appName": "Millefollium",
   "bundledWebRuntime": false,
   "npmClient": "npm",

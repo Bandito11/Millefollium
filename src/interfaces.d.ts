@@ -9,17 +9,33 @@ export interface IResponse<T> {
 /**
  * Date Format: MM/DD/YYYY
  */
-export interface IDaily {
+export interface oldIDaily {
     date: string;
     calories: string;
-    breakfast: IMeal[];
-    breakfastSnack: IMeal[];
-    lunch: IMeal[];
-    lunchSnack: IMeal[];
-    dinner: IMeal[];
-    dinnerSnack: IMeal[];
+    breakfast: oldIMeal[];
+    breakfastSnack: oldIMeal[];
+    lunch: oldIMeal[];
+    lunchSnack: oldIMeal[];
+    dinner: oldIMeal[];
+    dinnerSnack: oldIMeal[];
 }
 
+export interface IDaily {
+    date: number;
+    meals: IMeal[];
+}
+
+export interface IMeal{
+    name: string;
+    calories: number;
+    image: string;
+    ingredients: IFoodProduct[];
+    fat: number;
+    protein: number;
+    carbs: number;
+    steps: string[];
+    category: string;
+}
 
 export interface IDailyEntry {
     date: Date;
@@ -28,7 +44,7 @@ export interface IDailyEntry {
     foodProduct: IFoodProduct
 }
 
-export interface IMeal extends IFoodProduct {
+export interface oldIMeal extends IFoodProduct {
     id?: number;
     calories: string;
 }
@@ -76,7 +92,7 @@ export interface IVitamin {
     E: IAmount;
 }
 
-export interface IServingSize  {
+export interface IServingSize {
     size: string;
     grams: string;
     measurement: string;

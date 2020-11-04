@@ -1,17 +1,16 @@
-import { Component, h, Listen, State } from '@stencil/core';
+import { Component, h, State } from '@stencil/core';
 import { IFoodProduct } from '../../interfaces';
 import { getFoodProducts } from '../../services/db';
-import { foodNameToUppercase } from '../../helpers/utils';
 import { actionSheetController, modalController } from '@ionic/core';
 import { scan, stopScan } from '../../services/quagga';
-declare const localforage;
+import { toUpperCase } from '../../helpers/utils';
 
 // let usdaData: IUSDA[] = [];
 
 @Component({
     tag: 'app-food-list',
     styleUrl: 'app-food-list.css',
-    assetsDir: 'workers'
+    assetsDirs: ['workers']
 })
 
 export class AppFoodList {
@@ -23,37 +22,42 @@ export class AppFoodList {
     foodDataWorker;
     currentIndex: number;
 
-    componentWillLoad() {
-        // this.getFrequentFoodProducts();
-//        if (typeof (this.foodDataWorker) == 'undefined') {
-//            this.foodDataWorker = new Worker('workers/usda-file.js');
-//        }
-//       this.foodDataWorker.onmessage = function (event) {
-//            usdaData = event.data;
-//        };
-    }
-
-    componentDidLoad() {
+    scrollEvent() {
         const content = document.querySelector<HTMLIonContentElement>('#food-list-content');
         content.scrollEvents = true;
         content.addEventListener('ionScroll', async (ev) => {
             const scroll = await content.getScrollElement();
             const scrollTopMax = scroll['scrollTopMax'];
             if (ev['detail']['scrollTop'] === scrollTopMax) {
-                if (this.foodProducts.length > 0) {
-                    for (let i = this.currentIndex; i < this.currentIndex + 10; i++) {
-                        this.foodProducts = [this.unfilteredFoodProducts[i], ...this.foodProducts];
-                    }
-                    this.currentIndex += 10;
-                }
+                console.error('scroll in food list....')
+                // if (this.foodProducts.length > 0) {
+                //     for (let i = this.currentIndex; i < this.currentIndex + 10; i++) {
+                //         this.foodProducts = [this.unfilteredFoodProducts[i], ...this.foodProducts];
+                //     }
+                //     this.currentIndex += 10;
+                // }
             };
         });
     }
 
-    @Listen('ionChange')
-    handleIonChange(ev) {
-        this.queryByNameOrId(ev.detail.value);
+    componentWillLoad() {
+        // this.getFrequentFoodProducts();
+        //        if (typeof (this.foodDataWorker) == 'undefined') {
+        //            this.foodDataWorker = new Worker('workers/usda-file.js');
+        //        }
+        //       this.foodDataWorker.onmessage = function (event) {
+        //            usdaData = event.data;
+        //        };
     }
+
+    componentDidLoad() {
+        this.scrollEvent();
+    }
+
+    // @Listen('ionChange')
+    // handleIonChange(ev) {
+    //     this.queryByNameOrId(ev.detail.value);
+    // }
 
     queryByNameOrId(query) {
         if (query) {
@@ -155,7 +159,7 @@ export class AppFoodList {
 
     async showSelectionWindow(foodProduct: (IFoodProduct)) {
         const actionSheet = await actionSheetController.create({
-            header: foodNameToUppercase(foodProduct.name),
+            header: toUpperCase(foodProduct.name),
             buttons: [
                 {
                     text: 'Cancel',
@@ -204,112 +208,75 @@ export class AppFoodList {
         return await actionSheet.present();
     }
 
+    getToolbar() {
+        return <ion-toolbar color="primary">
+            <ion-toolbar color="primary">
+                <ion-buttons slot="start">
+                    <ion-back-button defaultHref="/"></ion-back-button>
+                </ion-buttons>
+                <ion-searchbar onIonChange={ev => this.searchRecipe(ev)} inputmode="text" type="search" debounce={500} spellcheck={true} autocomplete="on"></ion-searchbar>
+                <ion-buttons slot="end">
+                    {/* <ion-button onClick={this.getBarcode.bind(this)}>
+                        <ion-icon slot="icon-only" name="barcode"></ion-icon>
+                    </ion-button> */}
+                    <ion-button onClick={() => this.presentCreateModal({ mode: 'create' })}>
+                        Create
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+
+        </ion-toolbar>
+    }
+    searchRecipe(ev: CustomEvent<import("@ionic/core").SearchbarChangeEventDetail>): void {
+        const query = ev.detail.value;
+        if (query) {
+            console.error('Search Term ', query)
+        }
+    }
+
     render() {
         return [
             <ion-header>
                 {
                     navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
                         ? ''
-                        :
-                        <ion-toolbar color="primary">
-                            <ion-buttons slot="start">
-                                <ion-button href="/">
-                                    <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-                                </ion-button>
-                            </ion-buttons>
-                            <ion-searchbar animated debounce={500} spellcheck={true} autocomplete="on"></ion-searchbar>
-                            <ion-buttons slot="end">
-                                <ion-button onClick={this.getBarcode.bind(this)}>
-                                    <ion-icon slot="icon-only" name="barcode"></ion-icon>
-                                </ion-button>
-                                <ion-button onClick={() => this.presentCreateModal({ mode: 'create' })}>
-                                    Create
-                                </ion-button>
-                            </ion-buttons>
-                        </ion-toolbar>
+                        : this.getToolbar()
                 }
             </ion-header>
             ,
             <ion-content id="food-list-content" class="ion-padding">
                 {
-                    this.foodProducts.length > 0
-                        ? this.foodProducts.map((foodItem, index) =>
-                            <ion-card onClick={_ => this.showSelectionWindow(foodItem)}>
-                                {
-                                    index % 2
-                                        ? <ion-card-header color="secondary">
-                                            <ion-label>{foodNameToUppercase(foodItem.name)} </ion-label>
-                                        </ion-card-header>
-                                        : <ion-card-header color="tertiary">
-                                            <ion-label>{foodNameToUppercase(foodItem.name)} </ion-label>
-                                        </ion-card-header>
-                                }
-                                <ion-item lines="none">
-                                    <ion-label>
-                                        Serving Size {foodItem.servingSize.size} {foodItem.servingSize.measurement}
-                                    </ion-label>
-                                </ion-item>
-                                <ion-item lines="none">
-                                    <ion-label>Servings per Container about {foodItem.servingPerContainer}</ion-label>
-                                </ion-item>
-                                <ion-item lines="none">
-                                    <ion-label>{foodItem.calories} calories</ion-label>
-                                </ion-item>
-                            </ion-card>
-                        )
-                        : <h1>Recent</h1>
-                }
-                <div id="food-list-barcode"></div>
-                {
-                    this.frequentFoodProducts.length > 0 && this.foodProducts.length <= 0
-                        ? this.frequentFoodProducts.map((foodItem, index) =>
-                            <ion-card onClick={_ => this.showSelectionWindow(foodItem)}>
-                                {
-                                    index % 2
-                                        ? <ion-card-header color="tertiary">
-                                            <ion-label>{foodNameToUppercase(foodItem.name)} </ion-label>
-                                        </ion-card-header>
-                                        : <ion-card-header color="secondary">
-                                            <ion-label>{foodNameToUppercase(foodItem.name)} </ion-label>
-                                        </ion-card-header>
-                                }
-                                <ion-item lines="none">
-                                    <ion-label>
-                                        {foodItem.servingSize.size} {foodItem.servingSize.measurement}
-                                    </ion-label>
-                                </ion-item>
-                                <ion-item lines="none">
-                                    <ion-label>Servings per Container {foodItem.servingPerContainer}</ion-label>
-                                </ion-item>
-                                <ion-item lines="none">
-                                    <ion-label>{foodItem.calories} calories</ion-label>
-                                </ion-item>
-                            </ion-card>
-                        )
-                        : ''
+                    this.foodProducts.map((foodItem, index) =>
+                        <ion-card onClick={_ => this.showSelectionWindow(foodItem)}>
+                            {
+                                index % 2
+                                    ? <ion-card-header color="secondary">
+                                        <ion-label>{toUpperCase(foodItem.name)} </ion-label>
+                                    </ion-card-header>
+                                    : <ion-card-header color="tertiary">
+                                        <ion-label>{toUpperCase(foodItem.name)} </ion-label>
+                                    </ion-card-header>
+                            }
+                            <ion-item lines="none">
+                                <ion-label>
+                                    Serving Size {foodItem.servingSize.size} {foodItem.servingSize.measurement}
+                                </ion-label>
+                            </ion-item>
+                            <ion-item lines="none">
+                                <ion-label>Servings per Container about {foodItem.servingPerContainer}</ion-label>
+                            </ion-item>
+                            <ion-item lines="none">
+                                <ion-label>{foodItem.calories} calories</ion-label>
+                            </ion-item>
+                        </ion-card>
+                    )
                 }
             </ion-content>
             ,
             <ion-footer>
                 {
                     navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
-                        ?
-                        <ion-toolbar color="primary">
-                            <ion-buttons slot="start">
-                                <ion-button href="/">
-                                    <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-                                </ion-button>
-                            </ion-buttons>
-                            <ion-searchbar animated debounce={500} spellcheck={true} autocomplete="on"></ion-searchbar>
-                            <ion-buttons slot="end">
-                                <ion-button onClick={this.getBarcode.bind(this)}>
-                                    <ion-icon slot="icon-only" name="barcode"></ion-icon>
-                                </ion-button>
-                                <ion-button onClick={() => this.presentCreateModal({ mode: 'create' })}>
-                                    Create
-                            </ion-button>
-                            </ion-buttons>
-                        </ion-toolbar>
+                        ? this.getToolbar()
                         : ''
                 }
             </ion-footer>

@@ -5,14 +5,14 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { IDaily } from "./interfaces";
+import { oldIDaily } from "./interfaces";
 export namespace Components {
     interface AppDailyEntry {
     }
     interface AppDailyList {
         "breakfastCalories": number;
         "breakfastSnackCalories": number;
-        "daily": IDaily;
+        "daily": oldIDaily;
         "dinnerCalories": number;
         "dinnerSnackCalories": number;
         "lunchCalories": number;
@@ -25,7 +25,22 @@ export namespace Components {
     }
     interface AppHome {
     }
+    interface AppRecipeCreate {
+    }
+    interface AppRecipeDaily {
+        "calories": number;
+        "image": string;
+        "name": string;
+    }
+    interface AppRecipeDailyEntry {
+    }
+    interface AppRecipeInfo {
+    }
+    interface AppRecipeList {
+    }
     interface AppRoot {
+    }
+    interface AppUserProfile {
     }
     interface AppViewFood {
     }
@@ -61,11 +76,47 @@ declare global {
         prototype: HTMLAppHomeElement;
         new (): HTMLAppHomeElement;
     };
+    interface HTMLAppRecipeCreateElement extends Components.AppRecipeCreate, HTMLStencilElement {
+    }
+    var HTMLAppRecipeCreateElement: {
+        prototype: HTMLAppRecipeCreateElement;
+        new (): HTMLAppRecipeCreateElement;
+    };
+    interface HTMLAppRecipeDailyElement extends Components.AppRecipeDaily, HTMLStencilElement {
+    }
+    var HTMLAppRecipeDailyElement: {
+        prototype: HTMLAppRecipeDailyElement;
+        new (): HTMLAppRecipeDailyElement;
+    };
+    interface HTMLAppRecipeDailyEntryElement extends Components.AppRecipeDailyEntry, HTMLStencilElement {
+    }
+    var HTMLAppRecipeDailyEntryElement: {
+        prototype: HTMLAppRecipeDailyEntryElement;
+        new (): HTMLAppRecipeDailyEntryElement;
+    };
+    interface HTMLAppRecipeInfoElement extends Components.AppRecipeInfo, HTMLStencilElement {
+    }
+    var HTMLAppRecipeInfoElement: {
+        prototype: HTMLAppRecipeInfoElement;
+        new (): HTMLAppRecipeInfoElement;
+    };
+    interface HTMLAppRecipeListElement extends Components.AppRecipeList, HTMLStencilElement {
+    }
+    var HTMLAppRecipeListElement: {
+        prototype: HTMLAppRecipeListElement;
+        new (): HTMLAppRecipeListElement;
+    };
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
     }
     var HTMLAppRootElement: {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
+    };
+    interface HTMLAppUserProfileElement extends Components.AppUserProfile, HTMLStencilElement {
+    }
+    var HTMLAppUserProfileElement: {
+        prototype: HTMLAppUserProfileElement;
+        new (): HTMLAppUserProfileElement;
     };
     interface HTMLAppViewFoodElement extends Components.AppViewFood, HTMLStencilElement {
     }
@@ -79,7 +130,13 @@ declare global {
         "app-food-list": HTMLAppFoodListElement;
         "app-form-food": HTMLAppFormFoodElement;
         "app-home": HTMLAppHomeElement;
+        "app-recipe-create": HTMLAppRecipeCreateElement;
+        "app-recipe-daily": HTMLAppRecipeDailyElement;
+        "app-recipe-daily-entry": HTMLAppRecipeDailyEntryElement;
+        "app-recipe-info": HTMLAppRecipeInfoElement;
+        "app-recipe-list": HTMLAppRecipeListElement;
         "app-root": HTMLAppRootElement;
+        "app-user-profile": HTMLAppUserProfileElement;
         "app-view-food": HTMLAppViewFoodElement;
     }
 }
@@ -89,7 +146,7 @@ declare namespace LocalJSX {
     interface AppDailyList {
         "breakfastCalories"?: number;
         "breakfastSnackCalories"?: number;
-        "daily"?: IDaily;
+        "daily"?: oldIDaily;
         "dinnerCalories"?: number;
         "dinnerSnackCalories"?: number;
         "lunchCalories"?: number;
@@ -103,7 +160,22 @@ declare namespace LocalJSX {
     }
     interface AppHome {
     }
+    interface AppRecipeCreate {
+    }
+    interface AppRecipeDaily {
+        "calories"?: number;
+        "image"?: string;
+        "name"?: string;
+    }
+    interface AppRecipeDailyEntry {
+    }
+    interface AppRecipeInfo {
+    }
+    interface AppRecipeList {
+    }
     interface AppRoot {
+    }
+    interface AppUserProfile {
     }
     interface AppViewFood {
     }
@@ -113,7 +185,13 @@ declare namespace LocalJSX {
         "app-food-list": AppFoodList;
         "app-form-food": AppFormFood;
         "app-home": AppHome;
+        "app-recipe-create": AppRecipeCreate;
+        "app-recipe-daily": AppRecipeDaily;
+        "app-recipe-daily-entry": AppRecipeDailyEntry;
+        "app-recipe-info": AppRecipeInfo;
+        "app-recipe-list": AppRecipeList;
         "app-root": AppRoot;
+        "app-user-profile": AppUserProfile;
         "app-view-food": AppViewFood;
     }
 }
@@ -126,7 +204,13 @@ declare module "@stencil/core" {
             "app-food-list": LocalJSX.AppFoodList & JSXBase.HTMLAttributes<HTMLAppFoodListElement>;
             "app-form-food": LocalJSX.AppFormFood & JSXBase.HTMLAttributes<HTMLAppFormFoodElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
+            "app-recipe-create": LocalJSX.AppRecipeCreate & JSXBase.HTMLAttributes<HTMLAppRecipeCreateElement>;
+            "app-recipe-daily": LocalJSX.AppRecipeDaily & JSXBase.HTMLAttributes<HTMLAppRecipeDailyElement>;
+            "app-recipe-daily-entry": LocalJSX.AppRecipeDailyEntry & JSXBase.HTMLAttributes<HTMLAppRecipeDailyEntryElement>;
+            "app-recipe-info": LocalJSX.AppRecipeInfo & JSXBase.HTMLAttributes<HTMLAppRecipeInfoElement>;
+            "app-recipe-list": LocalJSX.AppRecipeList & JSXBase.HTMLAttributes<HTMLAppRecipeListElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "app-user-profile": LocalJSX.AppUserProfile & JSXBase.HTMLAttributes<HTMLAppUserProfileElement>;
             "app-view-food": LocalJSX.AppViewFood & JSXBase.HTMLAttributes<HTMLAppViewFoodElement>;
         }
     }

@@ -1,7 +1,8 @@
-import { IResponse, IDaily, IFoodProduct, IDailyEntry } from './../interfaces.d';
-import { dateToString, mealTypes } from '../helpers/utils';
+import { IResponse, oldIDaily, IFoodProduct, IDailyEntry } from './../interfaces.d';
+import { dateToString } from '../helpers/utils';
 import { CapacitorFileLokiAdapter } from './capacitor-file-loki-adapter';
 import loki from 'lokijs';
+import { DailyEntry } from '../models/daily-entry';
 
 const partioningAdapter = new loki.LokiPartitioningAdapter(new CapacitorFileLokiAdapter(), { paging: true });
 
@@ -15,7 +16,7 @@ const options: Partial<LokiConfigOptions> = {
     adapter: partioningAdapter
 }
 
-const db: Loki = new loki('millefollium.db', options) as Loki;
+const db = new loki('millefollium.db', options);
 
 function _loadDatabase() {
     foodProductsColl = db.getCollection('FoodProducts');
@@ -26,14 +27,14 @@ function _loadDatabase() {
     if (!dailyEntriesColl) {
         dailyEntriesColl = db.addCollection('DailyItems');
     };
-    if (foodProductsColl.count() < 6348) {
-        let foodDataWorker = new Worker('/workers/usda-file-v2.js')
-        if (typeof (foodDataWorker) !== undefined) {
-            foodDataWorker.onmessage = event => {
-                event.data.forEach((product: IFoodProduct) => insertOrUpdateFoodProduct(product));
-            };
-        }
-    }
+    // if (foodProductsColl.count() < 6348) {
+    //     let foodDataWorker = new Worker('/workers/usda-file-v2.js')
+    //     if (typeof (foodDataWorker) !== undefined) {
+    //         foodDataWorker.onmessage = event => {
+    //             event.data.forEach((product: IFoodProduct) => insertOrUpdateFoodProduct(product));
+    //         };
+    //     }
+    // }
 }
 
 export function insertOrUpdateFoodProduct(foodItem: IFoodProduct): IResponse<IFoodProduct> {
@@ -136,7 +137,7 @@ export function getFoodProducts(query): IResponse<(IFoodProduct & LokiObj)[]> {
     }
 }
 
-export function addToDaily(entry: IDailyEntry) {
+export function addToDaily(entry: DailyEntry) {
     const response: IResponse<undefined> = {
         success: false,
         error: `There was an error adding entry to database.`,
@@ -216,8 +217,8 @@ export function deleteDaily(foodProduct: IFoodProduct) {
     }
 }
 
-export function getDaily(date: Date): IResponse<IDaily> {
-    const response: IResponse<IDaily> = {
+export function getDaily(date: Date): IResponse<oldIDaily> {
+    const response: IResponse<oldIDaily> = {
         success: false,
         error: null,
         data: null,
@@ -225,7 +226,7 @@ export function getDaily(date: Date): IResponse<IDaily> {
         message: null
     };
     const today = dateToString(date);
-    let data: IDaily = {
+    let data: oldIDaily = {
         date: today,
         calories: '0',
         breakfast: [],
@@ -235,59 +236,59 @@ export function getDaily(date: Date): IResponse<IDaily> {
         dinner: [],
         dinnerSnack: []
     };
-    let results: IDailyEntry[] = [];
+    let results = [];
     try {
         results = dailyEntriesColl.where(entry => today == dateToString(new Date(entry.date)));
     } catch (error) {
         return response;
     }
     if (results.length > 0) {
-        results.forEach(dailyEntry => {
-            switch (dailyEntry.type) {
-                case mealTypes.breakfast:
-                    data.breakfast.push({
-                        ...dailyEntry.foodProduct,
-                        calories: (parseInt(dailyEntry.consumedSize) * parseInt(dailyEntry.foodProduct.calories)).toString(),
-                        dateCreated: dailyEntry.date
-                    });
-                    break;
-                case mealTypes.breakfastSnack:
-                    data.breakfastSnack.push({
-                        ...dailyEntry.foodProduct,
-                        calories: (parseInt(dailyEntry.consumedSize) * parseInt(dailyEntry.foodProduct.calories)).toString(),
-                        dateCreated: dailyEntry.date
-                    });
-                    break;
-                case mealTypes.lunch:
-                    data.lunch.push({
-                        ...dailyEntry.foodProduct,
-                        calories: (parseInt(dailyEntry.consumedSize) * parseInt(dailyEntry.foodProduct.calories)).toString(),
-                        dateCreated: dailyEntry.date
-                    });
-                    break;
-                case mealTypes.lunchSnack:
-                    data.lunchSnack.push({
-                        ...dailyEntry.foodProduct,
-                        calories: (parseInt(dailyEntry.consumedSize) * parseInt(dailyEntry.foodProduct.calories)).toString(),
-                        dateCreated: dailyEntry.date
-                    });
-                    break;
-                case mealTypes.dinner:
-                    data.dinner.push({
-                        ...dailyEntry.foodProduct,
-                        calories: (parseInt(dailyEntry.consumedSize) * parseInt(dailyEntry.foodProduct.calories)).toString(),
-                        dateCreated: dailyEntry.date
-                    });
-                    break;
-                case mealTypes.dinnerSnack:
-                    data.dinnerSnack.push({
-                        ...dailyEntry.foodProduct,
-                        calories: (parseInt(dailyEntry.consumedSize) * parseInt(dailyEntry.foodProduct.calories)).toString(),
-                        dateCreated: dailyEntry.date
-                    });
-                    break;
-            }
-        });
+        // results.forEach(dailyEntry => {
+        //     switch (dailyEntry.type) {
+        //         case mealTypes.breakfast:
+        //             data.breakfast.push({
+        //                 ...dailyEntry.foodProduct,
+        //                 calories: (parseInt(dailyEntry.consumedSize) * parseInt(dailyEntry.foodProduct.calories)).toString(),
+        //                 dateCreated: dailyEntry.date
+        //             });
+        //             break;
+        //         case mealTypes.breakfastSnack:
+        //             data.breakfastSnack.push({
+        //                 ...dailyEntry.foodProduct,
+        //                 calories: (parseInt(dailyEntry.consumedSize) * parseInt(dailyEntry.foodProduct.calories)).toString(),
+        //                 dateCreated: dailyEntry.date
+        //             });
+        //             break;
+        //         case mealTypes.lunch:
+        //             data.lunch.push({
+        //                 ...dailyEntry.foodProduct,
+        //                 calories: (parseInt(dailyEntry.consumedSize) * parseInt(dailyEntry.foodProduct.calories)).toString(),
+        //                 dateCreated: dailyEntry.date
+        //             });
+        //             break;
+        //         case mealTypes.lunchSnack:
+        //             data.lunchSnack.push({
+        //                 ...dailyEntry.foodProduct,
+        //                 calories: (parseInt(dailyEntry.consumedSize) * parseInt(dailyEntry.foodProduct.calories)).toString(),
+        //                 dateCreated: dailyEntry.date
+        //             });
+        //             break;
+        //         case mealTypes.dinner:
+        //             data.dinner.push({
+        //                 ...dailyEntry.foodProduct,
+        //                 calories: (parseInt(dailyEntry.consumedSize) * parseInt(dailyEntry.foodProduct.calories)).toString(),
+        //                 dateCreated: dailyEntry.date
+        //             });
+        //             break;
+        //         case mealTypes.dinnerSnack:
+        //             data.dinnerSnack.push({
+        //                 ...dailyEntry.foodProduct,
+        //                 calories: (parseInt(dailyEntry.consumedSize) * parseInt(dailyEntry.foodProduct.calories)).toString(),
+        //                 dateCreated: dailyEntry.date
+        //             });
+        //             break;
+        //     }
+        // });
         return {
             ...response,
             success: true,
@@ -302,7 +303,7 @@ export function getDaily(date: Date): IResponse<IDaily> {
 }
 
 export function getDailyEntries(date: Date[]) {
-    const response: IResponse<IDaily[]> = {
+    const response: IResponse<oldIDaily[]> = {
         success: false,
         error: 'There was an error retrieving the data.',
         data: null,

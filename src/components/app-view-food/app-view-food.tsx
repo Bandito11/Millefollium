@@ -1,6 +1,6 @@
 import { Component, h } from '@stencil/core';
 import { IFoodProduct } from '../../interfaces';
-import { foodNameToUppercase } from '../../helpers/utils';
+import { toUpperCase } from '../../helpers/utils';
 import { readImageFile } from '../../services/filesystem';
 import { modalController } from '@ionic/core';
 
@@ -54,7 +54,7 @@ export class AppViewFood {
                 }
             </div>,
             <ion-content class="ion-padding">
-                <h1>{foodNameToUppercase(this.foodItem.name)}</h1>
+                <h1>{toUpperCase(this.foodItem.name)}</h1>
                 <img src={this.imgUrl} alt={`A picture of ${this.foodItem.name}`} />
                 <p>Serving size {this.foodItem.servingSize.size} {this.foodItem.servingSize.measurement} ({this.foodItem.servingSize.grams}g)</p>
                 <p>Servings per Container about {this.foodItem.servingPerContainer}</p>

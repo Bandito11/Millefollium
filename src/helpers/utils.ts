@@ -1,5 +1,6 @@
+import { IMeal } from "../interfaces";
 
-export function foodNameToUppercase(name: string) {
+export function toUpperCase(name: string) {
   let formattedName;
   const array = name.split(' ');
   if (array.length > 0) {
@@ -25,4 +26,36 @@ export enum mealTypes {
   lunchSnack = 'lunchSnack',
   dinner = 'dinner',
   dinnerSnack = 'dinnerSnack'
+}
+
+
+export function calculateMacros(meals: IMeal[]) {
+  let totalCalories = 0;
+  let totalFat = 0;
+  let totalProtein = 0;
+  let totalCarbs = 0;
+
+  meals.forEach(meal => {
+    totalCalories += meal.calories;
+    totalFat += meal.fat;
+    totalProtein += meal.protein;
+    totalCarbs += meal.carbs;
+  });
+
+  if (totalCalories > 0) {
+    totalFat = ((totalFat * 9) / totalCalories) * 100;
+    totalProtein = ((totalProtein * 4) / totalCalories) * 100;
+    totalCarbs = ((totalCarbs * 4) / totalCalories) * 100;
+  } else {
+    totalFat = 0;
+    totalProtein = 0;
+    totalCarbs = 0;
+  }
+
+  return {
+    dailyCalories: totalCalories,
+    dailyProtein: totalProtein.toFixed(0),
+    dailyCarbs: totalCarbs.toFixed(0),
+    dailyFat: totalFat.toFixed(0)
+  }
 }
