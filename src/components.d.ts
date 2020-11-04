@@ -34,6 +34,8 @@ export namespace Components {
     }
     interface AppRecipeDailyEntry {
     }
+    interface AppRecipeFavorite {
+    }
     interface AppRecipeInfo {
     }
     interface AppRecipeList {
@@ -94,6 +96,12 @@ declare global {
         prototype: HTMLAppRecipeDailyEntryElement;
         new (): HTMLAppRecipeDailyEntryElement;
     };
+    interface HTMLAppRecipeFavoriteElement extends Components.AppRecipeFavorite, HTMLStencilElement {
+    }
+    var HTMLAppRecipeFavoriteElement: {
+        prototype: HTMLAppRecipeFavoriteElement;
+        new (): HTMLAppRecipeFavoriteElement;
+    };
     interface HTMLAppRecipeInfoElement extends Components.AppRecipeInfo, HTMLStencilElement {
     }
     var HTMLAppRecipeInfoElement: {
@@ -133,6 +141,7 @@ declare global {
         "app-recipe-create": HTMLAppRecipeCreateElement;
         "app-recipe-daily": HTMLAppRecipeDailyElement;
         "app-recipe-daily-entry": HTMLAppRecipeDailyEntryElement;
+        "app-recipe-favorite": HTMLAppRecipeFavoriteElement;
         "app-recipe-info": HTMLAppRecipeInfoElement;
         "app-recipe-list": HTMLAppRecipeListElement;
         "app-root": HTMLAppRootElement;
@@ -169,6 +178,8 @@ declare namespace LocalJSX {
     }
     interface AppRecipeDailyEntry {
     }
+    interface AppRecipeFavorite {
+    }
     interface AppRecipeInfo {
     }
     interface AppRecipeList {
@@ -188,6 +199,7 @@ declare namespace LocalJSX {
         "app-recipe-create": AppRecipeCreate;
         "app-recipe-daily": AppRecipeDaily;
         "app-recipe-daily-entry": AppRecipeDailyEntry;
+        "app-recipe-favorite": AppRecipeFavorite;
         "app-recipe-info": AppRecipeInfo;
         "app-recipe-list": AppRecipeList;
         "app-root": AppRoot;
@@ -207,6 +219,7 @@ declare module "@stencil/core" {
             "app-recipe-create": LocalJSX.AppRecipeCreate & JSXBase.HTMLAttributes<HTMLAppRecipeCreateElement>;
             "app-recipe-daily": LocalJSX.AppRecipeDaily & JSXBase.HTMLAttributes<HTMLAppRecipeDailyElement>;
             "app-recipe-daily-entry": LocalJSX.AppRecipeDailyEntry & JSXBase.HTMLAttributes<HTMLAppRecipeDailyEntryElement>;
+            "app-recipe-favorite": LocalJSX.AppRecipeFavorite & JSXBase.HTMLAttributes<HTMLAppRecipeFavoriteElement>;
             "app-recipe-info": LocalJSX.AppRecipeInfo & JSXBase.HTMLAttributes<HTMLAppRecipeInfoElement>;
             "app-recipe-list": LocalJSX.AppRecipeList & JSXBase.HTMLAttributes<HTMLAppRecipeListElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;

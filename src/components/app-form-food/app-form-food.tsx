@@ -1,6 +1,6 @@
 import { Component, h, State } from "@stencil/core";
 import { IFoodProduct } from "../../interfaces";
-import { toUpperCase } from '../../helpers/utils';
+import { firstLetterToUpperCase } from '../../helpers/utils';
 import { insertOrUpdateFoodProduct, deleteFoodProduct } from "../../services/db";
 import { writeImageFile, readImageFile } from "../../services/filesystem";
 import { alertController, modalController } from "@ionic/core";
@@ -253,7 +253,7 @@ export class AppDaily {
             this.foodProduct = modalElement.componentProps.foodProduct;
             this.name = this.foodProduct.name;
             this.calories = this.foodProduct.calories;
-            this.header = `Edit ${toUpperCase(this.foodProduct.name)}!`;
+            this.header = `Edit ${firstLetterToUpperCase(this.foodProduct.name)}!`;
             let image;
             try {
                 image = await readImageFile(this.foodProduct.name);
@@ -272,7 +272,7 @@ export class AppDaily {
         this.foodProduct = foodProduct;
         this.name = this.foodProduct.name;
         this.calories = this.foodProduct.calories;
-        this.header = `Edit ${toUpperCase(this.foodProduct.name)}!`;
+        this.header = `Edit ${firstLetterToUpperCase(this.foodProduct.name)}!`;
         let image;
         try {
             image = await readImageFile(this.foodProduct.name);
@@ -771,9 +771,9 @@ export class AppDaily {
         if (control === 'create') {
             message = 'Do you want to save this product?'
         } else if (control === 'edit') {
-            message = `Do you want to edit ${toUpperCase(this.name)}`;
+            message = `Do you want to edit ${firstLetterToUpperCase(this.name)}`;
         } else {
-            message = `Do you want to delete ${toUpperCase(this.name)}`;
+            message = `Do you want to delete ${firstLetterToUpperCase(this.name)}`;
         }
         const alert = await alertController.create({
             header: 'Warning!',

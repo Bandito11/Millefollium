@@ -14,6 +14,7 @@ export class AppRoot {
           {/* <ion-route url="/food/list" component="app-food-list"></ion-route> */}
           <ion-route url="/recipe/info/:name" component="app-recipe-info"></ion-route>
           <ion-route url="/recipe/list" component="app-recipe-list"></ion-route>
+          <ion-route url="/recipe/favorite" component="app-recipe-favorite"></ion-route>
           <ion-route url="/user/profile" component="app-user-profile"></ion-route>
         </ion-router>
         <ion-nav />

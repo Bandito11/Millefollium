@@ -35,6 +35,7 @@ export interface IMeal{
     carbs: number;
     steps: string[];
     category: string;
+    ratings: number
 }
 
 export interface IDailyEntry {

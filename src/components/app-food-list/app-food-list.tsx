@@ -3,7 +3,7 @@ import { IFoodProduct } from '../../interfaces';
 import { getFoodProducts } from '../../services/db';
 import { actionSheetController, modalController } from '@ionic/core';
 import { scan, stopScan } from '../../services/quagga';
-import { toUpperCase } from '../../helpers/utils';
+import { firstLetterToUpperCase } from '../../helpers/utils';
 
 // let usdaData: IUSDA[] = [];
 
@@ -159,7 +159,7 @@ export class AppFoodList {
 
     async showSelectionWindow(foodProduct: (IFoodProduct)) {
         const actionSheet = await actionSheetController.create({
-            header: toUpperCase(foodProduct.name),
+            header: firstLetterToUpperCase(foodProduct.name),
             buttons: [
                 {
                     text: 'Cancel',
@@ -251,10 +251,10 @@ export class AppFoodList {
                             {
                                 index % 2
                                     ? <ion-card-header color="secondary">
-                                        <ion-label>{toUpperCase(foodItem.name)} </ion-label>
+                                        <ion-label>{firstLetterToUpperCase(foodItem.name)} </ion-label>
                                     </ion-card-header>
                                     : <ion-card-header color="tertiary">
-                                        <ion-label>{toUpperCase(foodItem.name)} </ion-label>
+                                        <ion-label>{firstLetterToUpperCase(foodItem.name)} </ion-label>
                                     </ion-card-header>
                             }
                             <ion-item lines="none">

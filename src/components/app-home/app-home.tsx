@@ -1,5 +1,5 @@
 import { Component, h, Host, Listen, State } from "@stencil/core";
-import { calculateMacros, dateToString } from "../../helpers/utils";
+import { calculateMacros, dateToString, goToRecipeInfo } from "../../helpers/utils";
 import { IDaily, IMeal } from "../../interfaces";
 
 @Component({
@@ -66,7 +66,8 @@ export class AppHome {
       steps: [],
       calories: 400,
       fat: 19,
-      category: 'breakfast'
+      category: 'breakfast',
+      ratings: 5
     }
 
     const chickenRice: IMeal = {
@@ -78,7 +79,8 @@ export class AppHome {
       steps: [],
       calories: 600,
       fat: 10,
-      category: 'dinner'
+      category: 'dinner',
+      ratings: 3
     }
     this.daily.meals = [chickenRice, frenchToast];
     /////////////////////
@@ -132,7 +134,8 @@ export class AppHome {
       steps: [],
       calories: 400,
       fat: 19,
-      category: 'breakfast'
+      category: 'breakfast',
+      ratings: 5
     }
 
     const chickenRice: IMeal = {
@@ -144,7 +147,8 @@ export class AppHome {
       steps: [],
       calories: 600,
       fat: 10,
-      category: 'dinner'
+      category: 'dinner',
+      ratings: 3
     }
     const daily1 = {
       date: new Date('11/02/2020').valueOf(),
@@ -189,6 +193,7 @@ export class AppHome {
     if (ev.detail.isScrolling && (ev.detail.scrollTop == this.scrollTopMax)) {
       //TODO: Refresh when user have more than 10 daily entries
       // this.getPastDailyEntries();
+      console.error('scroll in home...')
     }
   }
 
@@ -202,10 +207,10 @@ export class AppHome {
               : this.getToolbar()
           }
         </ion-header>
-        <ion-content id="home-content" scrollEvents={true} onIonScroll={(ev => this.getDailyPastEntries(ev))} class="ion-padding">
+        <ion-content scrollEvents={true} onIonScroll={(ev => this.getDailyPastEntries(ev))} id="home-content" class="ion-padding">
           <img src="/assets/images/stick guy.png" />
           <h2>Today</h2>
-          <h3>{this.dailyCalories} calories consumed</h3>
+          <h3>{this.dailyCalories} calories</h3>
           <ion-list lines="none">
             <ion-item-group>
               <ion-item-divider color="secondary">
@@ -223,15 +228,23 @@ export class AppHome {
             </ion-item-group>
             <ion-item-group>
               <ion-item-divider color="tertiary">
-                <ion-label>Meals consumed today:</ion-label>
+                <ion-label>Meals:</ion-label>
               </ion-item-divider>
               {
                 this.daily.meals.map(meal =>
                   <app-recipe-daily
+                    // onClick={() => goToRecipeInfo(meal.name)}
                     name={meal.name}
                     calories={meal.calories}
                     image={meal.image}
-                  ></app-recipe-daily>
+                  >
+                    <ion-button slot="buttons" fill="outline">
+                      <ion-icon slot="icon-only" name="remove"></ion-icon>
+                    </ion-button>
+                    <ion-button slot="buttons" fill="outline" onClick={() => goToRecipeInfo(meal.name)}>
+                      <ion-icon slot="icon-only" name="information-outline"></ion-icon>
+                    </ion-button>
+                  </app-recipe-daily>
                 )
               }
             </ion-item-group>
@@ -242,18 +255,24 @@ export class AppHome {
                     <ion-label>This week:</ion-label>
                   </ion-item-divider>
                   {
-                    this.pastDailyEntries.map(daily =>
+                    this.pastDailyEntries.map((daily, i) =>
                       <div>
-                        <div class="ion-text-end">
-                          {/* <h2>{dateToString(new Date(daily.date))}</h2> */}
-                          <h2>Consumed {calculateMacros(daily.meals).dailyCalories} calories in {dateToString(new Date(daily.date))}</h2>
-                        </div>
+                        {
+                          i === 0
+                            ? <div class="ion-text-end">
+                              <h6>{calculateMacros(daily.meals).dailyCalories} calories Yesterday</h6>
+                            </div>
+                            : <div class="ion-text-end">
+                              <h6>{calculateMacros(daily.meals).dailyCalories} calories in {dateToString(new Date(daily.date))}</h6>
+                            </div>
+                        }
                         {
                           daily.meals.map(meal =>
                             <app-recipe-daily
                               name={meal.name}
                               calories={meal.calories}
                               image={meal.image}
+                            // onClick={() => goToRecipeInfo(meal.name)}
                             >
                             </app-recipe-daily>
                           )

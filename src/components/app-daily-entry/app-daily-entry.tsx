@@ -1,7 +1,7 @@
 import { Component, h } from '@stencil/core';
 import { IFoodProduct } from '../../interfaces';
 import { addToDaily } from '../../services/db';
-import { toUpperCase, mealTypes } from '../../helpers/utils';
+import { firstLetterToUpperCase, mealTypes } from '../../helpers/utils';
 import { alertController, modalController } from '@ionic/core';
 
 @Component({
@@ -117,7 +117,7 @@ export class AppDailyEntry {
             </ion-header>
             ,
             <ion-content class="ion-padding">
-                <h1>{toUpperCase(this.foodItem.name)}</h1>
+                <h1>{firstLetterToUpperCase(this.foodItem.name)}</h1>
                 <form>
                     <ion-list lines="none">
                         <ion-item>

@@ -1,6 +1,6 @@
 import { IMeal } from "../interfaces";
 
-export function toUpperCase(name: string) {
+export function firstLetterToUpperCase(name: string) {
   let formattedName;
   const array = name.split(' ');
   if (array.length > 0) {
@@ -58,4 +58,13 @@ export function calculateMacros(meals: IMeal[]) {
     dailyCarbs: totalCarbs.toFixed(0),
     dailyFat: totalFat.toFixed(0)
   }
+}
+
+
+export async function goToRecipeInfo(name: string) {
+  const router = document.querySelector('ion-router');
+  if (router) {
+    return router.push(`/recipe/info/${name}`, 'forward');
+  }
+  return false;
 }
