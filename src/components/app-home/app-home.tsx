@@ -26,7 +26,6 @@ export class AppHome {
     document.querySelector('ion-nav')
       .addEventListener('ionNavWillChange', () => {
         this.getDailyEntry(this.daily.date);
-        // this.getPastDailyEntries();
       });
   }
 
@@ -115,7 +114,6 @@ export class AppHome {
     this.scrollTopMax = scroll['scrollTopMax'];
 
     if ((ev.detail.currentY == this.scrollTopMax)) {
-      //TODO: Refresh when user have more than 10 daily entries
       this.getPastDailyEntries();
     }
   }

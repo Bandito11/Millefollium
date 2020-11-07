@@ -2,7 +2,8 @@ import { toastController } from '@ionic/core';
 import { Component, Host, h, State } from '@stencil/core';
 import { firstLetterToUpperCase, goToRecipeInfo } from '../../helpers/utils';
 import { IRecipe } from '../../interfaces';
-import { addNewDailyMeal, getNewRecipes } from '../../services/daily.tracker.service';
+import { addNewDailyMeal } from '../../services/daily.tracker.service';
+import { getNewRecipes } from '../../services/recipe.service';
 
 @Component({
   tag: 'app-recipe-list',
@@ -49,7 +50,7 @@ export class AppRecipeList {
     </ion-toolbar>
   }
   searchRecipe(ev: CustomEvent<import("@ionic/core").SearchbarChangeEventDetail>): void {
-    const query = ev.detail.value;
+    const query = ev.detail.value.toLowerCase();
     if (query) {
       console.error('Search Term: ', query)
     }

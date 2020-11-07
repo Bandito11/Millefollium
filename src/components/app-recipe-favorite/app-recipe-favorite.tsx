@@ -2,6 +2,7 @@ import { toastController } from '@ionic/core';
 import { Component, Host, h, State } from '@stencil/core';
 import { goToRecipeInfo } from '../../helpers/utils';
 import { IRecipe } from '../../interfaces';
+import { getFavoriteRecipes } from '../../services/recipe.service';
 
 @Component({
   tag: 'app-recipe-favorite',
@@ -24,33 +25,8 @@ export class AppRecipeFavorite {
   }
   getFavoriteRecipes(): void {
     //////?TODO: Get this information from database
-    const frenchToast: IRecipe = {
-      name: 'French Toast',
-      ingredients: [],
-      image: '/assets/images/frenchtoast.jpg',
-      protein: 24,
-      carbs: 12,
-      steps: [],
-      calories: 400,
-      fat: 19,
-      category: 'breakfast',
-      ratings: 5
-    }
 
-    const chickenRice: IRecipe = {
-      name: 'Chicken with Rice & Spinach',
-      ingredients: [],
-      image: '/assets/images/chickenrice.jpg',
-      protein: 30,
-      carbs: 40,
-      steps: [],
-      calories: 600,
-      fat: 10,
-      category: 'dinner',
-      ratings: 3
-    }
-
-    this.meals = [frenchToast, chickenRice];
+    this.meals = getFavoriteRecipes();
     /////////
 
   }
@@ -60,33 +36,32 @@ export class AppRecipeFavorite {
         footer ? "" : <ion-title>Favorite</ion-title>
       }
       <ion-buttons slot="start">
-        <ion-back-button defaultHref="/recipe/list"></ion-back-button>
+        <ion-back-button></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
   }
+
   searchRecipe(ev: CustomEvent<import("@ionic/core").SearchbarChangeEventDetail>): void {
-    const query = ev.detail.value;
+    const query = ev.detail.value.toLowerCase();
     if (query) {
+      //TODO: Get from local database
       console.error('Search Term: ', query)
     }
   }
 
   queryNewRecipes(ev: CustomEvent<import("@ionic/core").ScrollDetail>): void {
-    if (ev.detail.isScrolling && (ev.detail.scrollTop == this.scrollTopMax)) {
+    if ((ev.detail.currentY == this.scrollTopMax)) {
       //TODO: Refresh when user have more than 10 daily entries
-      console.error('scroll in recipe list...')
+      console.error('scroll in favorite list...')
+      this.getFavoriteRecipes();
     }
-  }
-
-  choseCategory(ev: CustomEvent<import("@ionic/core").SegmentChangeEventDetail>): void {
-    console.log('Query by Category: ', ev.detail.value)
   }
 
   async addDailyMeal(meal: IRecipe) {
     //TODO: Add to DB
     const toast = await toastController.create({
       message: `Added ${meal.name} to daily!`,
-      duration: 3000,
+      duration: 1000,
       color: 'success'
     });
     await toast.present();
@@ -95,6 +70,11 @@ export class AppRecipeFavorite {
     //TODO: Filter for Recipe arg0
     console.error('Filter: ', filter)
   }
+
+  getSearchbar() {
+    return <ion-searchbar onIonChange={ev => this.searchRecipe(ev)} inputmode="text" type="search" debounce={500} spellcheck={true} autocomplete="on"></ion-searchbar>
+  }
+
   render() {
     return (
       <Host>
@@ -102,7 +82,7 @@ export class AppRecipeFavorite {
           {
             navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
               ? ''
-              : this.getToolbar()
+              : this.getSearchbar()
           }
         </ion-header>
         <ion-toolbar>
@@ -126,6 +106,11 @@ export class AppRecipeFavorite {
           </ion-chip>
         </ion-toolbar>
         <ion-content id="food-list-content" scrollEvents={true} onIonScroll={(ev => this.queryNewRecipes(ev))} class="ion-padding">
+          {
+            navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
+              ? ''
+              : this.getToolbar()
+          }
           <ion-list lines="none">
             {
               this.meals.map(meal =>
@@ -145,6 +130,11 @@ export class AppRecipeFavorite {
               )
             }
           </ion-list>
+          {
+            navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
+              ? this.getSearchbar()
+              : ''
+          }
         </ion-content>
         <ion-footer>
           {
