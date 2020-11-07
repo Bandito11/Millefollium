@@ -1,7 +1,8 @@
 import { toastController } from '@ionic/core';
 import { Component, Host, h, State } from '@stencil/core';
-import { goToRecipeInfo } from '../../helpers/utils';
-import { IMeal } from '../../interfaces';
+import { firstLetterToUpperCase, goToRecipeInfo } from '../../helpers/utils';
+import { IRecipe } from '../../interfaces';
+import { addNewDailyMeal, getNewRecipes } from '../../services/daily.tracker.service';
 
 @Component({
   tag: 'app-recipe-list',
@@ -9,11 +10,12 @@ import { IMeal } from '../../interfaces';
 })
 export class AppRecipeList {
   scrollTopMax: number;
-  @State() meals: IMeal[];
+  @State() meals: IRecipe[];
 
   componentWillLoad() {
     this.meals = [];
     this.getNewRecipes();
+
   }
 
   async componentDidLoad() {
@@ -21,37 +23,15 @@ export class AppRecipeList {
     const scroll = await content.getScrollElement();
     this.scrollTopMax = scroll['scrollTopMax'];
 
+    const searchBar = document.querySelector<HTMLIonSearchbarElement>('#recipe-list-searchbar');
+    searchBar.setFocus();
   }
-  getNewRecipes(): void {
-    //////?TODO: Get this information from database
-    const frenchToast: IMeal = {
-      name: 'French Toast',
-      ingredients: [],
-      image: '/assets/images/frenchtoast.jpg',
-      protein: 24,
-      carbs: 12,
-      steps: [],
-      calories: 400,
-      fat: 19,
-      category: 'breakfast',
-      ratings: 5
+  async getNewRecipes() {
+    try {
+      this.meals = await getNewRecipes();
+    } catch (error) {
+      console.error(error);
     }
-
-    const chickenRice: IMeal = {
-      name: 'Chicken with Rice & Spinach',
-      ingredients: [],
-      image: '/assets/images/chickenrice.jpg',
-      protein: 30,
-      carbs: 40,
-      steps: [],
-      calories: 600,
-      fat: 10,
-      category: 'dinner',
-      ratings: 3
-    }
-
-    this.meals = [frenchToast, chickenRice];
-    /////////
 
   }
 
@@ -60,7 +40,7 @@ export class AppRecipeList {
       <ion-buttons slot="start">
         <ion-back-button defaultHref="/"></ion-back-button>
       </ion-buttons>
-      <ion-searchbar onIonChange={ev => this.searchRecipe(ev)} inputmode="text" type="search" debounce={500} spellcheck={true} autocomplete="on"></ion-searchbar>
+      <ion-searchbar id="recipe-list-searchbar" onIonChange={ev => this.searchRecipe(ev)} inputmode="text" type="search" debounce={500} spellcheck={true} autocomplete="on"></ion-searchbar>
       <ion-buttons slot="end">
         <ion-button href="/recipe/favorite">
           <ion-icon name="heart-outline"></ion-icon>
@@ -84,6 +64,30 @@ export class AppRecipeList {
 
   choseCategory(ev: CustomEvent<import("@ionic/core").SegmentChangeEventDetail>): void {
     console.log('Query by Category: ', ev.detail.value)
+  }
+
+  async addDailyMeal(meal: IRecipe) {
+    let message = '';
+    try {
+      const response = await addNewDailyMeal(meal);
+      if (response) {
+        message = `Added ${meal.name} to daily!`
+      } else {
+        message = `${firstLetterToUpperCase(meal.name)} couldn't be added to daily. Please try again later.`
+      }
+    } catch (error) {
+      message = error;
+    }
+    const toast = await toastController.create({
+      message: message,
+      duration: 1000,
+      color: 'success'
+    });
+    await toast.present();
+  }
+  filterRecipes(arg0: string): void {
+    //TODO: Filter for Recipe arg0
+    console.error('Filter: ', arg0)
   }
 
   render() {
@@ -161,18 +165,5 @@ export class AppRecipeList {
         </ion-footer>
       </Host>
     )
-  }
-  async addDailyMeal(meal: IMeal) {
-    //TODO: Add to DB
-    const toast = await toastController.create({
-      message: `Added ${meal.name} to daily!`,
-      duration: 3000,
-      color: 'success'
-    });
-    await toast.present();
-  }
-  filterRecipes(arg0: string): void {
-    //TODO: Filter for Recipe arg0
-    console.error('Filter: ', arg0)
   }
 }

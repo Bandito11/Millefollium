@@ -67,5 +67,4 @@ async function readLocalFile(opts: { dbName: string }) {
     } catch (error) {
         throw error;
     }
-
 }

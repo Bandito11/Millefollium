@@ -22,20 +22,30 @@ export interface oldIDaily {
 
 export interface IDaily {
     date: number;
-    meals: IMeal[];
+    meals: IRecipe[];
 }
 
-export interface IMeal{
+export interface IRecipe{
     name: string;
     calories: number;
     image: string;
-    ingredients: IFoodProduct[];
+    ingredients;
     fat: number;
     protein: number;
     carbs: number;
     steps: string[];
     category: string;
     ratings: number
+}
+
+export interface IProfile {
+        gender: string;
+        age: number;
+        weight: number;
+        height: number;
+        neck: number;
+        waist: number;
+        weighLoss: number
 }
 
 export interface IDailyEntry {

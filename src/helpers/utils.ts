@@ -1,4 +1,4 @@
-import { IMeal } from "../interfaces";
+import { IRecipe } from "../interfaces";
 
 export function firstLetterToUpperCase(name: string) {
   let formattedName;
@@ -16,7 +16,23 @@ export function firstLetterToUpperCase(name: string) {
  * @param date 
  */
 export function dateToString(date: Date) {
-  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  let month: number | string = date.getMonth() + 1
+    let days: number | string = date.getDate()
+    if (month < 10) {
+        month = `0${date.getMonth()}`
+    }
+    if (days < 10) {
+        days = `0${date.getDate()}`
+    }
+  return `${month}/${days}/${date.getFullYear()}`;
+}
+
+export enum mealCategories {
+  breakfast = 'breakfast',
+  snack = 'snack',
+  lunch = 'lunch',
+  dinner = 'dinner',
+  dessert = 'dessert'
 }
 
 export enum mealTypes {
@@ -28,8 +44,7 @@ export enum mealTypes {
   dinnerSnack = 'dinnerSnack'
 }
 
-
-export function calculateMacros(meals: IMeal[]) {
+export function calculateMacros(meals: IRecipe[]) {
   let totalCalories = 0;
   let totalFat = 0;
   let totalProtein = 0;
@@ -60,11 +75,21 @@ export function calculateMacros(meals: IMeal[]) {
   }
 }
 
-
 export async function goToRecipeInfo(name: string) {
   const router = document.querySelector('ion-router');
   if (router) {
     return router.push(`/recipe/info/${name}`, 'forward');
   }
   return false;
+}
+
+export function convertHeightToInches({ height, width }) {
+  const heightInches = height * 12;
+  return heightInches + width;
+}
+
+export function convertHeightToFeetInches(height) {
+  const heightFeet = parseInt((height / 12).toFixed(1));
+  const heightInches = height % 12;
+  return { heightFeet, heightInches };
 }

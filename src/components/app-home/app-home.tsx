@@ -1,6 +1,8 @@
-import { Component, h, Host, Listen, State } from "@stencil/core";
+import { Component, h, Host, State } from "@stencil/core";
 import { calculateMacros, dateToString, goToRecipeInfo } from "../../helpers/utils";
-import { IDaily, IMeal } from "../../interfaces";
+import { IDaily, IRecipe } from "../../interfaces";
+import { getTodayDaily } from "../../services/daily.tracker.service";
+import { removeMealFromDaily } from "../../services/local.db";
 
 @Component({
   tag: "app-home",
@@ -10,89 +12,57 @@ export class AppHome {
 
   @State() daily: IDaily;
   @State() pastDailyEntries: IDaily[];
-  dailyCalories;
-  dailyFat;
-  dailyProtein;
-  dailyCarbs;
+  @State() dailyCalories;
+  @State() dailyFat;
+  @State() dailyProtein;
+  @State() dailyCarbs;
+  today: number
   pastDate: number;
   dates: number[];
   scrollTopMax: number;
+  timeout: NodeJS.Timeout;
 
   ionNavEvent() {
-    document.querySelector('ion-nav').addEventListener('ionNavWillChange', () => {
-      this.getDailyEntry(this.daily.date);
-    });
+    document.querySelector('ion-nav')
+      .addEventListener('ionNavWillChange', () => {
+        this.getDailyEntry(this.daily.date);
+        // this.getPastDailyEntries();
+      });
   }
 
   componentWillLoad() {
-    this.dailyCalories = 0;
-    this.dailyCarbs = 0;
-    this.dailyFat = 0;
-    this.dailyProtein = 0;
-    this.daily = {
-      date: new Date().valueOf(),
-      meals: []
-    };
-    this.pastDate = new Date().valueOf();
+    this.today = new Date().valueOf();
+    this.refreshDailyData({ date: this.today, meals: [] });
+    this.pastDate = this.today;
     this.pastDailyEntries = [];
     this.dates = [];
     this.getDailyEntry(this.daily.date);
-    this.getPastDailyEntries();
   }
 
   async componentDidLoad() {
     this.ionNavEvent();
-
-    const content = document.querySelector<HTMLIonContentElement>('#home-content');
-    const scroll = await content.getScrollElement();
-    this.scrollTopMax = scroll['scrollTopMax'];
   }
 
-  @Listen('updatedDailyEntry')
-  handleUpdatedDailyEntry() {
-    // this.getDailyEntry();
-    // this.refreshPastDailyEntries();
+  getToolbar() {
+    return <ion-toolbar color="primary">
+      <ion-searchbar onClick={() => this.goToRecipeList()}></ion-searchbar>
+      <ion-buttons slot="end">
+        <ion-button href="/user/profile">
+          <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
   }
 
-
-  getDailyEntry(date: number) {
-    //TODO: Get this data from local database
-    const frenchToast: IMeal = {
-      name: 'French Toast',
-      ingredients: [],
-      image: 'assets/images/frenchtoast.jpg',
-      protein: 24,
-      carbs: 12,
-      steps: [],
-      calories: 400,
-      fat: 19,
-      category: 'breakfast',
-      ratings: 5
-    }
-
-    const chickenRice: IMeal = {
-      name: 'Chicken with Rice & Spinach',
-      ingredients: [],
-      image: 'assets/images/chickenrice.jpg',
-      protein: 30,
-      carbs: 40,
-      steps: [],
-      calories: 600,
-      fat: 10,
-      category: 'dinner',
-      ratings: 3
-    }
-    this.daily.meals = [chickenRice, frenchToast];
-    /////////////////////
-    date
-    //TODO: Search by date getDailyData(date)
-    //TODO: When creating the local database, the data has to be synced by category <snack, breakfast, lunch, dinner> in this order
-    if (this.daily.meals.length > 0) {
-      const macros = calculateMacros(this.daily.meals);
-      this.dailyCalories = macros.dailyCalories;
-      this.dailyCarbs = macros.dailyCarbs;
-      this.dailyFat = macros.dailyFat;
-      this.dailyProtein = macros.dailyProtein;
+  async getDailyEntry(date: number) {
+    try {
+      const result = await getTodayDaily(date);
+      clearTimeout(this.timeout);
+      if (result) {
+        this.refreshDailyData(result);
+      }
+    } catch (error) {
+      this.timeout = setTimeout(() => this.getDailyEntry(date), 1000);
     }
   };
 
@@ -123,77 +93,66 @@ export class AppHome {
     //   this.pastDailyEntries = [];
   }
 
-  getPastDailyEntries() {
-    //////?TODO: Get this information from database
-    const frenchToast: IMeal = {
-      name: 'French Toast',
-      ingredients: [],
-      image: 'assets/images/frenchtoast.jpg',
-      protein: 24,
-      carbs: 12,
-      steps: [],
-      calories: 400,
-      fat: 19,
-      category: 'breakfast',
-      ratings: 5
-    }
-
-    const chickenRice: IMeal = {
-      name: 'Chicken with Rice & Spinach',
-      ingredients: [],
-      image: 'assets/images/chickenrice.jpg',
-      protein: 30,
-      carbs: 40,
-      steps: [],
-      calories: 600,
-      fat: 10,
-      category: 'dinner',
-      ratings: 3
-    }
-    const daily1 = {
-      date: new Date('11/02/2020').valueOf(),
-      meals: [chickenRice, frenchToast]
-    };
-    const daily2 = {
-      date: new Date('11/01/2020').valueOf(),
-      meals: [frenchToast]
-    };
-
-    const daily3 = {
-      date: new Date('10/31/2020').valueOf(),
-      meals: [chickenRice]
-    };
-
-    this.pastDailyEntries = [daily1, daily2, daily3];
-    /////////
+  async getPastDailyEntries() {
     for (let i = 0; i < 10; i++) {
       this.generatePastDate();
       //TODO: Query past daily entries by dates
       //TODO: GetPastDailyEntries(this.pastDate)
+
+      try {
+        const result = await getTodayDaily(this.pastDate);
+        clearTimeout(this.timeout);
+        if (result) {
+          this.pastDailyEntries = [...this.pastDailyEntries, result];
+        }
+      } catch (error) {
+        this.timeout = setTimeout(() => this.getPastDailyEntries(), 1000);
+      }
     };
   }
 
-  getToolbar(footer?: boolean) {
-    return <ion-toolbar color="primary">
-      {
-        footer ? "" : <ion-title>Food Tracker</ion-title>
-      }
-      <ion-button class="searchbutton" fill="clear" expand="full" href="/recipe/list">
-        <ion-searchbar disabled={true}></ion-searchbar>
-      </ion-button>
-      <ion-buttons slot="end">
-        <ion-button href="/user/profile">
-          <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
+  goToRecipeList() {
+    const router = document.querySelector('ion-router');
+    if (router)
+      router.push('/recipe/list', 'forward');
+    return false;
   }
 
   async getDailyPastEntries(ev: CustomEvent<import("@ionic/core").ScrollDetail>) {
-    if (ev.detail.isScrolling && (ev.detail.scrollTop == this.scrollTopMax)) {
+    const content = document.querySelector<HTMLIonContentElement>('#home-content');
+    const scroll = await content.getScrollElement();
+    this.scrollTopMax = scroll['scrollTopMax'];
+
+    if (ev.detail.isScrolling && (ev.detail.currentY == this.scrollTopMax)) {
       //TODO: Refresh when user have more than 10 daily entries
-      // this.getPastDailyEntries();
-      console.error('scroll in home...')
+      this.getPastDailyEntries();
+    }
+  }
+
+  removeMeal(meal: IRecipe): void {
+    try {
+      const data = removeMealFromDaily({ meal: meal, date: this.today });
+      this.refreshDailyData(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  refreshDailyData(data) {
+    this.daily = {
+      ...data
+    }
+    if (this.daily.meals.length > 0) {
+      const macros = calculateMacros(this.daily.meals);
+      this.dailyCalories = macros.dailyCalories;
+      this.dailyCarbs = macros.dailyCarbs;
+      this.dailyFat = macros.dailyFat;
+      this.dailyProtein = macros.dailyProtein;
+    } else {
+      this.dailyCalories = 0;
+      this.dailyCarbs = 0;
+      this.dailyFat = 0;
+      this.dailyProtein = 0;
     }
   }
 
@@ -238,7 +197,7 @@ export class AppHome {
                     calories={meal.calories}
                     image={meal.image}
                   >
-                    <ion-button slot="buttons" fill="outline">
+                    <ion-button slot="buttons" fill="outline" onClick={() => this.removeMeal(meal)}>
                       <ion-icon slot="icon-only" name="remove"></ion-icon>
                     </ion-button>
                     <ion-button slot="buttons" fill="outline" onClick={() => goToRecipeInfo(meal.name)}>
@@ -257,15 +216,9 @@ export class AppHome {
                   {
                     this.pastDailyEntries.map((daily, i) =>
                       <div>
-                        {
-                          i === 0
-                            ? <div class="ion-text-end">
-                              <h6>{calculateMacros(daily.meals).dailyCalories} calories Yesterday</h6>
-                            </div>
-                            : <div class="ion-text-end">
-                              <h6>{calculateMacros(daily.meals).dailyCalories} calories in {dateToString(new Date(daily.date))}</h6>
-                            </div>
-                        }
+                        <div class="ion-text-end">
+                          <h6>{calculateMacros(daily.meals).dailyCalories} calories in {dateToString(new Date(daily.date))}</h6>
+                        </div>
                         {
                           daily.meals.map(meal =>
                             <app-recipe-daily
@@ -288,7 +241,7 @@ export class AppHome {
         <ion-footer>
           {
             navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
-              ? this.getToolbar(true)
+              ? this.getToolbar()
               : ''
           }
         </ion-footer>
