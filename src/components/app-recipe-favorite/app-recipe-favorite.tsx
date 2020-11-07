@@ -36,7 +36,7 @@ export class AppRecipeFavorite {
         footer ? "" : <ion-title>Favorite</ion-title>
       }
       <ion-buttons slot="start">
-        <ion-back-button></ion-back-button>
+        <ion-back-button defaultHref="/recipe/list"></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
   }
