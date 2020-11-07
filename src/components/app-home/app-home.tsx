@@ -84,21 +84,12 @@ export class AppHome {
     }
   }
 
-  refreshPastDailyEntries() {
-    // const dates = this.pastDailyEntries.map(entry => new Date(entry.date));
-    // const response = getDailyEntries(dates);
-    // if (response.success) {
-    //   this.pastDailyEntries = [...response.data];
-    // } else {
-    //   this.pastDailyEntries = [];
-  }
-
   async getPastDailyEntries() {
+    //TODO: Query past daily entries by dates
+    //TODO: GetPastDailyEntries(this.pastDate)
+    //TODO: Limit it to per database not a FOR condition
     for (let i = 0; i < 10; i++) {
       this.generatePastDate();
-      //TODO: Query past daily entries by dates
-      //TODO: GetPastDailyEntries(this.pastDate)
-
       try {
         const result = await getTodayDaily(this.pastDate);
         clearTimeout(this.timeout);
@@ -123,7 +114,7 @@ export class AppHome {
     const scroll = await content.getScrollElement();
     this.scrollTopMax = scroll['scrollTopMax'];
 
-    if (ev.detail.isScrolling && (ev.detail.currentY == this.scrollTopMax)) {
+    if ((ev.detail.currentY == this.scrollTopMax)) {
       //TODO: Refresh when user have more than 10 daily entries
       this.getPastDailyEntries();
     }
