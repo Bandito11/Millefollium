@@ -13,7 +13,7 @@ async function createLocalDirectory() {
             recursive: false // like mkdir -p
         });
     } catch (error) {
-        console.error(error);
+        throw new Error(error);
     }
 }
 
@@ -24,7 +24,7 @@ export async function deleteProfileLocal() {
             directory: FilesystemDirectory.Documents
         });
     } catch (error) {
-        console.error(error);
+        throw new Error(error);
     }
 }
 
@@ -37,7 +37,7 @@ export async function insertUpdateProfileLocal(profile: IProfile) {
             encoding: FilesystemEncoding.UTF8
         });
     } catch (error) {
-        console.error(error);
+        throw new Error(error);
     }
 }
 
@@ -51,6 +51,6 @@ export async function getProfileLocal() {
         const data = JSON.parse(lokiDBContents.data) as IProfile;
         return data;
     } catch (error) {
-        console.error(error);
+        throw new Error(error);
     }
 }

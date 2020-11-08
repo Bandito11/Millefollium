@@ -3,7 +3,7 @@ import { Component, Host, h, State } from '@stencil/core';
 import { firstLetterToUpperCase, goToRecipeInfo } from '../../helpers/utils';
 import { IRecipe } from '../../interfaces';
 import { addNewDailyMeal } from '../../services/daily.tracker.service';
-import { getNewRecipes } from '../../services/recipe.service';
+import { getRecipes, searchRecipeInAPI } from '../../services/recipe.service';
 
 @Component({
   tag: 'app-recipe-list',
@@ -12,28 +12,29 @@ import { getNewRecipes } from '../../services/recipe.service';
 export class AppRecipeList {
   scrollTopMax: number;
   @State() meals: IRecipe[];
+  initMeals: IRecipe[];
+
+  async queryNewRecipes(ev: CustomEvent<import("@ionic/core").ScrollDetail>) {
+    const content = document.querySelector<HTMLIonContentElement>('#recipe-list-content');
+    const scroll = await content.getScrollElement();
+    this.scrollTopMax = scroll['scrollTopMax'];
+
+    if (ev.detail.currentY === this.scrollTopMax) {
+      //TODO: Refresh when user have more than 10 daily entries
+      if (this.meals.length > 9) {
+        this.getNewRecipes();
+      }
+    }
+  }
 
   componentWillLoad() {
     this.meals = [];
     this.getNewRecipes();
-
   }
 
   async componentDidLoad() {
-    const content = document.querySelector<HTMLIonContentElement>('#food-list-content');
-    const scroll = await content.getScrollElement();
-    this.scrollTopMax = scroll['scrollTopMax'];
-
     const searchBar = document.querySelector<HTMLIonSearchbarElement>('#recipe-list-searchbar');
     searchBar.setFocus();
-  }
-  async getNewRecipes() {
-    try {
-      this.meals = await getNewRecipes();
-    } catch (error) {
-      console.error(error);
-    }
-
   }
 
   getToolbar() {
@@ -41,7 +42,7 @@ export class AppRecipeList {
       <ion-buttons slot="start">
         <ion-back-button defaultHref="/"></ion-back-button>
       </ion-buttons>
-      <ion-searchbar id="recipe-list-searchbar" onIonChange={ev => this.searchRecipe(ev)} inputmode="text" type="search" debounce={500} spellcheck={true} autocomplete="on"></ion-searchbar>
+      <ion-searchbar id="recipe-list-searchbar" onIonInput={ev=> this.clearSearch(ev)} onIonClear={() => this.searchCancelClicked()} onIonChange={ev => this.searchRecipe(ev)} inputmode="text" type="search" debounce={500} spellcheck={true} autocomplete="on"></ion-searchbar>
       <ion-buttons slot="end">
         <ion-button href="/recipe/favorite">
           <ion-icon name="heart-outline"></ion-icon>
@@ -49,22 +50,49 @@ export class AppRecipeList {
       </ion-buttons>
     </ion-toolbar>
   }
-  searchRecipe(ev: CustomEvent<import("@ionic/core").SearchbarChangeEventDetail>): void {
-    const query = ev.detail.value.toLowerCase();
-    if (query) {
-      console.error('Search Term: ', query)
+
+  clearSearch(ev: CustomEvent<KeyboardEvent>): void {
+    if(!ev.target['value']){
+      this.meals = [...this.initMeals];
     }
   }
 
-  queryNewRecipes(ev: CustomEvent<import("@ionic/core").ScrollDetail>): void {
-    if (ev.detail.isScrolling && (ev.detail.scrollTop == this.scrollTopMax)) {
-      //TODO: Refresh when user have more than 10 daily entries
-      console.error('scroll in recipe list...')
+  async getNewRecipes() {
+    try {
+      let meals;
+      if (this.meals.length > 0) {
+        meals = await getRecipes(this.meals[this.meals.length]);
+      } else {
+        meals = await getRecipes();
+      }
+      if (meals && meals.length > 0) {
+        this.meals = [...this.meals, ...meals];
+        this.initMeals = [...this.meals];
+      }
+    } catch (error) {
+      console.error(error);
     }
+  }
+
+  async searchRecipe(ev: CustomEvent<import("@ionic/core").SearchbarChangeEventDetail>) {
+    const term = ev.detail.value.toLowerCase();
+    if (term) {
+      try {
+        let meals;
+        meals = await searchRecipeInAPI(term);
+        this.meals = [...meals];
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
+
+  async searchCancelClicked() {
+    this.meals = [...this.initMeals];
   }
 
   choseCategory(ev: CustomEvent<import("@ionic/core").SegmentChangeEventDetail>): void {
-    console.log('Query by Category: ', ev.detail.value)
+    console.error('Query by Category: ', ev.detail.value)
   }
 
   async addDailyMeal(meal: IRecipe) {
@@ -88,7 +116,7 @@ export class AppRecipeList {
   }
   filterRecipes(arg0: string): void {
     //TODO: Filter for Recipe arg0
-    console.error('Filter: ', arg0)
+    console.error('Filter: ', arg0);
   }
 
   render() {
@@ -121,7 +149,7 @@ export class AppRecipeList {
             <ion-label>None</ion-label>
           </ion-chip>
         </ion-toolbar>
-        <ion-content id="food-list-content" scrollEvents={true} onIonScroll={(ev => this.queryNewRecipes(ev))} class="ion-padding">
+        <ion-content id="recipe-list-content" scrollEvents={true} onIonScroll={(ev => this.queryNewRecipes(ev))} class="ion-padding">
           <ion-list lines="none">
             {
               this.meals.map(meal =>

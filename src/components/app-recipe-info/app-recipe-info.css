@@ -1,3 +1,12 @@
 :host {
   display: block;
 }
+
+#steps:first-letter {
+  text-transform: capitalize;
+}
+
+#favorite-calories-text{
+  font-weight: 500;
+  font-size: 1.2em;
+}

@@ -1,8 +1,9 @@
+import { toastController } from "@ionic/core";
 import { Component, h, Host, State } from "@stencil/core";
 import { calculateMacros, dateToString, goToRecipeInfo } from "../../helpers/utils";
-import { IDaily, IRecipe } from "../../interfaces";
+import { IDaily } from "../../interfaces";
 import { getTodayDaily } from "../../services/daily.tracker.service";
-import { removeMealFromDaily } from "../../services/local.db";
+import { removeMealFromLocalDaily } from "../../services/local.db";
 
 @Component({
   tag: "app-home",
@@ -20,7 +21,7 @@ export class AppHome {
   pastDate: number;
   dates: number[];
   scrollTopMax: number;
-  timeout: NodeJS.Timeout;
+  interval: NodeJS.Timeout;
 
   ionNavEvent() {
     document.querySelector('ion-nav')
@@ -29,6 +30,15 @@ export class AppHome {
       });
   }
 
+  async getDailyPastEntries(ev: CustomEvent<import("@ionic/core").ScrollDetail>) {
+    const content = document.querySelector<HTMLIonContentElement>('#home-content');
+    const scroll = await content.getScrollElement();
+    this.scrollTopMax = scroll['scrollTopMax'];
+
+    if ((ev.detail.currentY === this.scrollTopMax)) {
+      this.getPastDailyEntries();
+    }
+  }
   componentWillLoad() {
     this.today = new Date().valueOf();
     this.refreshDailyData({ date: this.today, meals: [] });
@@ -56,12 +66,11 @@ export class AppHome {
   async getDailyEntry(date: number) {
     try {
       const result = await getTodayDaily(date);
-      clearTimeout(this.timeout);
       if (result) {
         this.refreshDailyData(result);
       }
     } catch (error) {
-      this.timeout = setTimeout(() => this.getDailyEntry(date), 1000);
+      console.error(error);
     }
   };
 
@@ -91,12 +100,11 @@ export class AppHome {
       this.generatePastDate();
       try {
         const result = await getTodayDaily(this.pastDate);
-        clearTimeout(this.timeout);
         if (result) {
           this.pastDailyEntries = [...this.pastDailyEntries, result];
         }
       } catch (error) {
-        this.timeout = setTimeout(() => this.getPastDailyEntries(), 1000);
+        console.error(error);
       }
     };
   }
@@ -108,20 +116,20 @@ export class AppHome {
     return false;
   }
 
-  async getDailyPastEntries(ev: CustomEvent<import("@ionic/core").ScrollDetail>) {
-    const content = document.querySelector<HTMLIonContentElement>('#home-content');
-    const scroll = await content.getScrollElement();
-    this.scrollTopMax = scroll['scrollTopMax'];
-
-    if ((ev.detail.currentY == this.scrollTopMax)) {
-      this.getPastDailyEntries();
-    }
-  }
-
-  removeMeal(meal: IRecipe): void {
+  async removeMeal({ meal, date }) {
     try {
-      const data = removeMealFromDaily({ meal: meal, date: this.today });
-      this.refreshDailyData(data);
+      const data = removeMealFromLocalDaily({ meal: meal, date: date });
+      if (data) {
+        this.refreshDailyData(data);
+        const toast = await toastController.create({
+          message: `${meal.name} was successfully removed.`,
+          color: 'success',
+          duration: 1000
+        });
+        toast.present();
+      } else {
+        throw new Error(`Meal item was: ${data}`);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -181,12 +189,11 @@ export class AppHome {
               {
                 this.daily.meals.map(meal =>
                   <app-recipe-daily
-                    // onClick={() => goToRecipeInfo(meal.name)}
                     name={meal.name}
                     calories={meal.calories}
                     image={meal.image}
                   >
-                    <ion-button slot="buttons" fill="outline" onClick={() => this.removeMeal(meal)}>
+                    <ion-button slot="buttons" fill="outline" onClick={() => this.removeMeal({ meal: meal, date: this.today })}>
                       <ion-icon slot="icon-only" name="remove"></ion-icon>
                     </ion-button>
                     <ion-button slot="buttons" fill="outline" onClick={() => goToRecipeInfo(meal.name)}>
@@ -203,7 +210,7 @@ export class AppHome {
                     <ion-label>This week:</ion-label>
                   </ion-item-divider>
                   {
-                    this.pastDailyEntries.map((daily, i) =>
+                    this.pastDailyEntries.map((daily) =>
                       <div>
                         <div class="ion-text-end">
                           <h6>{calculateMacros(daily.meals).dailyCalories} calories in {dateToString(new Date(daily.date))}</h6>
@@ -214,8 +221,10 @@ export class AppHome {
                               name={meal.name}
                               calories={meal.calories}
                               image={meal.image}
-                            // onClick={() => goToRecipeInfo(meal.name)}
                             >
+                              <ion-button slot="buttons" fill="outline" onClick={() => this.removeMeal({ meal: meal, date: daily.date })}>
+                                <ion-icon slot="icon-only" name="remove"></ion-icon>
+                              </ion-button>
                             </app-recipe-daily>
                           )
                         }

@@ -1,3 +1,5 @@
+import { iterate } from "localforage";
+
 export interface IResponse<T> {
     success: boolean;
     error: string;
@@ -35,7 +37,13 @@ export interface IRecipe{
     carbs: number;
     steps: string[];
     category: string;
-    ratings: number
+    ratings: number,
+    favorite?: boolean
+}
+
+interface IIngredient {
+    name: string,
+    amount: string;
 }
 
 export interface IProfile {
@@ -67,7 +75,7 @@ export interface IFoodProduct extends INutritionFacts {
     dateCreated: Date;
 }
 
-export interface INutritionFacts {
+interface INutritionFacts {
     servingSize: IServingSize;
     servingPerContainer: string;
     calories: string;
@@ -95,7 +103,7 @@ export interface INutritionFacts {
     sugarAlcohol: ISugar;
 }
 
-export interface IVitamin {
+interface IVitamin {
     A: IAmount;
     B: IAmount;
     C: IAmount;
@@ -103,13 +111,13 @@ export interface IVitamin {
     E: IAmount;
 }
 
-export interface IServingSize {
+interface IServingSize {
     size: string;
     grams: string;
     measurement: string;
 }
 
-export interface IFat {
+interface IFat {
     total: IAmount;
     saturated: IAmount;
     trans: IAmount;
@@ -119,7 +127,7 @@ export interface IFat {
 
 interface ISugar {
     added: IAmount;
-    total: IAmount
+    total: IAmount;
 }
 
 interface IAmount {

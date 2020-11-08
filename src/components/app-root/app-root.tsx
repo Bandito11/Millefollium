@@ -1,4 +1,5 @@
 import { Component, h } from '@stencil/core';
+import { initLocalDB } from '../../services/local.db';
 
 @Component({
   tag: 'app-root',
@@ -6,6 +7,9 @@ import { Component, h } from '@stencil/core';
 })
 export class AppRoot {
 
+  componentWillLoad() {
+    initLocalDB();
+  }
   render() {
     return (
       <ion-app>

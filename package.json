@@ -18,6 +18,7 @@
     "@capacitor/cli": "2.4.2",
     "@capacitor/core": "2.4.2",
     "@ericblade/quagga2": "1.2.4",
+    "firebase": "^8.0.1",
     "jest": "^26.6.2",
     "localforage": "^1.9.0",
     "lokijs": "1.5.11",

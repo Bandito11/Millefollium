@@ -89,7 +89,7 @@ export function convertHeightToInches({ height, width }) {
 }
 
 export function convertHeightToFeetInches(height) {
-  const heightFeet = parseInt((height / 12).toFixed(1));
-  const heightInches = height % 12;
-  return { heightFeet, heightInches };
+    const heightFeet = parseInt((height / 12).toFixed(1));
+    const heightInches = height % 12;
+    return { heightFeet, heightInches };
 }

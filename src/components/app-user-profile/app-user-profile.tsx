@@ -16,8 +16,20 @@ export class AppUserProfile {
   @State() weighLossChecked: boolean;
 
   async componentWillLoad() {
-    const result = await getProfile();
-    this.profile = result;
+    try {
+      const result = await getProfile();
+      this.profile = result;
+    } catch (error) {
+      this.profile = {
+        gender: 'male',
+        age: 0,
+        weight: 0,
+        height: 0,
+        neck: 0,
+        waist: 0,
+        weighLoss: 0
+      };
+    }
     const convertedHeight = convertHeightToFeetInches(this.profile.height);
     this.heightInFeet = convertedHeight.heightFeet;
     this.heightInInches = convertedHeight.heightInches;
@@ -58,7 +70,7 @@ export class AppUserProfile {
         toast.present();
       }
     } catch (error) {
-      //TODO: I don't know what to do here
+      console.error(error);
     }
   }
   editProfile(): void {
@@ -192,14 +204,14 @@ export class AppUserProfile {
                   }
                 </div>
                 : <div>
-                {
-                  this.profile.weighLoss > 0
-                    ? <ion-item lines="none">
-                      <ion-label>Ideal Weight: {this.profile.weighLoss} lbs</ion-label>
-                    </ion-item>
-                    : ''
-                }
-              </div>
+                  {
+                    this.profile.weighLoss > 0
+                      ? <ion-item lines="none">
+                        <ion-label>Ideal Weight: {this.profile.weighLoss} lbs</ion-label>
+                      </ion-item>
+                      : ''
+                  }
+                </div>
             }
           </ion-list>
         </ion-content>

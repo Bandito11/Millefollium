@@ -1,6 +1,9 @@
+import { toastController } from '@ionic/core';
+import { State } from '@ionic/core/dist/types/stencil-public-runtime';
 import { Component, Host, h } from '@stencil/core';
 import { firstLetterToUpperCase } from '../../helpers/utils';
 import { IRecipe } from '../../interfaces';
+import { getRecipeInfo, setFavorite } from '../../services/recipe.service';
 
 @Component({
   tag: 'app-recipe-info',
@@ -8,7 +11,7 @@ import { IRecipe } from '../../interfaces';
 })
 export class AppRecipeInfo {
 
-  recipe: IRecipe;
+  @State() recipe: IRecipe;
 
   componentWillLoad() {
     this.recipe = {
@@ -21,39 +24,26 @@ export class AppRecipeInfo {
       calories: null,
       fat: null,
       category: null,
-      ratings: null
+      ratings: null,
+      favorite: null
     }
     this.getRecipeInfo();
   }
 
-  getRecipeInfo() {
+  async getRecipeInfo() {
     const urlValues = location.pathname.split('/');
     const name = urlValues.pop().replace(/%20/g, ' '); //used to query results
-    //.//TODO: Get from internet /////
-    this.recipe = {
-      name: 'French Toast',
-      ingredients: [
-        { name: 'bread' },
-        { name: 'vanilla extract' },
-        { name: 'cinammon' }
-      ],
-      image: '/assets/images/frenchtoast.jpg',
-      protein: 24,
-      carbs: 12,
-      steps: [
-        'In a medium bowl mix the cinammon, vanilla extract and white eggs',
-        'Soak the bread in the mixture created in the first step',
-        'Spray a pan with cooking spray',
-        'Cook in a pan at medium low temperature',
-        'After a minute or two turn it around. If it\'s brownish color it is done, if not after doing the same with the other side turn it around again and cook it for a few more minutes.',
-        'Repeat for 4 more breads slices.'
-      ],
-      calories: 400,
-      fat: 19,
-      category: firstLetterToUpperCase('breakfast'),
-      ratings: 5
+    try {
+      const data = await getRecipeInfo(name.toLowerCase());
+      if (data) {
+        this.recipe = {
+          ...data,
+          category: firstLetterToUpperCase(data.category)
+        };
+      }
+    } catch (error) {
+      console.error(error);
     }
-    ///////////////
   }
 
   getToolbar(footer?: boolean) {
@@ -65,6 +55,51 @@ export class AppRecipeInfo {
         <ion-back-button defaultHref="/"></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
+  }
+
+  async setFavorite() {
+    if (!this.recipe.favorite) {
+      this.recipe = {
+        ...this.recipe,
+        favorite: true
+      }
+    } else {
+      this.recipe = {
+        ...this.recipe,
+        favorite: false
+      }
+    }
+    try {
+      const result = setFavorite(this.recipe);
+      let options = {
+        message: '',
+        color: ''
+      };
+      if (result) {
+        if (this.recipe.favorite) {
+          options. message = `Added to favorites.`;
+          options.color = 'success';
+        } else {
+          options.message = `Removed from favorites.`;
+          options.color  = 'danger'
+        }
+        const toast = await toastController.create({
+          message: options.message,
+          duration: 1000,
+          color: options.color
+        });
+        toast.present();
+      } else {
+        const toast = await toastController.create({
+          message: `Couldn't be added to favorites. Please try again later.`,
+          duration: 1000,
+          color: 'danger'
+        });
+        toast.present();
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   render() {
@@ -80,15 +115,21 @@ export class AppRecipeInfo {
         <ion-content class="ion-padding">
           <h2 class="ion-text-capitalize">{this.recipe.name}</h2>
           <ion-img src={this.recipe.image}></ion-img>
-          <ion-item lines="none">
-            <ion-label>xxx calories</ion-label>
+          <ion-item lines="none" id="favorite-calories-text">
+            <ion-label>{this.recipe.calories} calories</ion-label>
+            <ion-button onClick={() => this.setFavorite()} fill="clear">
+              {
+                this.recipe.favorite
+                  ? <ion-icon id="favorite-icon" name="heart-sharp"></ion-icon>
+                  : <ion-icon id="favorite-icon" name="heart-outline"></ion-icon>
+
+              }
+            </ion-button>
           </ion-item>
           <h3>Macros</h3>
           <ion-list lines="none">
             <ion-item>
-              <ion-label>
-                xx% Protein
-              </ion-label>
+              <ion-label>xx% Protein</ion-label>
             </ion-item>
             <ion-item>
               <ion-label>xx% Carbs</ion-label>
@@ -121,6 +162,7 @@ export class AppRecipeInfo {
               this.recipe.ingredients.map(ingredient =>
                 <ion-item>
                   <ion-label class="ion-text-capitalize">{ingredient.name}</ion-label>
+                  <ion-label class="ion-text-wrap">{ingredient.amount}</ion-label>
                 </ion-item>
               )
             }
@@ -131,10 +173,15 @@ export class AppRecipeInfo {
           <h3>How to prepare</h3>
           <ion-list lines="none">
             {
-              this.recipe.steps.map(step =>
-                <ion-item>
-                  <ion-label>{step}</ion-label>
-                </ion-item>)
+              this.recipe.steps.map((step, i) =>
+                i % 2
+                  ? <ion-item color="light">
+                    <ion-label id="steps">{step}</ion-label>
+                  </ion-item>
+                  : <ion-item>
+                    <ion-label id="steps">{step}</ion-label>
+                  </ion-item>
+              )
             }
           </ion-list>
         </ion-content>
@@ -148,5 +195,4 @@ export class AppRecipeInfo {
       </Host>
     );
   }
-
 }

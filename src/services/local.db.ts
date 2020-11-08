@@ -1,12 +1,14 @@
 import loki from 'lokijs';
 import { dateToString } from '../helpers/utils';
-import { IDaily, IProfile } from '../interfaces';
+import { IDaily, IProfile, IRecipe } from '../interfaces';
 import { CapacitorFileLokiAdapter } from './capacitor-file-loki-adapter';
 
 const partioningAdapter = new loki.LokiPartitioningAdapter(new CapacitorFileLokiAdapter(), { paging: true });
 
+let db: Loki;
 let dailyEntriesColl: Collection<IDaily>;
 let profileColl: Collection<IProfile>;
+let favoritesColl: Collection<IRecipe>;
 
 const options: Partial<LokiConfigOptions> = {
     autosave: true,
@@ -15,8 +17,9 @@ const options: Partial<LokiConfigOptions> = {
     adapter: partioningAdapter
 }
 
-const db = new loki('food-tracker.db', options);
-
+export function initLocalDB() {
+    db = new loki('food-tracker.db', options);
+}
 function _loadDatabase() {
     dailyEntriesColl = db.getCollection('DailyEntries');
     if (!dailyEntriesColl) {
@@ -26,9 +29,13 @@ function _loadDatabase() {
     if (!profileColl) {
         profileColl = db.addCollection('Profile');
     };
+    favoritesColl = db.getCollection('Favorites');
+    if (!favoritesColl) {
+        favoritesColl = db.addCollection('Favorites');
+    };
 }
 
-export function insertUpdateDaily(entry: IDaily) {
+export function insertUpdateLocalDaily(entry: IDaily) {
     const foundEntry = dailyEntriesColl
         .where((doc: IDaily) => {
             const docDate = new Date(doc.date);
@@ -48,20 +55,17 @@ export function insertUpdateDaily(entry: IDaily) {
         const docUpdated = dailyEntriesColl.update(doc);
         if (docUpdated) {
             return foundEntry;
-        } else {
-            throw new Error(`There was an error editing daily entry.`);
         }
-    } else {
+        throw new Error(`There was an error editing daily entry.`);
+    } else if (foundEntry.length === 0) {
         const result = dailyEntriesColl.insertOne(entry);
-        if (result) {
-            return result;
-        } else {
-            throw new Error(`There was an error adding the entry to the database.`);
-        }
+        return result;
+    } else {
+        throw new Error(`There was more than one record hit. Check the logic again.`);
     }
 }
 
-export function removeMealFromDaily({ date, meal }) {
+export function removeMealFromLocalDaily({ date, meal }) {
     const result = dailyEntriesColl
         .where((doc: IDaily) => {
             const docDate = new Date(doc.date);
@@ -84,15 +88,14 @@ export function removeMealFromDaily({ date, meal }) {
         const docUpdated = dailyEntriesColl.update(doc);
         if (docUpdated) {
             return docUpdated;
-        } else {
-            throw new Error(`There was an error deleting daily entry.`);
         }
+        throw new Error(`There was an error deleting daily entry.`);
     } else {
-        throw new Error(`An entry for this date wasn't found.`);
+        return null;
     }
 }
 
-export function getDailyEntry(date: number) {
+export function getLocalDailyEntry(date: number) {
     try {
         const result = dailyEntriesColl
             .where((doc: IDaily) => {
@@ -110,6 +113,57 @@ export function getDailyEntry(date: number) {
         if (result.length === 1) {
             return result[0];
         }
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+export function addRecipeToLocalFavorite(recipe: IRecipe) {
+    try {
+        const result = favoritesColl.findOne({ name: recipe.name });
+        if (result) {
+            const doc = {
+                ...result,
+                ...recipe
+            }
+            const docUpdated = favoritesColl.update(doc);
+            return docUpdated;
+        } else {
+            const result = favoritesColl.insertOne(recipe);
+            return result;
+        }
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+export function deleteRecipeFromLocalFavorite(recipe: IRecipe) {
+    try {
+        const found = favoritesColl.findOne({ name: recipe.name });
+        if (found) {
+            const result = favoritesColl.remove(found);
+            if (result) {
+                return result;
+            }
+        }
+        throw new Error(`Didn't find a favorite item for this recipe.`);
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+export function getLocalFavorites() {
+    try {
+        return favoritesColl.data;
+    } catch (error) {
+        throw new Error();
+    }
+}
+
+export function checkRecipeInLocalFavorites(recipe: IRecipe) {
+    try {
+        const result = favoritesColl.findOne({ name: recipe.name });
+        return result;
     } catch (error) {
         throw new Error(error);
     }

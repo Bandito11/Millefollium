@@ -6,7 +6,7 @@ export async function createProfile(profile: IProfile) {
         await insertUpdateProfileLocal(profile);
         return true;
     } catch (error) {
-        console.error(error);
+        throw new Error(error);
     }
 }
 
@@ -15,7 +15,7 @@ export async function insertUpdateProfile(profile: IProfile) {
         await insertUpdateProfileLocal(profile);
         return true;
     } catch (error) {
-        console.error(error);
+        throw new Error(error);
     }
 }
 
@@ -24,7 +24,7 @@ export async function deleteProfile() {
         await deleteProfileLocal();
         return true;
     } catch (error) {
-        console.error(error);
+       throw new Error(error);
     }
 }
 
@@ -33,14 +33,6 @@ export async function getProfile() {
         const result = await getProfileLocal();
         return result;
     } catch (error) {
-        return {
-            gender: 'male',
-            age: null,
-            weight: null,
-            height: null,
-            neck: null,
-            waist: null,
-            weighLoss: null
-        };
+        throw new Error(error);
     }
 }
