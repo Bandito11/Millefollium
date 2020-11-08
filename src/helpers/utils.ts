@@ -68,10 +68,10 @@ export function calculateMacros(meals: IRecipe[]) {
   }
 
   return {
-    dailyCalories: totalCalories,
-    dailyProtein: totalProtein.toFixed(0),
-    dailyCarbs: totalCarbs.toFixed(0),
-    dailyFat: totalFat.toFixed(0)
+    calories: totalCalories,
+    protein: totalProtein.toFixed(0),
+    carbs: totalCarbs.toFixed(0),
+    fat: totalFat.toFixed(0)
   }
 }
 

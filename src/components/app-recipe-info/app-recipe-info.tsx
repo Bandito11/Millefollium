@@ -34,7 +34,7 @@ export class AppRecipeInfo {
     const urlValues = location.pathname.split('/');
     const name = urlValues.pop().replace(/%20/g, ' '); //used to query results
     try {
-      const data = await getRecipeInfo(name.toLowerCase());
+      const data = await getRecipeInfo(name);
       if (data) {
         this.recipe = {
           ...data,
@@ -129,13 +129,13 @@ export class AppRecipeInfo {
           <h3>Macros</h3>
           <ion-list lines="none">
             <ion-item>
-              <ion-label>xx% Protein</ion-label>
+              <ion-label>{this.recipe.protein}g Protein</ion-label>
             </ion-item>
             <ion-item>
-              <ion-label>xx% Carbs</ion-label>
+              <ion-label>{this.recipe.carbs}g Carbs</ion-label>
             </ion-item>
             <ion-item>
-              <ion-label>xx% Fat</ion-label>
+              <ion-label>{this.recipe.fat}g Fat</ion-label>
             </ion-item>
           </ion-list>
           <p>Category: {this.recipe.category}</p>
@@ -176,10 +176,10 @@ export class AppRecipeInfo {
               this.recipe.steps.map((step, i) =>
                 i % 2
                   ? <ion-item color="light">
-                    <ion-label id="steps">{step}</ion-label>
+                    <ion-label id="steps" class="ion-text-wrap">{step}</ion-label>
                   </ion-item>
                   : <ion-item>
-                    <ion-label id="steps">{step}</ion-label>
+                    <ion-label id="steps"class="ion-text-wrap">{step}</ion-label>
                   </ion-item>
               )
             }

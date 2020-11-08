@@ -141,10 +141,10 @@ export class AppHome {
     }
     if (this.daily.meals.length > 0) {
       const macros = calculateMacros(this.daily.meals);
-      this.dailyCalories = macros.dailyCalories;
-      this.dailyCarbs = macros.dailyCarbs;
-      this.dailyFat = macros.dailyFat;
-      this.dailyProtein = macros.dailyProtein;
+      this.dailyCalories = macros.calories;
+      this.dailyCarbs = macros.carbs;
+      this.dailyFat = macros.fat;
+      this.dailyProtein = macros.protein;
     } else {
       this.dailyCalories = 0;
       this.dailyCarbs = 0;
@@ -213,7 +213,7 @@ export class AppHome {
                     this.pastDailyEntries.map((daily) =>
                       <div>
                         <div class="ion-text-end">
-                          <h6>{calculateMacros(daily.meals).dailyCalories} calories in {dateToString(new Date(daily.date))}</h6>
+                          <h4>{calculateMacros(daily.meals).calories} calories in {dateToString(new Date(daily.date))}</h4>
                         </div>
                         {
                           daily.meals.map(meal =>
