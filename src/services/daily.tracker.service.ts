@@ -14,32 +14,13 @@ export async function addNewDailyMeal(meal: IRecipe) {
     }
 }
 
-export function getTodayDaily(date: number): Promise<IDaily> {
-    // let interval;
-    return new Promise((resolve, reject) => {
+export function getTodayDaily(date: number) {
         try {
             const result = getLocalDailyEntry(date);
-            // clearInterval(interval);
-            resolve(result);
+            return result;
         } catch (error) {
-            // interval = setInterval(() => {
-            //     try {
-            //         const result = getLocalDailyEntry(date);
-            //         clearInterval(interval);
-            //         resolve(result);
-            //     } catch (error) {
-            //         try{
-            //             const errorMessage: string = error.message;
-            //             if (!errorMessage.includes('where')) {
-            //                 reject(error);
-            //             }    
-            //         } catch(error2){
-            //             reject(error);
-            //         }
-            //     }
-            // }, 1000);
+            throw new Error(error)
         }
-    });
 }
 
 export function deleteMealFromDaily({ date, meal }) {

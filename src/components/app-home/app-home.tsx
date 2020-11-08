@@ -65,7 +65,7 @@ export class AppHome {
 
   async getDailyEntry(date: number) {
     try {
-      const result = await getTodayDaily(date);
+      const result = getTodayDaily(date);
       if (result) {
         this.refreshDailyData(result);
       }
