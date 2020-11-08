@@ -2,6 +2,12 @@
   display: block;
 }
 
+#height-us-measurements {
+  display: inline-flex;
+}
+
+
+/* POSITION of the edit and checkmark button */
 .gender-edit-button{
   top: -20px
 }
@@ -9,6 +15,7 @@
 .gender-checkmark-button{
   top: -6px
 }
+
 
 @media only screen and (max-width: 374px) {
   .gender-edit-button{
@@ -18,5 +25,4 @@
   .gender-checkmark-button{
     top: 2px
   }
-  
 }

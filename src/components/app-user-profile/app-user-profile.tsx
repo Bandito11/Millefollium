@@ -13,7 +13,7 @@ export class AppUserProfile {
   @State() profile: IProfile;
   heightInFeet: number;
   heightInInches: number;
-  @State() weighLossChecked: boolean;
+  @State() activityLevelChecked: boolean;
 
   async componentWillLoad() {
     try {
@@ -27,13 +27,12 @@ export class AppUserProfile {
         height: 0,
         neck: 0,
         waist: 0,
-        weighLoss: 0
+        activityLevel: ''
       };
     }
     const convertedHeight = convertHeightToFeetInches(this.profile.height);
     this.heightInFeet = convertedHeight.heightFeet;
     this.heightInInches = convertedHeight.heightInches;
-    this.verifyCheckbox();
   }
 
   async getProfile() {
@@ -45,18 +44,8 @@ export class AppUserProfile {
     }
   }
 
-  verifyCheckbox() {
-    if (this.profile.weighLoss > 0) {
-      this.weighLossChecked = true;
-      return;
-    }
-    this.weighLossChecked = false;
-  }
-
   async choseProfile() {
-    if (!this.weighLossChecked) {
-      this.profile.weighLoss = 0
-    }
+    console.log(this.profile)
     this.editParameters = false;
     const heightInches = convertHeightToInches({ height: this.heightInFeet, width: this.heightInInches })
     this.profile.height = heightInches;
@@ -146,7 +135,7 @@ export class AppUserProfile {
             }
             {
               this.editParameters
-                ? <ion-item>
+                ? <div id="height-us-measurements">
                   <ion-item>
                     <ion-label position="stacked">Height (ft)</ion-label>
                     <ion-input inputMode="numeric" value={this.heightInFeet} type="text" onIonInput={ev => this.heightInFeet = parseInt(ev.target['value'])}></ion-input>
@@ -155,7 +144,7 @@ export class AppUserProfile {
                     <ion-label position="stacked">Height (in)</ion-label>
                     <ion-input inputMode="numeric" value={this.heightInInches} type="text" onIonInput={ev => this.heightInInches = parseInt(ev.target['value'])}></ion-input>
                   </ion-item>
-                </ion-item>
+                </div>
                 : <ion-item lines="none">
                   <ion-label>Height: {this.heightInFeet} ft {this.heightInInches} in</ion-label>
                 </ion-item>
@@ -185,33 +174,19 @@ export class AppUserProfile {
 
             {
               this.editParameters
-                ? <div>
-                  <ion-item lines="none">
-                    <ion-label>Want to lose weight?</ion-label>
-                    <ion-checkbox slot="start" checked={this.weighLossChecked} onIonChange={ev => this.weighLossChecked = ev.detail.checked}></ion-checkbox>
-                  </ion-item>
-                  {
-                    this.weighLossChecked
-                      ? <ion-item>
-                        <ion-input
-                          inputMode="numeric"
-                          type="text"
-                          placeholder={`What's your ideal weight for that dream  body you want?`}
-                          value={this.profile.weighLoss}
-                          onIonChange={ev => this.profile.weighLoss = parseInt(ev.detail.value)}></ion-input>
-                      </ion-item>
-                      : ''
-                  }
-                </div>
-                : <div>
-                  {
-                    this.profile.weighLoss > 0
-                      ? <ion-item lines="none">
-                        <ion-label>Ideal Weight: {this.profile.weighLoss} lbs</ion-label>
-                      </ion-item>
-                      : ''
-                  }
-                </div>
+                ?
+                <ion-item>
+                  <ion-label>Activity Level</ion-label>
+                  <ion-select value={firstLetterToUpperCase(this.profile.activityLevel)} placeholder="Select Activity Level" onIonChange={ev => this.profile.activityLevel = ev.detail.value}>
+                    <ion-select-option value="sedentary">Sedentary</ion-select-option>
+                    <ion-select-option value="moderately active">Moderately Active</ion-select-option>
+                    <ion-select-option value="active">Active </ion-select-option>
+                  </ion-select>
+                </ion-item>
+                :
+                <ion-item lines="none">
+                  <ion-label>Activity Level: {this.profile.activityLevel}</ion-label>
+                </ion-item>
             }
           </ion-list>
         </ion-content>

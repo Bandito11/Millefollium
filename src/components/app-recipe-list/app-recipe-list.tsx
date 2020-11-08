@@ -42,7 +42,7 @@ export class AppRecipeList {
       <ion-buttons slot="start">
         <ion-back-button defaultHref="/"></ion-back-button>
       </ion-buttons>
-      <ion-searchbar id="recipe-list-searchbar" onIonInput={ev=> this.clearSearch(ev)} onIonClear={() => this.searchCancelClicked()} onIonChange={ev => this.searchRecipe(ev)} inputmode="text" type="search" debounce={500} spellcheck={true} autocomplete="on"></ion-searchbar>
+      <ion-searchbar id="recipe-list-searchbar" onIonInput={ev => this.clearSearch(ev)} onIonClear={() => this.searchCancelClicked()} onIonChange={ev => this.searchRecipe(ev)} inputmode="text" type="search" debounce={500} spellcheck={true} autocomplete="on"></ion-searchbar>
       <ion-buttons slot="end">
         <ion-button href="/recipe/favorite">
           <ion-icon name="heart-outline"></ion-icon>
@@ -52,7 +52,7 @@ export class AppRecipeList {
   }
 
   clearSearch(ev: CustomEvent<KeyboardEvent>): void {
-    if(!ev.target['value']){
+    if (!ev.target['value']) {
       this.meals = [...this.initMeals];
     }
   }

@@ -17,13 +17,13 @@ export function firstLetterToUpperCase(name: string) {
  */
 export function dateToString(date: Date) {
   let month: number | string = date.getMonth() + 1
-    let days: number | string = date.getDate()
-    if (month < 10) {
-        month = `0${date.getMonth()}`
-    }
-    if (days < 10) {
-        days = `0${date.getDate()}`
-    }
+  let days: number | string = date.getDate()
+  if (month < 10) {
+    month = `0${date.getMonth()}`
+  }
+  if (days < 10) {
+    days = `0${date.getDate()}`
+  }
   return `${month}/${days}/${date.getFullYear()}`;
 }
 
@@ -89,7 +89,135 @@ export function convertHeightToInches({ height, width }) {
 }
 
 export function convertHeightToFeetInches(height) {
-    const heightFeet = parseInt((height / 12).toFixed(1));
-    const heightInches = height % 12;
-    return { heightFeet, heightInches };
+  const heightFeet = parseInt((height / 12).toFixed(1));
+  const heightInches = height % 12;
+  return { heightFeet, heightInches };
+}
+
+export function recommendedCaloriesPerActivityLevel({ activityLevel, age, gender }) {
+  if (gender === 'male') {
+    if (age >= 2 && age <= 3) {
+      if (activityLevel === 'sedentary') {
+        return 1000;
+      } else if (activityLevel === 'moderately active') {
+        return 1000;
+      } else if (activityLevel === 'active') {
+        return 1000;
+      }
+    } else if (age >= 4 && age <= 8) {
+      if (activityLevel === 'sedentary') {
+        return 1400;
+      } else if (activityLevel === 'moderately active') {
+        return 1600;
+      } else if (activityLevel === 'active') {
+        return 2000;
+      }
+    } else if (age >= 9 && age <= 13) {
+      if (activityLevel === 'sedentary') {
+        return 2000;
+      } else if (activityLevel === 'moderately active') {
+        return 2200;
+      } else if (activityLevel === 'active') {
+        return 2600;
+      }
+    } else if (age >= 14 && age <= 18) {
+      if (activityLevel === 'sedentary') {
+        return 2400;
+      } else if (activityLevel === 'moderately active') {
+        return 2800;
+      } else if (activityLevel === 'active') {
+        return 3200;
+      }
+    } else if (age >= 19 && age <= 30) {
+      if (activityLevel === 'sedentary') {
+        return 2600;
+      } else if (activityLevel === 'moderately active') {
+        return 2800;
+      } else if (activityLevel === 'active') {
+        return 3000;
+      }
+    } else if (age >= 31 && age <= 50) {
+      if (activityLevel === 'sedentary') {
+        return 2400;
+      } else if (activityLevel === 'moderately active') {
+        return 2600;
+      } else if (activityLevel === 'active') {
+        return 3000;
+      }
+    } else if (age >= 51) {
+      if (activityLevel === 'sedentary') {
+        return 2200;
+      } else if (activityLevel === 'moderately active') {
+        return 2400;
+      } else if (activityLevel === 'active') {
+        return 2800;
+      }
+    }
+  } else if (gender === 'female') {
+    if (age >= 2 && age <= 3) {
+      if (activityLevel === 'sedentary') {
+        return 1000;
+      } else if (activityLevel === 'moderately active') {
+        return 1000;
+      } else if (activityLevel === 'active') {
+        return 1000;
+      }
+    } else if (age >= 4 && age <= 8) {
+      if (activityLevel === 'sedentary') {
+        return 1400;
+      } else if (activityLevel === 'moderately active') {
+        return 1600;
+      } else if (activityLevel === 'active') {
+        return 1800;
+      }
+    } else if (age >= 9 && age <= 13) {
+      if (activityLevel === 'sedentary') {
+        return 1600;
+      } else if (activityLevel === 'moderately active') {
+        return 2200;
+      } else if (activityLevel === 'active') {
+        return 2200;
+      }
+    } else if (age >= 14 && age <= 18) {
+      if (activityLevel === 'sedentary') {
+        return 1800;
+      } else if (activityLevel === 'moderately active') {
+        return 2000;
+      } else if (activityLevel === 'active') {
+        return 2400;
+      }
+    } else if (age >= 19 && age <= 30) {
+      if (activityLevel === 'sedentary') {
+        return 2000;
+      } else if (activityLevel === 'moderately active') {
+        return 2200;
+      } else if (activityLevel === 'active') {
+        return 2400;
+      }
+    } else if (age >= 31 && age <= 50) {
+      if (activityLevel === 'sedentary') {
+        return 1800;
+      } else if (activityLevel === 'moderately active') {
+        return 2000;
+      } else if (activityLevel === 'active') {
+        return 2200;
+      }
+    } else if (age >= 51) {
+      if (activityLevel === 'sedentary') {
+        return 1600;
+      } else if (activityLevel === 'moderately active') {
+        return 1800;
+      } else if (activityLevel === 'active') {
+        return 2200;
+      }
+    }
+  }
+}
+
+export function calculateCalorieIntake({ recommendedCalories, dailyCalories }) {
+  let weighLoss = 0;
+  if (recommendedCalories && dailyCalories) {
+    weighLoss = recommendedCalories - dailyCalories;
+  }
+  return weighLoss;
 }
