@@ -1,5 +1,5 @@
 import { Component, Host, h, Prop } from '@stencil/core';
-import { firstLetterToUpperCase } from '../../helpers/utils';
+import { capitalizeAllFirstLetters } from '../../helpers/utils';
 
 @Component({
   tag: 'app-recipe-daily',
@@ -20,7 +20,7 @@ export class AppRecipeDaily {
           <ion-grid>
             <ion-row>
               <ion-label>
-                {firstLetterToUpperCase(this.name)}
+                {capitalizeAllFirstLetters(this.name)}
                 <br />
                 {this.calories} calories
                 <slot name="category"></slot>

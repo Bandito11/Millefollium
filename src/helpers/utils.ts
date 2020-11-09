@@ -1,14 +1,21 @@
 import { IRecipe } from "../interfaces";
 
-export function firstLetterToUpperCase(name: string) {
-  let formattedName;
+export function capitalizeFirstLetter(name: string) {
+  if (name) {
+    let formattedName;
+    formattedName = name[0].toUpperCase() + name.substring(1, name.length);
+    return formattedName;
+  }
+  return name;
+}
+
+export function capitalizeAllFirstLetters(name: string) {
   const array = name.split(' ');
   if (array.length > 0) {
-    formattedName = array.map(value => value[0].toUpperCase() + value.substring(1, value.length)).join(' ')
-  } else {
-    formattedName = name[0].toUpperCase() + name.substring(1, name.length);
+    const formattedName = array.map(value => value[0].toUpperCase() + value.substring(1, value.length)).join(' ')
+    return formattedName;
   }
-  return formattedName;
+  return name;
 }
 
 /**

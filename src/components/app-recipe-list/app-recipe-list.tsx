@@ -1,6 +1,6 @@
 import { toastController } from '@ionic/core';
 import { Component, Host, h, State } from '@stencil/core';
-import { firstLetterToUpperCase, goToRecipeInfo } from '../../helpers/utils';
+import { capitalizeAllFirstLetters, goToRecipeInfo } from '../../helpers/utils';
 import { IRecipe } from '../../interfaces';
 import { addNewDailyMeal } from '../../services/daily.tracker.service';
 import { getRecipes, searchRecipeInAPI } from '../../services/recipe.service';
@@ -14,7 +14,7 @@ export class AppRecipeList {
   @State() meals: IRecipe[];
   initMeals: IRecipe[];
 
-  async queryNewRecipes(ev: CustomEvent<import("@ionic/core").ScrollDetail>) {
+  async scrollForNewRecipes(ev: CustomEvent<import("@ionic/core").ScrollDetail>) {
     const content = document.querySelector<HTMLIonContentElement>('#recipe-list-content');
     const scroll = await content.getScrollElement();
     this.scrollTopMax = scroll['scrollTopMax'];
@@ -102,7 +102,7 @@ export class AppRecipeList {
       if (response) {
         message = `Added ${meal.name} to daily!`
       } else {
-        message = `${firstLetterToUpperCase(meal.name)} couldn't be added to daily. Please try again later.`
+        message = `${capitalizeAllFirstLetters(meal.name)} couldn't be added to daily. Please try again later.`
       }
     } catch (error) {
       message = error;
@@ -149,7 +149,7 @@ export class AppRecipeList {
             <ion-label>None</ion-label>
           </ion-chip>
         </ion-toolbar>
-        <ion-content id="recipe-list-content" scrollEvents={true} onIonScroll={(ev => this.queryNewRecipes(ev))} class="ion-padding">
+        <ion-content id="recipe-list-content" scrollEvents={true} onIonScroll={(ev => this.scrollForNewRecipes(ev))} class="ion-padding">
           <ion-list lines="none">
             {
               this.meals.map(meal =>

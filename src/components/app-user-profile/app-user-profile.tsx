@@ -1,4 +1,4 @@
-import { convertHeightToFeetInches, convertHeightToInches, firstLetterToUpperCase } from '../../helpers/utils';
+import { convertHeightToFeetInches, convertHeightToInches } from '../../helpers/utils';
 import { Component, Host, h, State } from '@stencil/core';
 import { IProfile } from '../../interfaces';
 import { toastController } from '@ionic/core';
@@ -45,7 +45,6 @@ export class AppUserProfile {
   }
 
   async choseProfile() {
-    console.log(this.profile)
     this.editParameters = false;
     const heightInches = convertHeightToInches({ height: this.heightInFeet, width: this.heightInInches })
     this.profile.height = heightInches;
@@ -108,7 +107,7 @@ export class AppUserProfile {
                   </ion-select>
                 </ion-item>
                 : <ion-item lines="none">
-                  <ion-label>Gender: {firstLetterToUpperCase(this.profile.gender)}</ion-label>
+                  <ion-label class="ion-text-capitalize">Gender: {this.profile.gender}</ion-label>
                 </ion-item>
             }
 
@@ -177,7 +176,7 @@ export class AppUserProfile {
                 ?
                 <ion-item>
                   <ion-label>Activity Level</ion-label>
-                  <ion-select value={firstLetterToUpperCase(this.profile.activityLevel)} placeholder="Select Activity Level" onIonChange={ev => this.profile.activityLevel = ev.detail.value}>
+                  <ion-select value={this.profile.activityLevel} placeholder="Select Activity Level" onIonChange={ev => this.profile.activityLevel = ev.detail.value}>
                     <ion-select-option value="sedentary">Sedentary</ion-select-option>
                     <ion-select-option value="moderately active">Moderately Active</ion-select-option>
                     <ion-select-option value="active">Active </ion-select-option>
@@ -185,7 +184,7 @@ export class AppUserProfile {
                 </ion-item>
                 :
                 <ion-item lines="none">
-                  <ion-label>Activity Level: {this.profile.activityLevel}</ion-label>
+                  <ion-label class="ion-text-capitalize">Activity Level: {this.profile.activityLevel}</ion-label>
                 </ion-item>
             }
           </ion-list>

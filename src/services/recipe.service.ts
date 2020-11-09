@@ -11,6 +11,28 @@ export async function getRecipes(startAfter?) {
     }
 }
 
+export async function getRecipeInfo(name: string) {
+    try {
+        let recipeInfo = await searchRecipeInfoInFirebase(name);
+        try {
+            const result = checkRecipeInLocalFavorites(recipeInfo);
+            if (result) {
+                recipeInfo.favorite = true;
+            } else {
+                recipeInfo.favorite = false;
+            };
+            return recipeInfo;
+        } catch (error) {
+            //Favorite db error
+            recipeInfo.favorite = false;
+            return recipeInfo;
+        }
+    } catch (error) {
+        //Firebase Api error
+        throw new Error(error);
+    }
+}
+
 export async function getFavoriteRecipes(): Promise<IRecipe[]> {
     // let interval;
     return new Promise((resolve, reject) => {
@@ -21,17 +43,6 @@ export async function getFavoriteRecipes(): Promise<IRecipe[]> {
             reject(error);
         }
     });
-}
-
-export async function getRecipeInfo(name: string) {
-    let recipeInfo = await searchRecipeInfoInFirebase(name);
-    const result = checkRecipeInLocalFavorites(recipeInfo);
-    if (result) {
-        recipeInfo.favorite = true;
-    } else {
-        recipeInfo.favorite = false;
-    }; 
-    return recipeInfo;
 }
 
 export async function setFavorite(recipe: IRecipe) {

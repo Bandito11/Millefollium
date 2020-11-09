@@ -1,7 +1,6 @@
 import { toastController } from '@ionic/core';
 import { State } from '@ionic/core/dist/types/stencil-public-runtime';
 import { Component, Host, h } from '@stencil/core';
-import { firstLetterToUpperCase } from '../../helpers/utils';
 import { IRecipe } from '../../interfaces';
 import { getRecipeInfo, setFavorite } from '../../services/recipe.service';
 
@@ -38,7 +37,7 @@ export class AppRecipeInfo {
       if (data) {
         this.recipe = {
           ...data,
-          category: firstLetterToUpperCase(data.category)
+          category: data.category
         };
       }
     } catch (error) {
@@ -77,11 +76,11 @@ export class AppRecipeInfo {
       };
       if (result) {
         if (this.recipe.favorite) {
-          options. message = `Added to favorites.`;
+          options.message = `Added to favorites.`;
           options.color = 'success';
         } else {
           options.message = `Removed from favorites.`;
-          options.color  = 'danger'
+          options.color = 'danger'
         }
         const toast = await toastController.create({
           message: options.message,
@@ -138,7 +137,7 @@ export class AppRecipeInfo {
               <ion-label>{this.recipe.fat}g Fat</ion-label>
             </ion-item>
           </ion-list>
-          <p>Category: {this.recipe.category}</p>
+          <p class="ion-text-capitalize">Category: {this.recipe.category}</p>
           <div>
             {
               this.recipe.ratings > 0 ? <ion-icon slot="ratings" name="star-sharp"></ion-icon> : <ion-icon slot="ratings" name="star-outline"></ion-icon>
@@ -179,7 +178,7 @@ export class AppRecipeInfo {
                     <ion-label id="steps" class="ion-text-wrap">{step}</ion-label>
                   </ion-item>
                   : <ion-item>
-                    <ion-label id="steps"class="ion-text-wrap">{step}</ion-label>
+                    <ion-label id="steps" class="ion-text-wrap">{step}</ion-label>
                   </ion-item>
               )
             }
