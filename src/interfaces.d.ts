@@ -53,7 +53,9 @@ export interface IProfile {
         height: number;
         neck: number;
         waist: number;
-        activityLevel: string
+        activityLevel: string;
+        bodyFat: number;
+        bodyMassIndex: number;
 }
 
 export interface IDailyEntry {

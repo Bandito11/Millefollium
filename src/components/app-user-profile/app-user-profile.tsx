@@ -1,4 +1,4 @@
-import { convertHeightToFeetInches, convertHeightToInches } from '../../helpers/utils';
+import { calculateBMI, calculateBodyFat, convertHeightToFeetInches, convertHeightToInches } from '../../helpers/utils';
 import { Component, Host, h, State } from '@stencil/core';
 import { IProfile } from '../../interfaces';
 import { toastController } from '@ionic/core';
@@ -27,7 +27,9 @@ export class AppUserProfile {
         height: 0,
         neck: 0,
         waist: 0,
-        activityLevel: ''
+        activityLevel: '',
+        bodyFat: 0,
+        bodyMassIndex: 0
       };
     }
     const convertedHeight = convertHeightToFeetInches(this.profile.height);
@@ -48,6 +50,8 @@ export class AppUserProfile {
     this.editParameters = false;
     const heightInches = convertHeightToInches({ height: this.heightInFeet, width: this.heightInInches })
     this.profile.height = heightInches;
+    this.profile.bodyMassIndex = calculateBMI(this.profile);
+    this.profile.bodyFat = calculateBodyFat(this.profile);
     try {
       const result = await insertUpdateProfile(this.profile);
       if (result) {
@@ -185,6 +189,20 @@ export class AppUserProfile {
                 :
                 <ion-item lines="none">
                   <ion-label class="ion-text-capitalize">Activity Level: {this.profile.activityLevel}</ion-label>
+                </ion-item>
+            }
+            {
+              this.editParameters
+                ? ''
+                : <ion-item lines="none">
+                  <ion-label>BMI: {this.profile.bodyMassIndex.toFixed(1)}</ion-label>
+                </ion-item>
+            }
+            {
+              this.editParameters
+                ? ''
+                : <ion-item lines="none">
+                  <ion-label>Body Fat: {this.profile.bodyFat.toFixed(0)}%</ion-label>
                 </ion-item>
             }
           </ion-list>

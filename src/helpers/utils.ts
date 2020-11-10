@@ -1,4 +1,4 @@
-import { IRecipe } from "../interfaces";
+import { IProfile, IRecipe } from "../interfaces";
 
 export function capitalizeFirstLetter(name: string) {
   if (name) {
@@ -227,4 +227,29 @@ export function calculateCalorieIntake({ recommendedCalories, dailyCalories }) {
     weighLoss = recommendedCalories - dailyCalories;
   }
   return weighLoss;
+}
+
+export function calculateBodyFat(profile: IProfile) {
+  let gender = 0;
+  if (profile.gender === 'male') {
+    gender = 1
+  }
+  let bodyFat = 0;
+  if (profile.age > 15) {
+    //Adult Body Fat
+    bodyFat = (1.39 * profile.bodyMassIndex) + (0.16 * profile.age) - (10.34 * gender) - 9;
+  } else {
+    //Children Body Fat
+    bodyFat = (1.51 * profile.bodyMassIndex) + (0.23 * profile.age) - (3.6 * gender) + 1.4;
+  }
+  return bodyFat;
+}
+
+export function calculateBMI(profile: IProfile) {
+  if (profile.height > 0) {
+    const bmi = (profile.weight / Math.pow(profile.height, 2)) * 703;
+    return bmi;
+  } else {
+    return 0;
+  }
 }

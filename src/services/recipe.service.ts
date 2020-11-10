@@ -64,3 +64,11 @@ export async function searchRecipeInAPI(term) {
     }
 
 }
+
+export function filterRecipesByCategory({ recipes, category }) {
+    if (category === 'none') {
+        return recipes;
+    }
+    const filter = recipes.filter(recipe => recipe.category === category);
+    return filter;
+}

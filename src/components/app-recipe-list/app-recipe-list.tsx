@@ -3,7 +3,7 @@ import { Component, Host, h, State } from '@stencil/core';
 import { capitalizeAllFirstLetters, goToRecipeInfo } from '../../helpers/utils';
 import { IRecipe } from '../../interfaces';
 import { addNewDailyMeal } from '../../services/daily.tracker.service';
-import { getRecipes, searchRecipeInAPI } from '../../services/recipe.service';
+import { filterRecipesByCategory, getRecipes, searchRecipeInAPI } from '../../services/recipe.service';
 
 @Component({
   tag: 'app-recipe-list',
@@ -91,9 +91,6 @@ export class AppRecipeList {
     this.meals = [...this.initMeals];
   }
 
-  choseCategory(ev: CustomEvent<import("@ionic/core").SegmentChangeEventDetail>): void {
-    console.error('Query by Category: ', ev.detail.value)
-  }
 
   async addDailyMeal(meal: IRecipe) {
     let message = '';
@@ -114,9 +111,8 @@ export class AppRecipeList {
     });
     await toast.present();
   }
-  filterRecipes(arg0: string): void {
-    //TODO: Filter for Recipe arg0
-    console.error('Filter: ', arg0);
+  filterRecipes(category: string): void {
+    this.meals = filterRecipesByCategory({ recipes: this.initMeals, category: category })
   }
 
   render() {
@@ -158,22 +154,8 @@ export class AppRecipeList {
                   calories={meal.calories}
                   image={meal.image}
                 >
-                  <div slot="category">Category: {meal.category}</div>
-                  {
-                    meal.ratings > 0 ? <ion-icon slot="ratings" name="star-sharp"></ion-icon> : <ion-icon slot="ratings" name="star-outline"></ion-icon>
-                  }
-                  {
-                    meal.ratings > 1 ? <ion-icon slot="ratings" name="star-sharp"></ion-icon> : <ion-icon slot="ratings" name="star-outline"></ion-icon>
-                  }
-                  {
-                    meal.ratings > 2 ? <ion-icon slot="ratings" name="star-sharp"></ion-icon> : <ion-icon slot="ratings" name="star-outline"></ion-icon>
-                  }
-                  {
-                    meal.ratings > 3 ? <ion-icon slot="ratings" name="star-sharp"></ion-icon> : <ion-icon slot="ratings" name="star-outline"></ion-icon>
-                  }
-                  {
-                    meal.ratings > 4 ? <ion-icon slot="ratings" name="star-sharp"></ion-icon> : <ion-icon slot="ratings" name="star-outline"></ion-icon>
-                  }
+                  <div slot="category" class="ion-text-capitalize">Category: {meal.category}</div>
+                  <app-recipe-ratings slot="ratings" ratings={meal.ratings}></app-recipe-ratings>
                   <ion-button slot="buttons" fill="outline" onClick={() => this.addDailyMeal(meal)}>
                     <ion-icon slot="icon-only" name="add"></ion-icon>
                   </ion-button>

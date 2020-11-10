@@ -3,7 +3,7 @@ import { Component, Host, h, State } from '@stencil/core';
 import { goToRecipeInfo } from '../../helpers/utils';
 import { IRecipe } from '../../interfaces';
 import { addNewDailyMeal } from '../../services/daily.tracker.service';
-import { getFavoriteRecipes, removeFromFavorites } from '../../services/recipe.service';
+import { filterRecipesByCategory, getFavoriteRecipes, removeFromFavorites } from '../../services/recipe.service';
 
 @Component({
   tag: 'app-recipe-favorite',
@@ -12,6 +12,7 @@ import { getFavoriteRecipes, removeFromFavorites } from '../../services/recipe.s
 export class AppRecipeFavorite {
   scrollTopMax: number;
   @State() meals: IRecipe[];
+  initMeals: IRecipe[];
 
   componentWillLoad() {
     this.meals = [];
@@ -25,18 +26,15 @@ export class AppRecipeFavorite {
 
   }
   async getFavoriteRecipes() {
-    //////?TODO: Get this information from database
     try {
       const meals = await getFavoriteRecipes();
       if (meals && meals.length > 0) {
         this.meals = meals;
+        this.initMeals = meals;
       }
     } catch (error) {
       console.error(error);
     }
-
-    /////////
-
   }
 
   searchRecipe(ev: CustomEvent<import("@ionic/core").SearchbarChangeEventDetail>): void {
@@ -58,7 +56,7 @@ export class AppRecipeFavorite {
   async removeFromFavorites(meal: IRecipe) {
     try {
       const result = await removeFromFavorites(meal);
-      if(result){
+      if (result) {
         const index = this.meals.findIndex(meal => meal.name === meal.name);
         const meals = this.meals.splice(index, 1);
         this.meals = [...meals];
@@ -104,9 +102,8 @@ export class AppRecipeFavorite {
       console.log(error)
     }
   }
-  filterRecipes(filter: string): void {
-    //TODO: Filter for Recipe arg0
-    console.error('Filter: ', filter)
+  filterRecipes(category: string): void {
+    this.meals = filterRecipesByCategory({ recipes: this.initMeals, category: category })
   }
 
   render() {

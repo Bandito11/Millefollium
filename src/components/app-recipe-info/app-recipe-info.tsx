@@ -138,23 +138,7 @@ export class AppRecipeInfo {
             </ion-item>
           </ion-list>
           <p class="ion-text-capitalize">Category: {this.recipe.category}</p>
-          <div>
-            {
-              this.recipe.ratings > 0 ? <ion-icon slot="ratings" name="star-sharp"></ion-icon> : <ion-icon slot="ratings" name="star-outline"></ion-icon>
-            }
-            {
-              this.recipe.ratings > 1 ? <ion-icon slot="ratings" name="star-sharp"></ion-icon> : <ion-icon slot="ratings" name="star-outline"></ion-icon>
-            }
-            {
-              this.recipe.ratings > 2 ? <ion-icon slot="ratings" name="star-sharp"></ion-icon> : <ion-icon slot="ratings" name="star-outline"></ion-icon>
-            }
-            {
-              this.recipe.ratings > 3 ? <ion-icon slot="ratings" name="star-sharp"></ion-icon> : <ion-icon slot="ratings" name="star-outline"></ion-icon>
-            }
-            {
-              this.recipe.ratings > 4 ? <ion-icon slot="ratings" name="star-sharp"></ion-icon> : <ion-icon slot="ratings" name="star-outline"></ion-icon>
-            }
-          </div>
+          <app-recipe-ratings ratings={this.recipe.ratings} canEdit={true}></app-recipe-ratings>
           <h3>Ingredients</h3>
           <ion-list lines="none">
             {
