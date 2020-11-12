@@ -42,6 +42,7 @@ export class AppHome {
       this.getPastDailyEntries();
     }
   }
+
   componentWillLoad() {
     this.today = new Date().valueOf();
     this.recommendedCalories = 0;

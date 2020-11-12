@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { IRecipe } from "./interfaces";
 export namespace Components {
     interface AppHome {
     }
@@ -21,13 +22,11 @@ export namespace Components {
     }
     interface AppRecipeRatings {
         "canEdit": boolean;
-        "ratings": number;
+        "recipe": IRecipe;
     }
     interface AppRoot {
     }
     interface AppUserProfile {
-    }
-    interface AppViewFood {
     }
 }
 declare global {
@@ -79,12 +78,6 @@ declare global {
         prototype: HTMLAppUserProfileElement;
         new (): HTMLAppUserProfileElement;
     };
-    interface HTMLAppViewFoodElement extends Components.AppViewFood, HTMLStencilElement {
-    }
-    var HTMLAppViewFoodElement: {
-        prototype: HTMLAppViewFoodElement;
-        new (): HTMLAppViewFoodElement;
-    };
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
         "app-recipe-daily": HTMLAppRecipeDailyElement;
@@ -94,7 +87,6 @@ declare global {
         "app-recipe-ratings": HTMLAppRecipeRatingsElement;
         "app-root": HTMLAppRootElement;
         "app-user-profile": HTMLAppUserProfileElement;
-        "app-view-food": HTMLAppViewFoodElement;
     }
 }
 declare namespace LocalJSX {
@@ -113,13 +105,11 @@ declare namespace LocalJSX {
     }
     interface AppRecipeRatings {
         "canEdit"?: boolean;
-        "ratings"?: number;
+        "recipe"?: IRecipe;
     }
     interface AppRoot {
     }
     interface AppUserProfile {
-    }
-    interface AppViewFood {
     }
     interface IntrinsicElements {
         "app-home": AppHome;
@@ -130,7 +120,6 @@ declare namespace LocalJSX {
         "app-recipe-ratings": AppRecipeRatings;
         "app-root": AppRoot;
         "app-user-profile": AppUserProfile;
-        "app-view-food": AppViewFood;
     }
 }
 export { LocalJSX as JSX };
@@ -145,7 +134,6 @@ declare module "@stencil/core" {
             "app-recipe-ratings": LocalJSX.AppRecipeRatings & JSXBase.HTMLAttributes<HTMLAppRecipeRatingsElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "app-user-profile": LocalJSX.AppUserProfile & JSXBase.HTMLAttributes<HTMLAppUserProfileElement>;
-            "app-view-food": LocalJSX.AppViewFood & JSXBase.HTMLAttributes<HTMLAppViewFoodElement>;
         }
     }
 }

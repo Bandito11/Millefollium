@@ -1,5 +1,6 @@
 import firebase from "firebase";
 import { IRecipe } from "../interfaces";
+import { calculateRatings } from "./calculate-ratings.worker";
 import("firebase/firestore");
 
 firebase.initializeApp({
@@ -15,11 +16,11 @@ firebase.initializeApp({
 
 firebase.analytics();
 
-var db = firebase.firestore();
+const db = firebase.firestore();
 
 export async function getRecipesFromFirebase(startAfter) {
     let recipesData = [];
-    var recipesRef = db.collection("recipes");
+    const recipesRef = db.collection("recipes");
     let query: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>;
     if (startAfter) {
         query = await recipesRef.orderBy('name').startAfter(startAfter).limit(20).get();
@@ -32,14 +33,41 @@ export async function getRecipesFromFirebase(startAfter) {
 
 export async function searchRecipeInFirebase(term) {
     let recipesData = [];
-    var recipesRef = db.collection("recipes");
+    const recipesRef = db.collection("recipes");
     const query = await recipesRef.orderBy('name').startAt(term).endAt(term + "\uf8ff").get();
     query.forEach(recipe => recipesData.push(recipe.data()));
     return recipesData as unknown as IRecipe[];
 }
 
 export async function searchRecipeInfoInFirebase(name) {
-    var recipesRef = db.collection("recipes");
+    const recipesRef = db.collection("recipes");
     const query = await recipesRef.where('name', '==', name).get();
     return query.docs[0].data() as unknown as IRecipe;
+}
+
+export async function postRatingsInFirebase(recipe: IRecipe) {
+    const recipesRef = db.collection("recipes");
+    try {
+        const res = await Promise.all([await calculateRatings(recipe), await recipesRef.where('name', '==', recipe.name).get()]);
+        const recipeCalculated = res[0];
+        const found = res[1];
+        await recipesRef.doc(found.docs[0].id).set(recipeCalculated);
+        return recipeCalculated;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function getFirebaseCurrentUser() {
+    const currentUser = firebase.auth().currentUser;
+    if (currentUser) {
+        return currentUser.uid;
+    } else {
+        try {
+            const anon = await firebase.auth().signInAnonymously();
+            return anon.user.uid;
+        } catch (error) {
+            throw error;
+        };
+    }
 }

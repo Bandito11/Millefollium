@@ -11,8 +11,8 @@ import { filterRecipesByCategory, getRecipes, searchRecipeInAPI } from '../../se
 })
 export class AppRecipeList {
   scrollTopMax: number;
-  @State() meals: IRecipe[];
-  initMeals: IRecipe[];
+  @State() recipes: IRecipe[];
+  initRecipes: IRecipe[];
 
   async scrollForNewRecipes(ev: CustomEvent<import("@ionic/core").ScrollDetail>) {
     const content = document.querySelector<HTMLIonContentElement>('#recipe-list-content');
@@ -21,14 +21,14 @@ export class AppRecipeList {
 
     if (ev.detail.currentY === this.scrollTopMax) {
       //TODO: Refresh when user have more than 10 daily entries
-      if (this.meals.length > 9) {
+      if (this.recipes.length > 9) {
         this.getNewRecipes();
       }
     }
   }
 
   componentWillLoad() {
-    this.meals = [];
+    this.recipes = [];
     this.getNewRecipes();
   }
 
@@ -53,21 +53,21 @@ export class AppRecipeList {
 
   clearSearch(ev: CustomEvent<KeyboardEvent>): void {
     if (!ev.target['value']) {
-      this.meals = [...this.initMeals];
+      this.recipes = [...this.initRecipes];
     }
   }
 
   async getNewRecipes() {
     try {
       let meals;
-      if (this.meals.length > 0) {
-        meals = await getRecipes(this.meals[this.meals.length]);
+      if (this.recipes.length > 0) {
+        meals = await getRecipes(this.recipes[this.recipes.length]);
       } else {
         meals = await getRecipes();
       }
       if (meals && meals.length > 0) {
-        this.meals = [...this.meals, ...meals];
-        this.initMeals = [...this.meals];
+        this.recipes = [...this.recipes, ...meals];
+        this.initRecipes = [...this.recipes];
       }
     } catch (error) {
       console.error(error);
@@ -80,7 +80,7 @@ export class AppRecipeList {
       try {
         let meals;
         meals = await searchRecipeInAPI(term);
-        this.meals = [...meals];
+        this.recipes = [...meals];
       } catch (error) {
         console.error(error);
       }
@@ -88,9 +88,8 @@ export class AppRecipeList {
   }
 
   async searchCancelClicked() {
-    this.meals = [...this.initMeals];
+    this.recipes = [...this.initRecipes];
   }
-
 
   async addDailyMeal(meal: IRecipe) {
     let message = '';
@@ -111,8 +110,9 @@ export class AppRecipeList {
     });
     await toast.present();
   }
+
   filterRecipes(category: string): void {
-    this.meals = filterRecipesByCategory({ recipes: this.initMeals, category: category })
+    this.recipes = filterRecipesByCategory({ recipes: this.initRecipes, category: category })
   }
 
   render() {
@@ -148,18 +148,18 @@ export class AppRecipeList {
         <ion-content id="recipe-list-content" scrollEvents={true} onIonScroll={(ev => this.scrollForNewRecipes(ev))} class="ion-padding">
           <ion-list lines="none">
             {
-              this.meals.map(meal =>
+              this.recipes.map(recipe =>
                 <app-recipe-daily
-                  name={meal.name}
-                  calories={meal.calories}
-                  image={meal.image}
+                  name={recipe.name}
+                  calories={recipe.calories}
+                  image={recipe.image}
                 >
-                  <div slot="category" class="ion-text-capitalize">Category: {meal.category}</div>
-                  <app-recipe-ratings slot="ratings" ratings={meal.ratings}></app-recipe-ratings>
-                  <ion-button slot="buttons" fill="outline" onClick={() => this.addDailyMeal(meal)}>
+                  <div slot="category" class="ion-text-capitalize">Category: {recipe.category}</div>
+                  <app-recipe-ratings slot="ratings" recipe={recipe}></app-recipe-ratings>
+                  <ion-button slot="buttons" fill="outline" onClick={() => this.addDailyMeal(recipe)}>
                     <ion-icon slot="icon-only" name="add"></ion-icon>
                   </ion-button>
-                  <ion-button slot="buttons" fill="outline" onClick={() => goToRecipeInfo(meal.name)}>
+                  <ion-button slot="buttons" fill="outline" onClick={() => goToRecipeInfo(recipe.name)}>
                     <ion-icon slot="icon-only" name="information-outline"></ion-icon>
                   </ion-button>
                 </app-recipe-daily>

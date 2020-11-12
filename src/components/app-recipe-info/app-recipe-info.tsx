@@ -23,8 +23,9 @@ export class AppRecipeInfo {
       calories: null,
       fat: null,
       category: null,
-      ratings: null,
-      favorite: null
+      averageRating: null,
+      favorite: null,
+      ratings: []
     }
     this.getRecipeInfo();
   }
@@ -138,7 +139,7 @@ export class AppRecipeInfo {
             </ion-item>
           </ion-list>
           <p class="ion-text-capitalize">Category: {this.recipe.category}</p>
-          <app-recipe-ratings ratings={this.recipe.ratings} canEdit={true}></app-recipe-ratings>
+          <app-recipe-ratings recipe={this.recipe} canEdit={true}></app-recipe-ratings>
           <h3>Ingredients</h3>
           <ion-list lines="none">
             {

@@ -1,4 +1,5 @@
 import { IProfile } from "../interfaces";
+import { getFirebaseCurrentUser } from "./food-tracker.firebase";
 import { deleteProfileLocal, getProfileLocal, insertUpdateProfileLocal } from "./user.profile.local";
 
 export async function createProfile(profile: IProfile) {
@@ -6,7 +7,7 @@ export async function createProfile(profile: IProfile) {
         await insertUpdateProfileLocal(profile);
         return true;
     } catch (error) {
-        throw new Error(error);
+        throw error
     }
 }
 
@@ -15,7 +16,7 @@ export async function insertUpdateProfile(profile: IProfile) {
         await insertUpdateProfileLocal(profile);
         return true;
     } catch (error) {
-        throw new Error(error);
+        throw error
     }
 }
 
@@ -24,7 +25,7 @@ export async function deleteProfile() {
         await deleteProfileLocal();
         return true;
     } catch (error) {
-       throw new Error(error);
+        throw error
     }
 }
 
@@ -33,6 +34,10 @@ export async function getProfile() {
         const result = await getProfileLocal();
         return result;
     } catch (error) {
-        throw new Error(error);
+        throw error
     }
+}
+
+export async function getCurrentUserId() {
+    return getFirebaseCurrentUser();
 }

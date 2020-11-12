@@ -1,5 +1,3 @@
-import { iterate } from "localforage";
-
 export interface IResponse<T> {
     success: boolean;
     error: string;
@@ -7,6 +5,58 @@ export interface IResponse<T> {
     data: T;
     message: any;
 }
+
+
+export interface IDaily {
+    date: number;
+    meals: IRecipe[];
+}
+
+export interface IRecipe {
+    name: string;
+    calories: number;
+    image: string;
+    ingredients: IIngredient[];
+    fat: number;
+    protein: number;
+    carbs: number;
+    steps: string[];
+    category: string;
+    averageRating: number,
+    favorite?: boolean,
+    ratings: IRating[]
+}
+
+export interface IRating {
+    id: string;
+    rating: number;
+}
+
+interface IIngredient {
+    name: string,
+    amount: string;
+}
+
+export interface IProfile {
+    gender: string;
+    age: number;
+    weight: number;
+    height: number;
+    neck: number;
+    waist: number;
+    activityLevel: string;
+    bodyFat: number;
+    bodyMassIndex: number;
+}
+
+export interface IDailyEntry {
+    date: Date;
+    type: string
+    consumedSize: string;
+    foodProduct: IFoodProduct
+}
+
+//////////////////////////////////////
 
 /**
  * Date Format: MM/DD/YYYY
@@ -20,49 +70,6 @@ export interface oldIDaily {
     lunchSnack: oldIMeal[];
     dinner: oldIMeal[];
     dinnerSnack: oldIMeal[];
-}
-
-export interface IDaily {
-    date: number;
-    meals: IRecipe[];
-}
-
-export interface IRecipe{
-    name: string;
-    calories: number;
-    image: string;
-    ingredients;
-    fat: number;
-    protein: number;
-    carbs: number;
-    steps: string[];
-    category: string;
-    ratings: number,
-    favorite?: boolean
-}
-
-interface IIngredient {
-    name: string,
-    amount: string;
-}
-
-export interface IProfile {
-        gender: string;
-        age: number;
-        weight: number;
-        height: number;
-        neck: number;
-        waist: number;
-        activityLevel: string;
-        bodyFat: number;
-        bodyMassIndex: number;
-}
-
-export interface IDailyEntry {
-    date: Date;
-    type: string
-    consumedSize: string;
-    foodProduct: IFoodProduct
 }
 
 export interface oldIMeal extends IFoodProduct {

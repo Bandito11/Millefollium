@@ -10,7 +10,7 @@ export async function addNewDailyMeal(meal: IRecipe) {
         const result = insertUpdateLocalDaily(newDaily);
         return result;
     } catch (error) {
-        throw new Error(error);
+        throw error
     }
 }
 
@@ -19,7 +19,7 @@ export function getTodayDaily(date: number) {
             const result = getLocalDailyEntry(date);
             return result;
         } catch (error) {
-            throw new Error(error)
+            throw error
         }
 }
 
@@ -27,6 +27,6 @@ export function deleteMealFromDaily({ date, meal }) {
     try {
         return removeMealFromLocalDaily({ meal: meal, date: date });
     } catch (error) {
-        throw new Error(error);
+        throw error
     }
 }

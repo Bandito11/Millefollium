@@ -1,13 +1,13 @@
 import { IRecipe } from "../interfaces";
-import { getRecipesFromFirebase, searchRecipeInFirebase, searchRecipeInfoInFirebase } from "./food-tracker.firebase";
-import { addRecipeToLocalFavorite, checkRecipeInLocalFavorites, deleteRecipeFromLocalFavorite, getLocalFavorites } from "./local.db";
+import { getRecipesFromFirebase, searchRecipeInfoInFirebase, searchRecipeInFirebase, postRatingsInFirebase } from "./food-tracker.firebase";
+import { checkRecipeInLocalFavorites, getLocalFavorites, addRecipeToLocalFavorite, deleteRecipeFromLocalFavorite } from "./local.db";
 
 export async function getRecipes(startAfter?) {
     try {
         const recipes = await getRecipesFromFirebase(startAfter);
         return recipes;
     } catch (error) {
-        throw new Error(error);
+        throw error;
     }
 }
 
@@ -29,7 +29,7 @@ export async function getRecipeInfo(name: string) {
         }
     } catch (error) {
         //Firebase Api error
-        throw new Error(error);
+        throw error;
     }
 }
 
@@ -60,7 +60,7 @@ export async function searchRecipeInAPI(term) {
         const result = await searchRecipeInFirebase(term);
         return result;
     } catch (error) {
-        throw new Error(error)
+        throw error;
     }
 
 }
@@ -71,4 +71,14 @@ export function filterRecipesByCategory({ recipes, category }) {
     }
     const filter = recipes.filter(recipe => recipe.category === category);
     return filter;
+}
+
+export async function rateRecipe(recipe: IRecipe) {
+    try {
+        const res = await postRatingsInFirebase(recipe);
+        return res;
+    } catch (error) {
+        throw error;
+    }
+
 }
