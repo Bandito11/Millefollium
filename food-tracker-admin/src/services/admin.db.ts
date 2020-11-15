@@ -96,3 +96,8 @@ export async function postRecipeToFirebase(recipe: IRecipe) {
             });
         });
 }
+
+export function editRecipe(recipe: IRecipe){
+    //TODO: use the method for create recipe but add the doc number in order to edit
+    //Check how to use the link to delete the picture
+}
