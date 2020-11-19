@@ -10,6 +10,7 @@ export namespace Components {
     interface AppEdit {
     }
     interface AppEntryForm {
+        "header": string;
         "recipe": IRecipe;
     }
     interface AppHome {
@@ -62,6 +63,7 @@ declare namespace LocalJSX {
     interface AppEdit {
     }
     interface AppEntryForm {
+        "header"?: string;
         "recipe"?: IRecipe;
     }
     interface AppHome {

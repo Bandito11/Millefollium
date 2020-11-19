@@ -2,11 +2,11 @@
   display: block;
 }
 
-#create-user-input {
+.create-user-input {
   display: inline-flex;
 }
 
-#create-user-input-file {
+.create-user-input-file {
   position: absolute;
   top: 0;
   right: 0;

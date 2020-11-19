@@ -71,3 +71,13 @@ export async function getFirebaseCurrentUser() {
         };
     }
 }
+
+export async function getPictureFromFirebaseStorage(imagePath) {
+    const storageRef = firebase.storage().ref();
+    try {
+        const url = await storageRef.child(imagePath).getDownloadURL();
+        return url;
+    } catch (error) {
+        throw error;
+    }
+}

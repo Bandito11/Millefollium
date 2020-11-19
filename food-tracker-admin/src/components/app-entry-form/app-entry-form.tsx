@@ -2,7 +2,7 @@ import { isPlatform, toastController } from '@ionic/core';
 import { Component, Host, h, Prop, State } from '@stencil/core';
 import { base64ToURL } from '../../helpers/utils';
 import { IRecipe, IIngredient } from '../../interfaces';
-import { postRecipe } from '../../services/recipe.service';
+import { getImageUrl, postRecipe } from '../../services/recipe.service';
 
 @Component({
   tag: 'app-entry-form',
@@ -15,10 +15,12 @@ export class AppEntryForm {
   @State() stepsControl: HTMLIonInputElement[];
   file: File;
   image;
+  @Prop() header: string;
 
   componentWillLoad() {
-    this.ingredientsControl = [this.ingredientInput(0)];
-    this.stepsControl = [this.stepsInput(0)];
+    this.ingredientsControl = [];
+    this.stepsControl = [];
+    this.image = '';
     if (!this.recipe) {
       this.recipe = {
         name: '',
@@ -37,12 +39,17 @@ export class AppEntryForm {
     }
     if (this.recipe.name) {
       this.ifInEdit();
+    } else {
+      this.ingredientsControl = [this.ingredientInput(this.ingredientsControl.length)];
+      this.stepsControl = [this.stepsInput(this.stepsControl.length)];
     }
   }
-  ifInEdit() {
-    this.image = this.recipe.image;
-    this.ingredientsControl = [];
-    this.stepsControl = [];
+  async ifInEdit() {
+    try {
+      this.image = await getImageUrl(this.recipe.image);
+    } catch (error) {
+      console.error(error);
+    }
     this.recipe.ingredients.map((ingredient, index) => this.ingredientsControl = [...this.ingredientsControl, this.ingredientInput(index, ingredient)]);
     this.recipe.steps.map((steps, index) => this.stepsControl = [...this.stepsControl, this.stepsInput(index, steps)]);
   }
@@ -54,7 +61,7 @@ export class AppEntryForm {
         <ion-label position="floating">Name</ion-label>
         {
           ingredient
-            ? <ion-input id={`ingredient-name-id-${index}`} value={ingredient.name} required={true}></ion-input>
+            ? <ion-input id={`edit-ingredient-name-id-${index}`} value={ingredient.name} required={true}></ion-input>
             : <ion-input id={`ingredient-name-id-${index}`} required={true}></ion-input>
         }
       </ion-item>
@@ -62,7 +69,7 @@ export class AppEntryForm {
         <ion-label position="floating">Amount</ion-label>
         {
           ingredient
-            ? <ion-input id={`ingredient-amount-id-${index}`} value={ingredient.amount} required={true}></ion-input>
+            ? <ion-input id={`edit-ingredient-amount-id-${index}`} value={ingredient.amount} required={true}></ion-input>
             : <ion-input id={`ingredient-amount-id-${index}`} required={true}></ion-input>
         }
       </ion-item>
@@ -86,7 +93,7 @@ export class AppEntryForm {
       <ion-label position="floating">{id + 1}</ion-label>
       {
         step
-          ? <ion-input id={`steps-id-${id}`} value={step} required={true}></ion-input>
+          ? <ion-input id={`edit-steps-id-${id}`} value={step} required={true}></ion-input>
           : <ion-input id={`steps-id-${id}`} required={true}></ion-input>
       }
     </ion-item>
@@ -100,17 +107,22 @@ export class AppEntryForm {
 
   getPicture(): void {
     if (isPlatform('capacitor')) {
-
+      //TODO:
     } else {
-      const chosenPic: HTMLInputElement = document.querySelector('#create-user-input-file');
+      let chosenPic: HTMLInputElement;
+      if (this.header) {
+        chosenPic = document.querySelector('#edit-input-file');
+      } else {
+        chosenPic = document.querySelector('#input-file');
+      }
       if (chosenPic.files.length !== 0) {
         this.file = chosenPic.files[0];
         this.recipe = {
           ...this.recipe,
           image: this.file
         }
+        this.image = base64ToURL(this.file);
       };
-      this.image = base64ToURL(this.file);
     }
   }
 
@@ -123,7 +135,6 @@ export class AppEntryForm {
     if (ev) {
       ev.preventDefault();
     }
-    console.log(this.recipe.category)
     if (this.ingredientsControl.length < 1) {
       const toast = await toastController.create({
         message: `Recipe has to have ingredients.`,
@@ -135,9 +146,18 @@ export class AppEntryForm {
     } else {
       const ingredients: IIngredient[] = [];
       for (let i = 0; i < this.ingredientsControl.length; i++) {
-        const name = document.querySelector(`#ingredient-name-id-${i}`)['value'];
-        const amount = document.querySelector(`#ingredient-amount-id-${i}`)['value'];
-        ingredients.push({ name: name, amount: amount })
+        let name = '';
+        let amount = '';
+        if (this.header) {
+          name = document.querySelector(`#edit-ingredient-name-id-${i}`)['value'];
+          amount = document.querySelector(`#edit-ingredient-amount-id-${i}`)['value'];
+        } else {
+          name = document.querySelector(`#ingredient-name-id-${i}`)['value'];
+          amount = document.querySelector(`#ingredient-amount-id-${i}`)['value'];
+        }
+        if (name && amount) {
+          ingredients.push({ name: name, amount: amount })
+        }
       }
       this.recipe.ingredients = [...ingredients];
     }
@@ -152,7 +172,15 @@ export class AppEntryForm {
     } else {
       const steps = [];
       for (let i = 0; i < this.stepsControl.length; i++) {
-        steps.push(document.querySelector(`#steps-id-${i}`)['value']);
+        let step;
+        if (this.header) {
+          step = document.querySelector(`#edit-steps-id-${i}`)['value'];
+        } else {
+          step = document.querySelector(`#steps-id-${i}`)['value'];
+        }
+        if (step) {
+          steps.push(step);
+        }
       }
       this.recipe.steps = [...steps];
     }
@@ -195,10 +223,15 @@ export class AppEntryForm {
         <form onSubmit={ev => this.handleSubmit(ev)}>
           <img src={this.image} alt={`Image of ${this.recipe.name}`} />
           <ion-list>
-            <div id="create-user-input">
+            <div class="create-user-input">
               <ion-button>
-                <input id="create-user-input-file" type="file" accept="image/*"
-                  onChange={() => this.getPicture()}></input>
+                {
+                  this.header
+                    ? <input id="edit-input-file" class="create-user-input-file" type="file" accept="image/*"
+                      onChange={() => this.getPicture()}></input>
+                    : <input id="input-file" class="create-user-input-file" type="file" accept="image/*"
+                      onChange={() => this.getPicture()}></input>
+                }
                 <ion-icon slot="icon-only" name="images-outline"></ion-icon>
               </ion-button>
             </div>

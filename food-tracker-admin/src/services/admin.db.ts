@@ -12,7 +12,7 @@ firebase.initializeApp({
     measurementId: "G-VP3B0G8MN7"
 });
 
-export async function login({ email, password }) {
+export async function loginFirebase({ email, password }) {
     try {
         await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch (error) {
@@ -20,7 +20,7 @@ export async function login({ email, password }) {
     }
 }
 
-export async function logout() {
+export async function logoutFirebase() {
     try {
         await firebase.auth().signOut();
         return true;
@@ -87,16 +87,15 @@ export async function postRecipeToFirebase(recipe: IRecipe) {
             //     // Unknown error occurred, inspect error.serverResponse
             //     break;
             // }
-        }, function () {
+        }, async function () {
             // Upload completed successfully, now we can get the download URL
-            uploadTask.snapshot.ref.getDownloadURL().then(async function (downloadURL) {
-                recipe.image = imagesPath;
-                try {
-                    await recipesRef.doc(recipe['id']).set(recipe);
-                } catch (error) {
-                    throw error;
-                }
-            });
+            recipe.image = imagesPath;
+            try {
+                delete recipe.id;
+                await recipesRef.doc(recipe['id']).set(recipe);
+            } catch (error) {
+                throw error;
+            }
         });
 }
 
@@ -111,6 +110,16 @@ export async function searchRecipeInFirebase(name: string) {
     try {
         const found = await recipesRef.where('name', '==', name).get();
         return found;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function getPictureFromFirebaseStorage(imagePath) {
+    const storageRef = firebase.storage().ref();
+    try {
+        const url = await storageRef.child(imagePath).getDownloadURL();
+        return url;
     } catch (error) {
         throw error;
     }

@@ -7,7 +7,10 @@ import { logoutOfAPI } from "../../services/auth.service";
   styleUrl: 'app-main.css'
 })
 export class AppMain {
+
   async logout() {
+    const router = document.querySelector('ion-router');
+    router.back();
     try {
       const res = await logoutOfAPI();
       let message = ''
@@ -29,8 +32,6 @@ export class AppMain {
       });
       toast.present();
     }
-    const router = document.querySelector('ion-router');
-    router.back();
   }
   render() {
     return (
@@ -39,7 +40,7 @@ export class AppMain {
           <ion-toolbar color="primary">
             <ion-title>Main Page</ion-title>
             <ion-buttons slot="start">
-              <ion-button  onClick={() => this.logout()}>
+              <ion-button onClick={() => this.logout()}>
                 <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
               </ion-button>
             </ion-buttons>
@@ -53,7 +54,7 @@ export class AppMain {
         <ion-content class="ion-padding">
           <app-entry-form></app-entry-form>
         </ion-content>
-        </Host>
+      </Host>
     );
   }
 }

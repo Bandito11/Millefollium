@@ -1,8 +1,8 @@
-import { login } from "./admin.db";
+import { loginFirebase, logoutFirebase } from "./admin.db";
 
 export async function loginIntoAPI({ email, password }) {
     try {
-        await login({ email: email, password: password });
+        await loginFirebase({ email: email, password: password });
     } catch (error) {
         throw error;
     }
@@ -10,7 +10,7 @@ export async function loginIntoAPI({ email, password }) {
 
 export async function logoutOfAPI() {
     try {
-        const res = await logoutOfAPI();
+        const res = await logoutFirebase();
         return res;
     } catch (error) {
         if (error === false) {

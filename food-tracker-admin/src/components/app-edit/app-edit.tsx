@@ -55,7 +55,7 @@ export class AppEdit {
           </ion-searchbar>
           {
             this.recipe.name
-              ? <app-entry-form recipe={this.recipe}></app-entry-form>
+              ? <app-entry-form header={'edit'} recipe={this.recipe}></app-entry-form>
               : ""
           }
         </ion-content>

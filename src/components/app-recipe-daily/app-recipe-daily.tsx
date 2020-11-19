@@ -1,5 +1,6 @@
 import { Component, Host, h, Prop } from '@stencil/core';
 import { capitalizeAllFirstLetters } from '../../helpers/utils';
+import { getImageUrl } from '../../services/recipe.service';
 
 @Component({
   tag: 'app-recipe-daily',
@@ -9,6 +10,10 @@ export class AppRecipeDaily {
   @Prop() name: string;
   @Prop() calories: number;
   @Prop() image: string;
+
+  async componentWillLoad() {
+    this.image = await getImageUrl(this.image);
+  }
 
   render() {
     return (

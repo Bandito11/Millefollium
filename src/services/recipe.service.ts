@@ -1,5 +1,5 @@
 import { IRecipe } from "../interfaces";
-import { getRecipesFromFirebase, searchRecipeInfoInFirebase, searchRecipeInFirebase, postRatingsInFirebase } from "./food-tracker.firebase";
+import { getRecipesFromFirebase, searchRecipeInfoInFirebase, searchRecipeInFirebase, postRatingsInFirebase, getPictureFromFirebaseStorage } from "./food-tracker.firebase";
 import { checkRecipeInLocalFavorites, getLocalFavorites, addRecipeToLocalFavorite, deleteRecipeFromLocalFavorite } from "./local.db";
 
 export async function getRecipes(startAfter?) {
@@ -13,18 +13,26 @@ export async function getRecipes(startAfter?) {
 
 export async function getRecipeInfo(name: string) {
     try {
-        let recipeInfo = await searchRecipeInfoInFirebase(name);
+        let response = await searchRecipeInfoInFirebase(name);
         try {
-            const result = checkRecipeInLocalFavorites(recipeInfo);
+            const result = checkRecipeInLocalFavorites(response);
             if (result) {
-                recipeInfo.favorite = true;
+                response.favorite = true;
             } else {
-                recipeInfo.favorite = false;
+                response.favorite = false;
             };
+            const recipeInfo = {
+                ...response,
+                image: await getImageUrl(response.image)
+            }
             return recipeInfo;
         } catch (error) {
             //Favorite db error
-            recipeInfo.favorite = false;
+            response.favorite = false;
+            const recipeInfo = {
+                ...response,
+                image: await getImageUrl(response.image)
+            }
             return recipeInfo;
         }
     } catch (error) {
@@ -80,5 +88,14 @@ export async function rateRecipe(recipe: IRecipe) {
     } catch (error) {
         throw error;
     }
+}
 
+
+export async function getImageUrl(imagePath) {
+    try {
+        const url = await getPictureFromFirebaseStorage(imagePath);
+        return url;
+    } catch (error) {
+        throw error;
+    }
 }

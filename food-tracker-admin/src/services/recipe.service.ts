@@ -1,5 +1,5 @@
 import { IRecipe } from "../interfaces";
-import { postRecipeToFirebase, searchRecipeInFirebase } from "./admin.db";
+import { getPictureFromFirebaseStorage, postRecipeToFirebase, searchRecipeInFirebase } from "./admin.db";
 
 
 export async function postRecipe(recipe: IRecipe) {
@@ -14,6 +14,15 @@ export async function searchForRecipe(name: string) {
     try {
         const response = await searchRecipeInFirebase(name);
         return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function getImageUrl(imagePath){
+    try {
+        const url = await getPictureFromFirebaseStorage(imagePath);
+        return url;
     } catch (error) {
         throw error;
     }
