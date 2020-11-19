@@ -1,5 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { IRecipe } from '../../interfaces';
+import { searchForRecipe } from '../../services/recipe.service';
 
 @Component({
   tag: 'app-edit',
@@ -10,6 +11,27 @@ export class AppEdit {
 
   componentWillLoad() {
     this.recipe = {} as IRecipe;
+  }
+
+  async searchRecipe(ev: CustomEvent<import("@ionic/core").SearchbarChangeEventDetail>) {
+    const value = ev.detail.value.toLowerCase().trim();
+    if (value) {
+      try {
+        const response = await searchForRecipe(value);
+        if (response) {
+          response.docs.forEach(data => {
+            this.recipe = data.data() as IRecipe;
+            this.recipe.id = data.id;
+          });
+        } else {
+          this.recipe = {} as IRecipe;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      this.recipe = {} as IRecipe;
+    }
   }
 
   render() {
@@ -24,24 +46,20 @@ export class AppEdit {
           </ion-toolbar>
         </ion-header>
         <ion-content>
-          <ion-searchbar 
-          placeholder="Search for Recipe" 
-          inputmode="text" 
-          type="text" 
-          onIonChange={ev => this.searchForRecipe(ev.detail.value)} debounce={250} show-cancel-button="always">
+          <ion-searchbar
+            placeholder="Search for Recipe"
+            inputmode="text"
+            type="text"
+            onIonChange={ev => this.searchRecipe(ev)}
+            debounce={250} >
           </ion-searchbar>
           {
             this.recipe.name
-            ? <app-entry-form recipe={this.recipe}></app-entry-form>
-            : ""
+              ? <app-entry-form recipe={this.recipe}></app-entry-form>
+              : ""
           }
         </ion-content>
       </Host>
     );
   }
-  searchForRecipe(value: string): void {
-    console.log('Value.', value);
-    this.recipe = {...this.recipe, name: value};
-  }
-
 }

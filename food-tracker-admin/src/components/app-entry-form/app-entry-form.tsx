@@ -14,7 +14,7 @@ export class AppEntryForm {
   @Prop({ mutable: true }) recipe: IRecipe;
   @State() stepsControl: HTMLIonInputElement[];
   file: File;
-  image: string;
+  image;
 
   componentWillLoad() {
     this.ingredientsControl = [this.ingredientInput(0)];
@@ -35,21 +35,36 @@ export class AppEntryForm {
         notes: ''
       }
     }
-
+    if (this.recipe.name) {
+      this.ifInEdit();
+    }
+  }
+  ifInEdit() {
+    this.image = this.recipe.image;
+    this.ingredientsControl = [];
+    this.stepsControl = [];
+    this.recipe.ingredients.map((ingredient, index) => this.ingredientsControl = [...this.ingredientsControl, this.ingredientInput(index, ingredient)]);
+    this.recipe.steps.map((steps, index) => this.stepsControl = [...this.stepsControl, this.stepsInput(index, steps)]);
   }
 
-  ingredientInput(index) {
+  ingredientInput(index, ingredient?: IIngredient) {
     return <div class="ion-padding">
       <p>{index + 1}</p>
       <ion-item>
         <ion-label position="floating">Name</ion-label>
-        <ion-input id={`ingredient-name-id-${index}`} required={true}>
-        </ion-input>
+        {
+          ingredient
+            ? <ion-input id={`ingredient-name-id-${index}`} value={ingredient.name} required={true}></ion-input>
+            : <ion-input id={`ingredient-name-id-${index}`} required={true}></ion-input>
+        }
       </ion-item>
       <ion-item>
         <ion-label position="floating">Amount</ion-label>
-        <ion-input id={`ingredient-amount-id-${index}`} required={true}>
-        </ion-input>
+        {
+          ingredient
+            ? <ion-input id={`ingredient-amount-id-${index}`} value={ingredient.amount} required={true}></ion-input>
+            : <ion-input id={`ingredient-amount-id-${index}`} required={true}></ion-input>
+        }
       </ion-item>
     </div>
   }
@@ -66,11 +81,14 @@ export class AppEntryForm {
     this.ingredientsControl = [...this.ingredientsControl];
   }
 
-  stepsInput(id) {
+  stepsInput(id, step?: string) {
     return <ion-item>
       <ion-label position="floating">{id + 1}</ion-label>
-      <ion-input id={`steps-id-${id}`} required={true}>
-      </ion-input>
+      {
+        step
+          ? <ion-input id={`steps-id-${id}`} value={step} required={true}></ion-input>
+          : <ion-input id={`steps-id-${id}`} required={true}></ion-input>
+      }
     </ion-item>
   }
   addToStepsControl(index) {
@@ -149,6 +167,10 @@ export class AppEntryForm {
       return;
     }
     try {
+      this.recipe = {
+        ...this.recipe,
+        name: this.recipe.name.toLowerCase()
+      }
       await postRecipe(this.recipe);
       const toast = await toastController.create({
         message: `${this.recipe.name} was created successfully.`,

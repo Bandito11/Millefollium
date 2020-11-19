@@ -1,26 +1,21 @@
 const errorMessage = `Couldn't retrieve data from file.`;
 const fileName = 'USDA-SR28-V1.csv';
-fetch(`/assets/${fileName}`)
-    .then(res => res.ok ? res.text() : errorMessage)
-    .then((data) => {
-        if (data.startsWith(errorMessage)) {
-            console.log(data);
-        } else {
-            postMessage(createUSDAObject(createUSDAArray(data)));
-        }
+export const getUSDAData = async () => {
+    return new Promise(resolve => {
+        fetch(`/assets/${fileName}`)
+            .then(res => res.ok ? res.text() : errorMessage)
+            .then((data) => {
+                if (data.startsWith(errorMessage)) {
+                    console.log(data);
+                } else {
+                    resolve(createUSDAObject(createUSDAArray(data)));
+                }
+            });
     });
-
-// let foodDataWorker;
-// if (typeof(foodDataWorker) == "undefined") {
-//   foodDataWorker = new Worker("workers/usda-file.js");
-// }
-// foodDataWorker.onmessage = function(event){
-//   TODO: Do something with event
-// };
-
-function createUSDAArray(data){
+}
+function createUSDAArray(data) {
     const temp = data.split(`\n`);
-    const foodData = temp.map((rows) => {
+    const foodData = temp.map(rows => {
         const usda = {
             databaseNumber: 0,
             foodGroup: '',

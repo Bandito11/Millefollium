@@ -1,4 +1,5 @@
 export interface IRecipe {
+    id?;
     name: string;
     calories: number;
     image: File;

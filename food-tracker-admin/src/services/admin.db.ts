@@ -37,15 +37,18 @@ export async function postRecipeToFirebase(recipe: IRecipe) {
     const db = firebase.firestore();
     const recipesRef = db.collection("recipes");
     try {
-        const found = await recipesRef.where('name', '==', recipe.name).get();
-        if (found) {
-            throw `Recipe ${recipe.name} already exists`;
+        if (!recipe['id']) {
+            const found = await recipesRef.where('name', '==', recipe.name).get();
+            if (found) {
+                throw `Recipe ${recipe.name} already exists`;
+            }
         }
     } catch (error) {
         throw error;
     }
     const storageRef = firebase.storage().ref();
-    const imageRef = storageRef.child(`images/${recipe.name}.png`)
+    const imagesPath: any = `images/${recipe.name}.png`;
+    const imageRef = storageRef.child(imagesPath)
     //Upload image
     const metadata = {
         contentType: 'image/png'
@@ -87,9 +90,9 @@ export async function postRecipeToFirebase(recipe: IRecipe) {
         }, function () {
             // Upload completed successfully, now we can get the download URL
             uploadTask.snapshot.ref.getDownloadURL().then(async function (downloadURL) {
-                recipe.image = downloadURL;
+                recipe.image = imagesPath;
                 try {
-                    await recipesRef.doc().set(recipe);
+                    await recipesRef.doc(recipe['id']).set(recipe);
                 } catch (error) {
                     throw error;
                 }
@@ -97,7 +100,18 @@ export async function postRecipeToFirebase(recipe: IRecipe) {
         });
 }
 
-export function editRecipe(recipe: IRecipe){
+export function editRecipe(recipe: IRecipe) {
     //TODO: use the method for create recipe but add the doc number in order to edit
     //Check how to use the link to delete the picture
+}
+
+export async function searchRecipeInFirebase(name: string) {
+    const db = firebase.firestore();
+    const recipesRef = db.collection("recipes");
+    try {
+        const found = await recipesRef.where('name', '==', name).get();
+        return found;
+    } catch (error) {
+        throw error;
+    }
 }

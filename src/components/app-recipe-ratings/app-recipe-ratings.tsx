@@ -3,7 +3,7 @@ import { Component, Host, h, Prop } from '@stencil/core';
 import { IRecipe } from '../../interfaces';
 import { findRatingsIndex } from '../../services/find-ratings-index.worker';
 import { rateRecipe } from '../../services/recipe.service';
-import { getCurrentUserId } from '../../services/user.profile.service';
+import { getCurrentUserId } from '../../services/user-profile.service';
 
 @Component({
   tag: 'app-recipe-ratings',

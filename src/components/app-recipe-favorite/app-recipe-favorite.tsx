@@ -38,7 +38,7 @@ export class AppRecipeFavorite {
   }
 
   searchRecipe(ev: CustomEvent<import("@ionic/core").SearchbarChangeEventDetail>): void {
-    const query = ev.detail.value.toLowerCase();
+    const query = ev.detail.value.toLowerCase().trim();
     if (query) {
       //TODO: Get from local database
       console.error('Search Term: ', query)

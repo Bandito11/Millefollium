@@ -4,7 +4,7 @@ import { calculateCalorieIntake, calculateMacros, dateToString, goToRecipeInfo, 
 import { IDaily } from "../../interfaces";
 import { getTodayDaily } from "../../services/daily.tracker.service";
 import { removeMealFromLocalDaily } from "../../services/local.db";
-import { getProfile } from "../../services/user.profile.service";
+import { getProfile } from "../../services/user-profile.service";
 
 @Component({
   tag: "app-home",

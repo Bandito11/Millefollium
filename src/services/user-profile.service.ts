@@ -1,6 +1,6 @@
 import { IProfile } from "../interfaces";
 import { getFirebaseCurrentUser } from "./food-tracker.firebase";
-import { deleteProfileLocal, getProfileLocal, insertUpdateProfileLocal } from "./user.profile.local";
+import { deleteProfileLocal, getProfileLocal, insertUpdateProfileLocal } from "./user-profile.local";
 
 export async function createProfile(profile: IProfile) {
     try {

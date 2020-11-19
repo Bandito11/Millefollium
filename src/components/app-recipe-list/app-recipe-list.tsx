@@ -75,7 +75,7 @@ export class AppRecipeList {
   }
 
   async searchRecipe(ev: CustomEvent<import("@ionic/core").SearchbarChangeEventDetail>) {
-    const term = ev.detail.value.toLowerCase();
+    const term = ev.detail.value.toLowerCase().trim();
     if (term) {
       try {
         let meals;
