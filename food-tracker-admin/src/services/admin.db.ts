@@ -48,7 +48,7 @@ export async function postRecipeToFirebase(recipe: IRecipe) {
     }
     const storageRef = firebase.storage().ref();
     const imagesPath: any = `images/${recipe.name}.png`;
-    const imageRef = storageRef.child(imagesPath)
+    const imageRef = storageRef.child(imagesPath);
     //Upload image
     const metadata = {
         contentType: 'image/png'
@@ -69,7 +69,7 @@ export async function postRecipeToFirebase(recipe: IRecipe) {
                     break;
             }
         }, function (error) {
-            error;
+            console.error(error);
             // A full list of error codes is available at
             // https://firebase.google.com/docs/storage/web/handle-errors
             // switch (error.code) {
@@ -88,20 +88,15 @@ export async function postRecipeToFirebase(recipe: IRecipe) {
             //     break;
             // }
         }, async function () {
-            // Upload completed successfully, now we can get the download URL
-            recipe.image = imagesPath;
             try {
+                const id = recipe.id;
                 delete recipe.id;
-                await recipesRef.doc(recipe['id']).set(recipe);
+                recipe.image = imagesPath;
+                await recipesRef.doc(id).set(recipe);
             } catch (error) {
                 throw error;
             }
         });
-}
-
-export function editRecipe(recipe: IRecipe) {
-    //TODO: use the method for create recipe but add the doc number in order to edit
-    //Check how to use the link to delete the picture
 }
 
 export async function searchRecipeInFirebase(name: string) {
@@ -123,4 +118,9 @@ export async function getPictureFromFirebaseStorage(imagePath) {
     } catch (error) {
         throw error;
     }
+}
+
+export function checkIfLoggedInFirebase() {
+    const logged = firebase.auth().currentUser;
+    return logged;
 }

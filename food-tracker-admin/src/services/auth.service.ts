@@ -1,4 +1,4 @@
-import { loginFirebase, logoutFirebase } from "./admin.db";
+import { checkIfLoggedInFirebase, loginFirebase, logoutFirebase } from "./admin.db";
 
 export async function loginIntoAPI({ email, password }) {
     try {
@@ -19,4 +19,8 @@ export async function logoutOfAPI() {
             throw error;
         }
     }
+}
+
+export async function checkIfLoggedIn() {
+    return checkIfLoggedInFirebase();
 }

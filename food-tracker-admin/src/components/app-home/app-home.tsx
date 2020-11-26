@@ -23,7 +23,8 @@ export class AppHome {
       await loginIntoAPI({ email: this.email, password: this.password });
       const toast = await toastController.create({
         message: `User is logged in.`,
-        duration: 1000
+        duration: 500, 
+        position: 'top'
       });
       toast.present();
       const router = document.querySelector('ion-router');

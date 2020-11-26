@@ -68,7 +68,7 @@ export class AppEntryForm {
       <ion-item>
         <ion-label position="floating">Amount</ion-label>
         {
-          ingredient
+          this.header
             ? <ion-input id={`edit-ingredient-amount-id-${index}`} value={ingredient.amount} required={true}></ion-input>
             : <ion-input id={`ingredient-amount-id-${index}`} required={true}></ion-input>
         }
@@ -92,7 +92,7 @@ export class AppEntryForm {
     return <ion-item>
       <ion-label position="floating">{id + 1}</ion-label>
       {
-        step
+        this.header
           ? <ion-input id={`edit-steps-id-${id}`} value={step} required={true}></ion-input>
           : <ion-input id={`steps-id-${id}`} required={true}></ion-input>
       }
@@ -138,7 +138,8 @@ export class AppEntryForm {
     if (this.ingredientsControl.length < 1) {
       const toast = await toastController.create({
         message: `Recipe has to have ingredients.`,
-        duration: 1000,
+        duration: 500,
+        position: 'top',
         color: 'danger'
       });
       toast.present();
@@ -164,7 +165,8 @@ export class AppEntryForm {
     if (this.stepsControl.length < 1) {
       const toast = await toastController.create({
         message: `Recipe has to have steps.`,
-        duration: 1000,
+        duration: 500,
+        position: 'top',
         color: 'danger'
       });
       toast.present();
@@ -188,7 +190,8 @@ export class AppEntryForm {
     if (!this.recipe.image) {
       const toast = await toastController.create({
         message: `Recipe has to have an image.`,
-        duration: 1000,
+        duration: 500,
+        position: 'top',
         color: 'danger'
       });
       toast.present();
@@ -202,7 +205,8 @@ export class AppEntryForm {
       await postRecipe(this.recipe);
       const toast = await toastController.create({
         message: `${this.recipe.name} was created successfully.`,
-        duration: 1000,
+        duration: 500,
+        position: 'top',
         color: 'success'
       });
       toast.present();
@@ -210,7 +214,8 @@ export class AppEntryForm {
       console.error(error);
       const toast = await toastController.create({
         message: error,
-        duration: 1000,
+        duration: 500,
+        position: 'top',
         color: 'danger'
       });
       toast.present();

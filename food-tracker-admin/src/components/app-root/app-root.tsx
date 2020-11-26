@@ -1,4 +1,5 @@
 import { Component, h } from '@stencil/core';
+import { checkIfLoggedIn } from '../../services/auth.service';
 
 @Component({
   tag: 'app-root',
@@ -10,11 +11,20 @@ export class AppRoot {
       <ion-app>
         <ion-router useHash={false}>
           <ion-route url="/" component="app-home" />
-          <ion-route url="/main" component="app-main" />
-          <ion-route url="/main/edit" component="app-edit" />
+          <ion-route url="/main" component="app-main" beforeEnter={isLoggedInGuard} />
+          <ion-route url="/main/edit" component="app-edit" beforeEnter={isLoggedInGuard} />
         </ion-router>
         <ion-nav />
       </ion-app>
     );
+  }
+}
+
+const isLoggedInGuard = async () => {
+  const isLoggedIn = await checkIfLoggedIn(); 
+  if (isLoggedIn) {
+    return true;
+  } else {
+    return { redirect: '/' };
   }
 }

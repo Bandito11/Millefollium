@@ -21,14 +21,16 @@ export class AppMain {
       }
       const toast = await toastController.create({
         message: message,
-        duration: 1000,
+        duration: 500,
+        position: 'top'
       });
       toast.present();
     } catch (error) {
       console.error(error);
       const toast = await toastController.create({
         message: 'User logged out.',
-        duration: 1000,
+        duration: 500,
+        position: 'top'
       });
       toast.present();
     }
