@@ -1,0 +1,64 @@
+[debug] [2020-12-06T09:07:42.672Z] ----------------------------------------------------------------------
+[debug] [2020-12-06T09:07:42.674Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy
+[debug] [2020-12-06T09:07:42.674Z] CLI Version:   8.15.0
+[debug] [2020-12-06T09:07:42.674Z] Platform:      darwin
+[debug] [2020-12-06T09:07:42.674Z] Node Version:  v14.8.0
+[debug] [2020-12-06T09:07:42.676Z] Time:          Sun Dec 06 2020 05:07:42 GMT-0400 (Atlantic Standard Time)
+[debug] [2020-12-06T09:07:42.676Z] ----------------------------------------------------------------------
+[debug] [2020-12-06T09:07:42.676Z] 
+[debug] [2020-12-06T09:07:42.683Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-12-06T09:07:42.684Z] > authorizing via signed-in user
+[debug] [2020-12-06T09:07:42.684Z] [iam] checking project food-tracker-65cf6 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2020-12-06T09:07:42.687Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/food-tracker-65cf6:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2020-12-06T09:07:43.074Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 06 Dec 2020 09:07:43 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=166","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-12-06T09:07:43.076Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/food-tracker-65cf6  
+ 
+[debug] [2020-12-06T09:07:43.451Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 06 Dec 2020 09:07:43 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Deploying to 'food-tracker-65cf6'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2020-12-06T09:07:43.456Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/food-tracker-65cf6/versions  
+ {"config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2020-12-06T09:07:44.329Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 06 Dec 2020 09:07:44 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  hosting[food-tracker-65cf6]: beginning deploy... 
+[info] i  hosting[food-tracker-65cf6]: found 1445 files in www 
+[debug] [2020-12-06T09:07:44.452Z] [hosting] hash cache [d3d3] not populated
+[debug] [2020-12-06T09:07:44.891Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/food-tracker-65cf6/versions/2868367cb243bcbd:populateFiles  
+ <request body omitted>
+[debug] [2020-12-06T09:07:45.160Z] [hosting] hash cache [d3d3] stored for 1445 files
+[debug] [2020-12-06T09:07:45.160Z] [hosting][hash queue][FINAL] {"max":702,"min":6,"avg":20.983391003460245,"active":0,"complete":1445,"success":1445,"errored":0,"retried":0,"total":1445,"elapsed":707}
+[debug] [2020-12-06T09:07:45.161Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/food-tracker-65cf6/versions/2868367cb243bcbd:populateFiles  
+ <request body omitted>
+[debug] [2020-12-06T09:07:46.091Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 06 Dec 2020 09:07:46 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-12-06T09:07:46.121Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 06 Dec 2020 09:07:46 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-12-06T09:07:46.121Z] [hosting][populate queue][FINAL] {"max":1205,"min":964,"avg":1084.5,"active":0,"complete":2,"success":2,"errored":0,"retried":0,"total":2,"elapsed":1230}
+[debug] [2020-12-06T09:07:46.121Z] [hosting] uploads queued: 107
+[debug] [2020-12-06T09:07:49.882Z] [hosting][upload queue][FINAL] {"max":3788,"min":1360,"avg":1738.6355140186913,"active":0,"complete":107,"success":107,"errored":0,"retried":0,"total":107,"elapsed":3791}
+[info] ✔  hosting[food-tracker-65cf6]: file upload complete 
+[debug] [2020-12-06T09:07:49.883Z] [hosting] deploy completed after 5553ms
+[debug] [2020-12-06T09:07:49.884Z] [
+  {
+    "config": {
+      "public": "www",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
+      "site": "food-tracker-65cf6"
+    },
+    "site": "food-tracker-65cf6",
+    "version": "sites/food-tracker-65cf6/versions/2868367cb243bcbd"
+  }
+]
+[info] i  hosting[food-tracker-65cf6]: finalizing version... 
+[debug] [2020-12-06T09:07:49.885Z] >>> HTTP REQUEST PATCH https://firebasehosting.googleapis.com/v1beta1/sites/food-tracker-65cf6/versions/2868367cb243bcbd?updateMask=status  
+ {"status":"FINALIZED"}
