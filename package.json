@@ -31,7 +31,8 @@
     "@types/jest": "^26.0.15",
     "@types/lokijs": "1.5.3",
     "@types/puppeteer": "^5.4.0",
-    "rollup-plugin-node-polyfills": "0.2.1"
+    "rollup-plugin-node-polyfills": "0.2.1",
+    "workbox-build": "^4.3.1"
   },
   "repository": {
     "type": "git",

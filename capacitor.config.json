@@ -1,6 +1,6 @@
 {
   "appId": "food.tracker",
-  "appName": "Millefollium",
+  "appName": "Food Tracker",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www"
