@@ -90,7 +90,6 @@ export async function rateRecipe(recipe: IRecipe) {
     }
 }
 
-
 export async function getImageUrl(imagePath) {
     try {
         const url = await getPictureFromFirebaseStorage(imagePath);

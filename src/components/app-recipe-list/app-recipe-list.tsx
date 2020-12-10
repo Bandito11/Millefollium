@@ -65,10 +65,11 @@ export class AppRecipeList {
       } else {
         meals = await getRecipes();
       }
+      console.log(meals)
       if (meals && meals.length > 0) {
         this.recipes = [...this.recipes, ...meals];
         this.initRecipes = [...this.recipes];
-      }
+      } 
     } catch (error) {
       console.error(error);
     }
@@ -112,7 +113,7 @@ export class AppRecipeList {
   }
 
   filterRecipes(category: string): void {
-    this.recipes = filterRecipesByCategory({ recipes: this.initRecipes, category: category })
+    this.recipes = filterRecipesByCategory({ recipes: this.initRecipes, category: category });
   }
 
   render() {

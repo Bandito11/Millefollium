@@ -11,8 +11,10 @@ export class AppRecipeDaily {
   @Prop() calories: number;
   @Prop() image: string;
 
-  async componentWillLoad() {
-    this.image = await getImageUrl(this.image);
+  async componentDidRender() {
+    if (!this.image.match('https://firebasestorage.googleapis.com')) {
+      this.image = await getImageUrl(this.image);
+    }
   }
 
   render() {
