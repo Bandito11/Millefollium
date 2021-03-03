@@ -114,7 +114,7 @@ export class AppRecipeInfo {
         </ion-header>
         <ion-content class="ion-padding">
           <h2 class="ion-text-capitalize">{this.recipe.name}</h2>
-          <ion-img src={this.recipe.image}></ion-img>
+          {/* <ion-img src={this.recipe.image}></ion-img> */}
           <ion-item lines="none" id="favorite-calories-text">
             <ion-label>{this.recipe.calories} calories</ion-label>
             <ion-button onClick={() => this.setFavorite()} fill="clear">

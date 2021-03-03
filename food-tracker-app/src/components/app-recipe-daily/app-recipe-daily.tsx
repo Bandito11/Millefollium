@@ -1,6 +1,5 @@
 import { Component, Host, h, Prop } from '@stencil/core';
 import { capitalizeAllFirstLetters } from '../../helpers/utils';
-import { getImageUrl } from '../../services/recipe.service';
 
 @Component({
   tag: 'app-recipe-daily',
@@ -12,18 +11,18 @@ export class AppRecipeDaily {
   @Prop() image: string;
 
   async componentDidRender() {
-    if (!this.image.match('https://firebasestorage.googleapis.com')) {
-      this.image = await getImageUrl(this.image);
-    }
+    // if (!this.image.match('https://firebasestorage.googleapis.com')) {
+    //   this.image = await getImageUrl(this.image);
+    // }
   }
 
   render() {
     return (
       <Host>
         <ion-item>
-          <ion-thumbnail slot="start">
+          {/* <ion-thumbnail slot="start">
             <ion-img src={this.image} ></ion-img>
-          </ion-thumbnail>
+          </ion-thumbnail> */}
           <ion-grid>
             <ion-row>
               <ion-label>

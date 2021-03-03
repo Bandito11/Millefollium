@@ -1,8 +1,7 @@
-import { isPlatform, toastController } from '@ionic/core';
+import { toastController } from '@ionic/core';
 import { Component, Host, h, Prop, State } from '@stencil/core';
-import { base64ToURL } from '../../helpers/utils';
 import { IRecipe, IIngredient } from '../../interfaces';
-import { getImageUrl, postRecipe } from '../../services/recipe.service';
+import { postRecipe } from '../../services/recipe.service';
 
 @Component({
   tag: 'app-entry-form',
@@ -14,13 +13,13 @@ export class AppEntryForm {
   @Prop({ mutable: true }) recipe: IRecipe;
   @State() stepsControl: HTMLIonInputElement[];
   file: File;
-  image;
+  //image;
   @Prop() header: string;
 
   componentWillLoad() {
     this.ingredientsControl = [];
     this.stepsControl = [];
-    this.image = '';
+    //this.image = '';
     if (!this.recipe) {
       this.recipe = {
         name: '',
@@ -46,7 +45,7 @@ export class AppEntryForm {
   }
   async ifInEdit() {
     try {
-      this.image = await getImageUrl(this.recipe.image);
+      //this.image = await getImageUrl(this.recipe.image);
     } catch (error) {
       console.error(error);
     }
@@ -106,24 +105,20 @@ export class AppEntryForm {
   }
 
   getPicture(): void {
-    if (isPlatform('capacitor')) {
-      //TODO:
+    let chosenPic: HTMLInputElement;
+    if (this.header) {
+      chosenPic = document.querySelector('#edit-input-file');
     } else {
-      let chosenPic: HTMLInputElement;
-      if (this.header) {
-        chosenPic = document.querySelector('#edit-input-file');
-      } else {
-        chosenPic = document.querySelector('#input-file');
-      }
-      if (chosenPic.files.length !== 0) {
-        this.file = chosenPic.files[0];
-        this.recipe = {
-          ...this.recipe,
-          image: this.file
-        }
-        this.image = base64ToURL(this.file);
-      };
+      chosenPic = document.querySelector('#input-file');
     }
+    if (chosenPic.files.length !== 0) {
+      this.file = chosenPic.files[0];
+      this.recipe = {
+        ...this.recipe,
+        image: this.file
+      }
+      //this.image = base64ToURL(this.file);
+    };
   }
 
   removeFromStepsControl(): void {
@@ -223,7 +218,7 @@ export class AppEntryForm {
     return (
       <Host>
         <form onSubmit={ev => this.handleSubmit(ev)}>
-          <img src={this.image} alt={`Image of ${this.recipe.name}`} />
+          {/* <img src={this.image} alt={`Image of ${this.recipe.name}`} /> */}
           <ion-list>
             <div class="create-user-input">
               <ion-button>
