@@ -15,26 +15,34 @@ export class AppHome {
     this.headerText = 'Login';
   }
 
-  async handleSubmit(ev: Event): Promise<void> {
-    if (ev) {
-      ev.preventDefault();
-    }
+  async handleSubmit(ev: Event) {
+    ev.preventDefault();
     try {
       await loginIntoAPI({ email: this.email, password: this.password });
       const toast = await toastController.create({
         message: `User is logged in.`,
-        duration: 500, 
-        position: 'top'
+        duration: 500,
       });
       toast.present();
-      const router = document.querySelector('ion-router');
-      router.push('/main/')
+      const ionNav = document.querySelector('ion-nav');
+      ionNav.push('app-main')
     } catch (error) {
       const alert = await alertController.create({
         header: 'Error',
         message: error
       });
       alert.present();
+    }
+  }
+
+  handleInput(opts: { type: string, value: string }) {
+    switch (opts.type) {
+      case 'email':
+        this.email = opts.value;
+        break;
+      case 'password':
+        this.password = opts.value;
+        break;
     }
   }
 
@@ -52,11 +60,11 @@ export class AppHome {
             <ion-list>
               <ion-item>
                 <ion-label position="stacked">E-Mail</ion-label>
-                <ion-input required={true} type="email" onInput={ev => this.email = ev.target['value']}></ion-input>
+                <ion-input required={true} type="email" onInput={ev => this.handleInput({ type: 'email', value: ev.target['value'] })}></ion-input>
               </ion-item>
               <ion-item>
                 <ion-label position="stacked">Password</ion-label>
-                <ion-input required={true} type="password" onInput={ev => this.password = ev.target['value']}></ion-input>
+                <ion-input required={true} type="password" onInput={ev => this.handleInput({ type: 'password', value: ev.target['value'] })}></ion-input>
               </ion-item>
               <ion-button expand="block" type="submit">Submit</ion-button>
             </ion-list>

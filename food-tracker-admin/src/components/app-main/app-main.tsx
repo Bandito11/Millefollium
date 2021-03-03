@@ -9,32 +9,31 @@ import { logoutOfAPI } from "../../services/auth.service";
 export class AppMain {
 
   async logout() {
-    const router = document.querySelector('ion-router');
-    router.back();
+    const ionNav = document.querySelector('ion-nav');
     try {
       const res = await logoutOfAPI();
       let message = ''
       if (res) {
         message = 'User was signed out.'
       } else {
-        message = 'There was an error. User was not signed in.'
+        message = 'User was not signed in.'
       }
       const toast = await toastController.create({
         message: message,
         duration: 500,
-        position: 'top'
       });
-      toast.present();
+      await toast.present();
+      ionNav.pop();
     } catch (error) {
-      console.error(error);
       const toast = await toastController.create({
-        message: 'User logged out.',
+        message: error,
         duration: 500,
-        position: 'top'
       });
-      toast.present();
+      await toast.present();
     }
+    
   }
+
   render() {
     return (
       <Host>

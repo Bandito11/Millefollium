@@ -18,5 +18,8 @@
     "@ionic/core": "^5.3.2",
     "@stencil/core": "^2.0.1",
     "workbox-build": "^4.3.1"
+  },
+  "dependencies": {
+    "firebase": "^8.2.9"
   }
 }

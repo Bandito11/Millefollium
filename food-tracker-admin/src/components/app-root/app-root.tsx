@@ -11,7 +11,7 @@ export class AppRoot {
       <ion-app>
         <ion-router useHash={false}>
           <ion-route url="/" component="app-home" />
-          <ion-route url="/main" component="app-main" beforeEnter={isLoggedInGuard} />
+          <ion-route url="/main" component="app-main" beforeLeave={isLoggedInGuard} beforeEnter={isLoggedInGuard} />
           <ion-route url="/main/edit" component="app-edit" beforeEnter={isLoggedInGuard} />
         </ion-router>
         <ion-nav />
@@ -21,7 +21,7 @@ export class AppRoot {
 }
 
 const isLoggedInGuard = async () => {
-  const isLoggedIn = await checkIfLoggedIn(); 
+  const isLoggedIn = await checkIfLoggedIn();
   if (isLoggedIn) {
     return true;
   } else {

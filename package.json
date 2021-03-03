@@ -1,42 +1,22 @@
 {
-  "name": "millefollium",
-  "private": true,
-  "version": "0.0.5",
-  "description": "any",
-  "license": "MIT",
-  "files": [
-    "dist/"
-  ],
+  "name": "food-tracker",
+  "version": "1.0.0",
+  "description": "",
   "scripts": {
-    "build": "stencil build",
-    "start": "stencil build --dev --watch --serve",
-    "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watch",
-    "deploy": "stencil build && firebase deploy"
-  },
-  "dependencies": {
-    "@capacitor/cli": "2.4.2",
-    "@capacitor/core": "2.4.2",
-    "@ericblade/quagga2": "1.2.4",
-    "firebase": "^8.0.1",
-    "jest": "^26.6.2",
-    "localforage": "^1.9.0",
-    "lokijs": "1.5.11",
-    "puppeteer": "^5.4.1"
-  },
-  "devDependencies": {
-    "@ionic/core": "^5.4.1",
-    "@ionic/pwa-elements": "3.0.1",
-    "@stencil/core": "^2.2.0",
-    "@types/jest": "^26.0.15",
-    "@types/lokijs": "1.5.3",
-    "@types/puppeteer": "^5.4.0",
-    "rollup-plugin-node-polyfills": "0.2.1",
-    "workbox-build": "^4.3.1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "admin:deploy": "cd food-tracker-admin && firebase deploy",
+    "app:deploy": "cd food-tracker-app && firebase deploy",
+    "app:start": "cd food-tracker-app && npm start",
+    "admin:start": "cd food-tracker-admin && npm start"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Bandito11/Millefollium.git"
+    "url": "git+https://github.com/Bandito11/food-tracker.git"
   },
-  "author": "Esteban Morales"
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bandito11/food-tracker/issues"
+  },
+  "homepage": "https://github.com/Bandito11/food-tracker#readme"
 }

@@ -139,7 +139,6 @@ export class AppEntryForm {
       const toast = await toastController.create({
         message: `Recipe has to have ingredients.`,
         duration: 500,
-        position: 'top',
         color: 'danger'
       });
       toast.present();
@@ -166,7 +165,6 @@ export class AppEntryForm {
       const toast = await toastController.create({
         message: `Recipe has to have steps.`,
         duration: 500,
-        position: 'top',
         color: 'danger'
       });
       toast.present();
@@ -215,7 +213,6 @@ export class AppEntryForm {
       const toast = await toastController.create({
         message: error,
         duration: 500,
-        position: 'top',
         color: 'danger'
       });
       toast.present();
