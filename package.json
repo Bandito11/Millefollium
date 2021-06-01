@@ -4,10 +4,10 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "admin:deploy": "cd food-tracker-admin && firebase deploy",
-    "app:deploy": "cd food-tracker-app && firebase deploy",
-    "app:start": "cd food-tracker-app && npm start",
-    "admin:start": "cd food-tracker-admin && npm start"
+    "admin:deploy": "cd admin && firebase deploy",
+    "app:deploy": "cd app && firebase deploy",
+    "app:start": "cd app && npm start",
+    "admin:start": "cd admin && npm start"
   },
   "repository": {
     "type": "git",
