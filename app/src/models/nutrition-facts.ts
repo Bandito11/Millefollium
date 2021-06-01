@@ -1,6 +1,6 @@
 import { IServingSize, IFat, IAmount, ISugar, IVitamin } from "../interfaces";
 
-export class NutritionFacts {
+ export abstract class NutritionFacts {
     
     private _servingSize : IServingSize;
     public get servingSize() : IServingSize {

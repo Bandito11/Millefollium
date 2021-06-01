@@ -1,6 +1,6 @@
 import { NutritionFacts } from "./nutrition-facts";
 
-export class FoodProduct extends NutritionFacts {
+export abstract class FoodProduct extends NutritionFacts {
 
     private _name: string;
     public get name(): string {

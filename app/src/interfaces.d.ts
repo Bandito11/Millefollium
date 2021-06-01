@@ -58,25 +58,6 @@ export interface IDailyEntry {
 
 //////////////////////////////////////
 
-/**
- * Date Format: MM/DD/YYYY
- */
-export interface oldIDaily {
-    date: string;
-    calories: string;
-    breakfast: oldIMeal[];
-    breakfastSnack: oldIMeal[];
-    lunch: oldIMeal[];
-    lunchSnack: oldIMeal[];
-    dinner: oldIMeal[];
-    dinnerSnack: oldIMeal[];
-}
-
-export interface oldIMeal extends IFoodProduct {
-    id?: number;
-    calories: string;
-}
-
 export interface IFoodProduct extends INutritionFacts {
     name: string;
     barcode: string;

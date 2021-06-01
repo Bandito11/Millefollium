@@ -1,6 +1,6 @@
-import { IFoodProduct } from "../interfaces";
+import { IDailyEntry, IFoodProduct } from "../interfaces";
 
-export class DailyEntry {
+class DailyEntry implements IDailyEntry {
 
 
     private _date: Date;
@@ -40,3 +40,7 @@ export class DailyEntry {
     }
 
 }
+
+
+const DailyEntryModel = new DailyEntry();
+export default DailyEntryModel;

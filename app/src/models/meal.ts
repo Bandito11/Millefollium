@@ -1,5 +1,6 @@
 import { FoodProduct } from "./food-product";
-export class Meal extends FoodProduct {
+
+export abstract class Meal extends FoodProduct{
 
     private _id: number;
     public get id(): number {
