@@ -1,8 +1,8 @@
 import { calculateBMI, calculateBodyFat, convertHeightToFeetInches, convertHeightToInches } from '../../helpers/utils';
 import { Component, Host, h, State } from '@stencil/core';
-import { IProfile } from '../../interfaces';
 import { toastController } from '@ionic/core';
-import { getProfile, insertUpdateProfile } from '../../services/user-profile.service';
+import { getProfile, insertUpdateProfile } from '../../services/user-profile';
+import { IProfile } from '../../interfaces/IProfile';
 
 @Component({
   tag: 'app-user-profile',

@@ -1,4 +1,5 @@
-import { IProfile, IRecipe } from "../interfaces";
+import { IProfile } from "../interfaces/IProfile";
+import { IRecipe } from "../interfaces/IRecipe";
 
 export function capitalizeFirstLetter(name: string) {
   if (name) {

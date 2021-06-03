@@ -1,9 +1,9 @@
 import { toastController } from '@ionic/core';
 import { Component, Host, h, State } from '@stencil/core';
 import { goToRecipeInfo } from '../../helpers/utils';
-import { IRecipe } from '../../interfaces';
-import { addNewDailyMeal } from '../../services/daily.tracker.service';
-import { filterRecipesByCategory, getFavoriteRecipes, removeFromFavorites } from '../../services/recipe.service';
+import { IRecipe } from '../../interfaces/IRecipe';
+import { addNewDailyMeal } from '../../services/daily.tracker';
+import { filterRecipesByCategory, getFavoriteRecipes, removeRecipe } from '../../services/recipe';
 
 @Component({
   tag: 'app-recipe-favorite',
@@ -55,7 +55,7 @@ export class AppRecipeFavorite {
 
   async removeFromFavorites(meal: IRecipe) {
     try {
-      const result = await removeFromFavorites(meal);
+      const result = await removeRecipe(meal);
       if (result) {
         const index = this.meals.findIndex(meal => meal.name === meal.name);
         const meals = this.meals.splice(index, 1);

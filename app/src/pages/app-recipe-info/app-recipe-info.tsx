@@ -1,8 +1,7 @@
 import { toastController } from '@ionic/core';
-import { State } from '@ionic/core/dist/types/stencil-public-runtime';
-import { Component, Host, h } from '@stencil/core';
-import { IRecipe } from '../../interfaces';
-import { getRecipeInfo, setFavorite } from '../../services/recipe.service';
+import { Component, Host, h, State } from '@stencil/core';
+import { IRecipe } from '../../interfaces/IRecipe';
+import { getRecipe, updateRecipe } from '../../services/recipe';
 
 @Component({
   tag: 'app-recipe-info',
@@ -34,7 +33,7 @@ export class AppRecipeInfo {
     const urlValues = location.pathname.split('/');
     const name = urlValues.pop().replace(/%20/g, ' '); //used to query results
     try {
-      const data = await getRecipeInfo(name);
+      const data = await getRecipe(name);
       if (data) {
         this.recipe = {
           ...data,
@@ -70,7 +69,7 @@ export class AppRecipeInfo {
       }
     }
     try {
-      const result = setFavorite(this.recipe);
+      const result = updateRecipe(this.recipe);
       let options = {
         message: '',
         color: ''
@@ -139,7 +138,7 @@ export class AppRecipeInfo {
             </ion-item>
           </ion-list>
           <p class="ion-text-capitalize">Category: {this.recipe.category}</p>
-          <app-recipe-ratings recipe={this.recipe} canEdit={true}></app-recipe-ratings>
+          {/* <app-recipe-ratings recipe={this.recipe} canEdit={true}></app-recipe-ratings> */}
           <h3>Ingredients</h3>
           <ion-list lines="none">
             {

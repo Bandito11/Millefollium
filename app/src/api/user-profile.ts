@@ -1,5 +1,5 @@
 import { Filesystem, FilesystemDirectory, FilesystemEncoding } from "@capacitor/core";
-import { IProfile } from "../interfaces";
+import { IProfile } from "../interfaces/IProfile";
 
 const directoryName = `local`;
 const dbName = `profile`;

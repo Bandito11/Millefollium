@@ -1,4 +1,7 @@
-import { IServingSize, IFat, IAmount, ISugar, IVitamin } from "../interfaces";
+import { IAmount } from "../interfaces/IAmount";
+import { IFat } from "../interfaces/IFat";
+import { ISugar } from "../interfaces/ISugar";
+import { IVitamin } from "../interfaces/IVitamin";
 
  export abstract class NutritionFacts {
     

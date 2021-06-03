@@ -1,9 +1,9 @@
 import { toastController } from '@ionic/core';
 import { Component, Host, h, State } from '@stencil/core';
 import { capitalizeAllFirstLetters, goToRecipeInfo } from '../../helpers/utils';
-import { IRecipe } from '../../interfaces';
-import { addNewDailyMeal } from '../../services/daily.tracker.service';
-import { filterRecipesByCategory, getRecipes, searchRecipeInAPI } from '../../services/recipe.service';
+import { IRecipe } from '../../interfaces/IRecipe';
+import { addNewDailyMeal } from '../../services/daily.tracker';
+import { filterRecipesByCategory, getRecipes, searchRecipe } from '../../services/recipe';
 
 @Component({
   tag: 'app-recipe-list',
@@ -11,7 +11,7 @@ import { filterRecipesByCategory, getRecipes, searchRecipeInAPI } from '../../se
 })
 export class AppRecipeList {
   scrollTopMax: number;
-  @State() recipes: IRecipe[];
+  @State() recipes: IRecipe[] = [];
   initRecipes: IRecipe[];
 
   async scrollForNewRecipes(ev: CustomEvent<import("@ionic/core").ScrollDetail>) {
@@ -20,7 +20,7 @@ export class AppRecipeList {
     this.scrollTopMax = scroll['scrollTopMax'];
 
     if (ev.detail.currentY === this.scrollTopMax) {
-      //TODO: Refresh when user have more than 10 daily entries
+      //FIXME: Refresh when user have more than 10 daily entries
       if (this.recipes.length > 9) {
         this.getNewRecipes();
       }
@@ -28,27 +28,12 @@ export class AppRecipeList {
   }
 
   componentWillLoad() {
-    this.recipes = [];
     this.getNewRecipes();
   }
 
   async componentDidLoad() {
     const searchBar = document.querySelector<HTMLIonSearchbarElement>('#recipe-list-searchbar');
     searchBar.setFocus();
-  }
-
-  getToolbar() {
-    return <ion-toolbar color="primary">
-      <ion-buttons slot="start">
-        <ion-back-button defaultHref="/"></ion-back-button>
-      </ion-buttons>
-      <ion-searchbar id="recipe-list-searchbar" onIonInput={ev => this.clearSearch(ev)} onIonClear={() => this.searchCancelClicked()} onIonChange={ev => this.searchRecipe(ev)} inputmode="text" type="search" debounce={500} spellcheck={true} autocomplete="on"></ion-searchbar>
-      <ion-buttons slot="end">
-        <ion-button href="/recipe/favorite">
-          <ion-icon name="heart-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
   }
 
   clearSearch(ev: CustomEvent<KeyboardEvent>): void {
@@ -65,11 +50,10 @@ export class AppRecipeList {
       } else {
         meals = await getRecipes();
       }
-      console.log(meals)
       if (meals && meals.length > 0) {
         this.recipes = [...this.recipes, ...meals];
         this.initRecipes = [...this.recipes];
-      } 
+      }
     } catch (error) {
       console.error(error);
     }
@@ -80,7 +64,7 @@ export class AppRecipeList {
     if (term) {
       try {
         let meals;
-        meals = await searchRecipeInAPI(term);
+        meals = await searchRecipe(term);
         this.recipes = [...meals];
       } catch (error) {
         console.error(error);
@@ -120,11 +104,24 @@ export class AppRecipeList {
     return (
       <Host>
         <ion-header>
-          {
-            navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
-              ? ''
-              : this.getToolbar()
-          }
+          <ion-toolbar color="primary">
+            <ion-searchbar
+              id="recipe-list-searchbar"
+              onIonInput={ev => this.clearSearch(ev)}
+              onIonClear={() => this.searchCancelClicked()}
+              onIonChange={ev => this.searchRecipe(ev)}
+              inputmode="text"
+              type="search"
+              debounce={500}
+              spellcheck={true}
+              autocomplete="on"
+            />
+            <ion-buttons slot="end">
+              <ion-button href="/recipe/favorite">
+                <ion-icon name="heart-outline"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-toolbar>
         </ion-header>
         <ion-toolbar>
           <ion-chip outline onClick={() => this.filterRecipes("breakfast")}>
@@ -156,7 +153,7 @@ export class AppRecipeList {
                   image={recipe.image}
                 >
                   <div slot="category" class="ion-text-capitalize">Category: {recipe.category}</div>
-                  <app-recipe-ratings slot="ratings" recipe={recipe}></app-recipe-ratings>
+                  {/* <app-recipe-ratings slot="ratings" recipe={recipe}></app-recipe-ratings> */}
                   <ion-button slot="buttons" fill="outline" onClick={() => this.addDailyMeal(recipe)}>
                     <ion-icon slot="icon-only" name="add"></ion-icon>
                   </ion-button>
@@ -168,13 +165,6 @@ export class AppRecipeList {
             }
           </ion-list>
         </ion-content>
-        <ion-footer>
-          {
-            navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
-              ? this.getToolbar()
-              : ''
-          }
-        </ion-footer>
       </Host>
     )
   }

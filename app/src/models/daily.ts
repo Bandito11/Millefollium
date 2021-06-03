@@ -1,6 +1,6 @@
-import { IDaily, IRecipe } from "../interfaces";
+import { IRecipe } from "../interfaces/IRecipe";
 
-class Daily implements IDaily{
+class Daily {
 
     private _date: number;
     public get date(): number {

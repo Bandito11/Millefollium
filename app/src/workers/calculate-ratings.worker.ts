@@ -1,4 +1,4 @@
-import { IRecipe } from "../interfaces";
+import { IRecipe } from "../interfaces/IRecipe";
 
 export const calculateRatings = async (recipe: IRecipe) => {
     if (recipe.ratings.length > 0) {

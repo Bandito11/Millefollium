@@ -1,9 +1,9 @@
-import { toastController } from '@ionic/core';
+// import { toastController } from '@ionic/core';
 import { Component, Host, h, Prop } from '@stencil/core';
-import { IRecipe } from '../../interfaces';
-import { findRatingsIndex } from '../../services/find-ratings-index.worker';
-import { rateRecipe } from '../../services/recipe.service';
-import { getCurrentUserId } from '../../services/user-profile.service';
+// import { findRatingsIndex } from '../../workers/find-ratings-index.worker';
+// import { rateRecipe } from '../../services/recipe';
+// import { getCurrentUserId } from '../../services/user-profile';
+import { IRecipe } from '../../interfaces/IRecipe';
 
 @Component({
   tag: 'app-recipe-ratings',
@@ -18,36 +18,37 @@ export class AppRecipeRatings {
   }
 
   async userRated(rating: number) {
-    try {
-      const id = await getCurrentUserId();
-      if (id) {
-        const indexFound = await findRatingsIndex({id: id, recipe: this.recipe});
-        if (indexFound > -1) {
-          this.recipe.ratings[indexFound].rating = rating;
-        } else {
-          this.recipe.ratings.push({ id: id, rating: rating });
-        }
-        const res = await rateRecipe(this.recipe);
-        const toast = await toastController.create({
-          message: `${this.recipe.name} was rated!`,
-          duration: 1000,
-          color: 'success'
-        });
-        toast.present();
-        this.recipe = {
-          ...res
-        }
-      } else {
-        const toast = await toastController.create({
-          message: `User can't rate a recipe unless he's logged in.`,
-          duration: 1000,
-          color: 'danger'
-        });
-        toast.present();
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    rating
+    // try {
+    //   const id = await getCurrentUserId();
+    //   if (id) {
+    //     const indexFound = await findRatingsIndex({id: id, recipe: this.recipe});
+    //     if (indexFound > -1) {
+    //       this.recipe.ratings[indexFound].rating = rating;
+    //     } else {
+    //       this.recipe.ratings.push({ id: id, rating: rating });
+    //     }
+    //     const res = await rateRecipe(this.recipe);
+    //     const toast = await toastController.create({
+    //       message: `${this.recipe.name} was rated!`,
+    //       duration: 1000,
+    //       color: 'success'
+    //     });
+    //     toast.present();
+    //     this.recipe = {
+    //       ...res
+    //     }
+    //   } else {
+    //     const toast = await toastController.create({
+    //       message: `User can't rate a recipe unless he's logged in.`,
+    //       duration: 1000,
+    //       color: 'danger'
+    //     });
+    //     toast.present();
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    // }
   }
 
   render() {

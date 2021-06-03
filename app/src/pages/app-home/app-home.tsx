@@ -1,10 +1,9 @@
 import { toastController } from "@ionic/core";
 import { Component, h, Host, State } from "@stencil/core";
 import { calculateCalorieIntake, calculateMacros, dateToString, goToRecipeInfo, recommendedCaloriesPerActivityLevel } from "../../helpers/utils";
-import { IDaily } from "../../interfaces";
-import { getTodayDaily } from "../../services/daily.tracker.service";
-import { removeMealFromLocalDaily } from "../../services/local.db";
-import { getProfile } from "../../services/user-profile.service";
+import { getTodayDaily, removeMealFromDaily } from "../../services/daily.tracker";
+import { getProfile } from "../../services/user-profile";
+import { IDaily } from "../../interfaces/IDaily";
 
 @Component({
   tag: "app-home",
@@ -142,7 +141,7 @@ export class AppHome {
 
   async removeMeal({ meal, date }) {
     try {
-      const data = removeMealFromLocalDaily({ meal: meal, date: date });
+      const data = removeMealFromDaily({ meal: meal, date: date });
       if (data) {
         this.refreshDailyData(data);
         const toast = await toastController.create({
