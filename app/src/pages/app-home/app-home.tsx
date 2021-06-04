@@ -1,9 +1,10 @@
 import { toastController } from "@ionic/core";
 import { Component, h, Host, State } from "@stencil/core";
-import { calculateCalorieIntake, calculateMacros, dateToString, goToRecipeInfo, recommendedCaloriesPerActivityLevel } from "../../helpers/utils";
 import { getTodayDaily, removeMealFromDaily } from "../../services/daily.tracker";
 import { getProfile } from "../../services/user-profile";
 import { IDaily } from "../../interfaces/IDaily";
+import { calculateMacros, calculateCalorieIntake } from "../../helpers/calculations";
+import { recommendedCaloriesPerActivityLevel, goToRecipeInfo, dateToString } from "../../helpers/utils";
 
 @Component({
   tag: "app-home",

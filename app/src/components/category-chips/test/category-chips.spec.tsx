@@ -1,18 +1,18 @@
 import { newSpecPage } from '@stencil/core/testing';
-import { AppRecipeFavorite } from '../app-recipe-favorite';
+import { CategoryChips } from '../category-chips';
 
-describe('app-recipe-favorite', () => {
+describe('category-chips', () => {
   it('renders', async () => {
     const page = await newSpecPage({
-      components: [AppRecipeFavorite],
-      html: `<app-recipe-favorite></app-recipe-favorite>`,
+      components: [CategoryChips],
+      html: `<category-chips></category-chips>`,
     });
     expect(page.root).toEqualHtml(`
-      <app-recipe-favorite>
+      <category-chips>
         <mock:shadow-root>
           <slot></slot>
         </mock:shadow-root>
-      </app-recipe-favorite>
+      </category-chips>
     `);
   });
 });

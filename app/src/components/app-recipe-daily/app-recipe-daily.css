@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+.recipe-name {
+  word-wrap: break-word;
+}
+

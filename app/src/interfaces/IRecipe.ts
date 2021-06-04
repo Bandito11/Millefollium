@@ -1,5 +1,4 @@
 import { IIngredient } from "./IIngredient";
-import { IRating } from "./IRating";
 
 export interface IRecipe {
     name: string;
@@ -11,7 +10,5 @@ export interface IRecipe {
     carbs: number;
     steps: string[];
     category: string;
-    averageRating: number,
-    favorite?: boolean,
-    ratings: IRating[]
+    favorite: boolean;
 }

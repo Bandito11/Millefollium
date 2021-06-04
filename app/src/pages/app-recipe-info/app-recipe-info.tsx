@@ -1,43 +1,29 @@
 import { toastController } from '@ionic/core';
 import { Component, Host, h, State } from '@stencil/core';
+import Recipe from '../../models/recipe';
 import { IRecipe } from '../../interfaces/IRecipe';
 import { getRecipe, updateRecipe } from '../../services/recipe';
-
 @Component({
   tag: 'app-recipe-info',
-  styleUrl: 'app-recipe-info.css'
+  styleUrl: 'app-recipe-info.css',
 })
 export class AppRecipeInfo {
-
   @State() recipe: IRecipe;
 
   componentWillLoad() {
-    this.recipe = {
-      name: null,
-      ingredients: [],
-      image: null,
-      protein: null,
-      carbs: null,
-      steps: [],
-      calories: null,
-      fat: null,
-      category: null,
-      averageRating: null,
-      favorite: null,
-      ratings: []
-    }
+    this.recipe = Recipe;
     this.getRecipeInfo();
   }
 
-  async getRecipeInfo() {
+  getRecipeInfo() {
     const urlValues = location.pathname.split('/');
-    const name = urlValues.pop().replace(/%20/g, ' '); //used to query results
+    const name = urlValues.pop().replace(/%20/g, ' ').trim(); //used to query results
     try {
-      const data = await getRecipe(name);
+      const data = getRecipe(name);
       if (data) {
         this.recipe = {
           ...data,
-          category: data.category
+          category: data.category,
         };
       }
     } catch (error) {
@@ -45,71 +31,59 @@ export class AppRecipeInfo {
     }
   }
 
-  getToolbar(footer?: boolean) {
-    return <ion-toolbar color="primary">
-      {
-        footer ? "" : <ion-title class="ion-text-capitalize">{this.recipe.name}</ion-title>
-      }
-      <ion-buttons slot="start">
-        <ion-back-button defaultHref="/"></ion-back-button>
-      </ion-buttons>
-    </ion-toolbar>
-  }
-
   async setFavorite() {
     if (!this.recipe.favorite) {
       this.recipe = {
         ...this.recipe,
-        favorite: true
-      }
+        favorite: true,
+      };
     } else {
       this.recipe = {
         ...this.recipe,
-        favorite: false
-      }
+        favorite: false,
+      };
     }
-    try {
       const result = updateRecipe(this.recipe);
       let options = {
         message: '',
-        color: ''
+        color: '',
       };
       if (result) {
-        if (this.recipe.favorite) {
+        if (result.favorite) {
           options.message = `Added to favorites.`;
           options.color = 'success';
         } else {
           options.message = `Removed from favorites.`;
-          options.color = 'danger'
+          options.color = 'danger';
         }
         const toast = await toastController.create({
           message: options.message,
           duration: 1000,
-          color: options.color
+          color: options.color,
         });
         toast.present();
       } else {
         const toast = await toastController.create({
           message: `Couldn't be added to favorites. Please try again later.`,
           duration: 1000,
-          color: 'danger'
+          color: 'danger',
         });
         toast.present();
       }
-    } catch (error) {
-      console.error(error);
-    }
   }
 
   render() {
     return (
       <Host>
         <ion-header>
-          {
-            navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
-              ? ''
-              : this.getToolbar()
-          }
+          <ion-toolbar color="primary">
+            <ion-title class="ion-text-capitalize">
+              {this.recipe.name}
+            </ion-title>
+            <ion-buttons slot="start">
+              <ion-back-button defaultHref="/"></ion-back-button>
+            </ion-buttons>
+          </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
           <h2 class="ion-text-capitalize">{this.recipe.name}</h2>
@@ -117,12 +91,11 @@ export class AppRecipeInfo {
           <ion-item lines="none" id="favorite-calories-text">
             <ion-label>{this.recipe.calories} calories</ion-label>
             <ion-button onClick={() => this.setFavorite()} fill="clear">
-              {
-                this.recipe.favorite
-                  ? <ion-icon id="favorite-icon" name="heart-sharp"></ion-icon>
-                  : <ion-icon id="favorite-icon" name="heart-outline"></ion-icon>
-
-              }
+              {this.recipe.favorite ? (
+                <ion-icon id="favorite-icon" name="heart-sharp"></ion-icon>
+              ) : (
+                <ion-icon id="favorite-icon" name="heart-outline"></ion-icon>
+              )}
             </ion-button>
           </ion-item>
           <h3>Macros</h3>
@@ -138,43 +111,38 @@ export class AppRecipeInfo {
             </ion-item>
           </ion-list>
           <p class="ion-text-capitalize">Category: {this.recipe.category}</p>
-          {/* <app-recipe-ratings recipe={this.recipe} canEdit={true}></app-recipe-ratings> */}
           <h3>Ingredients</h3>
           <ion-list lines="none">
-            {
-              this.recipe.ingredients.map(ingredient =>
-                <ion-item>
-                  <ion-label class="ion-text-capitalize">{ingredient.name}</ion-label>
-                  <ion-label class="ion-text-wrap">{ingredient.amount}</ion-label>
-                </ion-item>
-              )
-            }
+            {this.recipe.ingredients.map((ingredient) => (
+              <ion-item>
+                <ion-label class="ion-text-capitalize">
+                  {ingredient.name}
+                </ion-label>
+                <ion-label class="ion-text-wrap">{ingredient.amount}</ion-label>
+              </ion-item>
+            ))}
           </ion-list>
           <h3>Cooking Tools</h3>
-          <ion-list lines="none">
-          </ion-list>
+          <ion-list lines="none"></ion-list>
           <h3>How to prepare</h3>
           <ion-list lines="none">
-            {
-              this.recipe.steps.map((step, i) =>
-                i % 2
-                  ? <ion-item color="light">
-                    <ion-label id="steps" class="ion-text-wrap">{step}</ion-label>
-                  </ion-item>
-                  : <ion-item>
-                    <ion-label id="steps" class="ion-text-wrap">{step}</ion-label>
-                  </ion-item>
+            {this.recipe.steps.map((step, i) =>
+              i % 2 ? (
+                <ion-item color="light">
+                  <ion-label id="steps" class="ion-text-wrap">
+                    {step}
+                  </ion-label>
+                </ion-item>
+              ) : (
+                <ion-item>
+                  <ion-label id="steps" class="ion-text-wrap">
+                    {step}
+                  </ion-label>
+                </ion-item>
               )
-            }
+            )}
           </ion-list>
         </ion-content>
-        <ion-footer>
-          {
-            navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android')
-              ? this.getToolbar(true)
-              : ''
-          }
-        </ion-footer>
       </Host>
     );
   }

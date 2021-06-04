@@ -1,4 +1,4 @@
-import { insertUpdateLocalDaily, getLocalDailyEntry, removeMealFromLocalDaily } from "../database/daily";
+import { insertUpdateDaily, getDailyEntry, removeMeal } from "../database/daily";
 import { IDaily } from "../interfaces/IDaily";
 import { IRecipe } from "../interfaces/IRecipe";
 
@@ -7,16 +7,16 @@ export async function addNewDailyMeal(meal: IRecipe) {
         date: new Date().valueOf(),
         meals: [meal]
     }
-    const result = insertUpdateLocalDaily(newDaily);
+    const result = insertUpdateDaily(newDaily);
     return result;
 
 }
 
 export function getTodayDaily(date: number) {
-    const result = getLocalDailyEntry(date);
+    const result = getDailyEntry(date);
     return result;
 }
 
 export function removeMealFromDaily({ date, meal }) {
-    return removeMealFromLocalDaily({ meal: meal, date: date });
+    return removeMeal({ meal: meal, date: date });
 }

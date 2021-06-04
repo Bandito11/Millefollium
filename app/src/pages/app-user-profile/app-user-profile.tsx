@@ -1,8 +1,8 @@
-import { calculateBMI, calculateBodyFat, convertHeightToFeetInches, convertHeightToInches } from '../../helpers/utils';
 import { Component, Host, h, State } from '@stencil/core';
 import { toastController } from '@ionic/core';
-import { getProfile, insertUpdateProfile } from '../../services/user-profile';
+import { getProfile, createUpdateProfile } from '../../services/user-profile';
 import { IProfile } from '../../interfaces/IProfile';
+import { convertHeightToFeetInches, convertHeightToInches, calculateBMI, calculateBodyFat } from '../../helpers/calculations';
 
 @Component({
   tag: 'app-user-profile',
@@ -15,10 +15,9 @@ export class AppUserProfile {
   heightInInches: number;
   @State() activityLevelChecked: boolean;
 
-  async componentWillLoad() {
+   componentWillLoad() {
     try {
-      const result = await getProfile();
-      this.profile = result;
+      this.profile = getProfile();
     } catch (error) {
       this.profile = {
         gender: 'male',
@@ -37,23 +36,23 @@ export class AppUserProfile {
     this.heightInInches = convertedHeight.heightInches;
   }
 
-  async getProfile() {
+   getProfile() {
     try {
-      const result = await getProfile();
+      const result =  getProfile();
       return result;
     } catch (error) {
       console.error(error);
     }
   }
 
-  async choseProfile() {
+   async choseProfile() {
     this.editParameters = false;
     const heightInches = convertHeightToInches({ height: this.heightInFeet, width: this.heightInInches })
     this.profile.height = heightInches;
     this.profile.bodyMassIndex = calculateBMI(this.profile);
     this.profile.bodyFat = calculateBodyFat(this.profile);
     try {
-      const result = await insertUpdateProfile(this.profile);
+      const result = createUpdateProfile(this.profile);
       if (result) {
         const toast = await toastController.create({
           message: `Profile was updated!`,

@@ -1,6 +1,6 @@
 import firebase from "firebase";
 import { IRecipe } from "../interfaces/IRecipe";
-import { calculateRatings } from "../workers/calculate-ratings.worker";
+// import { calculateRatings } from "../workers/calculate-ratings.worker";
 import("firebase/firestore");
 
 firebase.initializeApp({
@@ -56,21 +56,21 @@ export async function searchRecipeInfoInFirebase(name) {
     return query.docs[0].data() as unknown as IRecipe;
 }
 
-export async function postRatingsInFirebase(recipe: IRecipe) {
-    if (!user) {
-        throw `User doesn't have permissions to access Firebase.`;
-    }
-    const recipesRef = db.collection('recipes');
-    try {
-        const res = await Promise.all([await calculateRatings(recipe), await recipesRef.where('name', '==', recipe.name).get()]);
-        const recipeCalculated = res[0];
-        const found = res[1];
-        await recipesRef.doc(found.docs[0].id).set(recipeCalculated);
-        return recipeCalculated;
-    } catch (error) {
-        throw error;
-    }
-}
+// export async function postRatingsInFirebase(recipe: IRecipe) {
+//     if (!user) {
+//         throw `User doesn't have permissions to access Firebase.`;
+//     }
+//     const recipesRef = db.collection('recipes');
+//     try {
+//         const res = await Promise.all([await calculateRatings(recipe), await recipesRef.where('name', '==', recipe.name).get()]);
+//         const recipeCalculated = res[0];
+//         const found = res[1];
+//         await recipesRef.doc(found.docs[0].id).set(recipeCalculated);
+//         return recipeCalculated;
+//     } catch (error) {
+//         throw error;
+//     }
+// }
 
 export async function getFirebaseCurrentUser() {
     const currentUser = firebase.auth().currentUser;

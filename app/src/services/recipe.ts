@@ -1,63 +1,56 @@
-import { getOneRecipe, get, getRecipesByFavorite, insert, update, remove, getRecipesByName } from "../database/recipes";
-import { IRecipe } from "../interfaces/IRecipe";
+import {
+  getOneRecipe,
+  get,
+  insert,
+  update,
+  remove,
+  getRecipesByName,
+  getRecipesByCategory,
+  getRecipesByFavorite,
+} from '../database/recipes';
+import { IRecipe } from '../interfaces/IRecipe';
 
-
-export async function getRecipe(name: string) {
-    const result = getOneRecipe(name);
-    return result;
+export function getRecipe(name: string) {
+  return getOneRecipe(name);
 }
 
-export async function getRecipes(startAfter?): Promise<IRecipe[]> {
-    startAfter
-    const result = get();
-    return result;
+export async function getRecipes(startAfter?) {
+  startAfter;
+  return await get();
 }
 
-export async function getFavoriteRecipes(startAfter?): Promise<IRecipe[]> {
-    startAfter
-    const result = getRecipesByFavorite();
-    return result;
+export function getFavoriteRecipes(startAfter?) {
+  startAfter;
+  return getRecipesByFavorite();
 }
 
-
-export async function addRecipe(recipe: IRecipe) {
-    const result = insert(recipe);
-    return result;
+export function addRecipe(recipe: IRecipe) {
+  return insert(recipe);
 }
 
-export async function updateRecipe(recipe: IRecipe) {
-    const result = update(recipe);
-    return result;
+export function updateRecipe(recipe: IRecipe) {
+  return update(recipe);
 }
 
-export async function removeRecipe(meal: IRecipe) {
-    const result = remove(meal);
-    return result;
+export function removeRecipe(meal: IRecipe) {
+  return remove(meal);
 }
 
-export async function searchRecipe(name: string) {
-    const result = getRecipesByName(name);
-    return result;
+export function searchRecipe(name: string) {
+  return getRecipesByName(name);
 }
 
-export function filterRecipesByCategory({ recipes, category }) {
-    if (category === 'none') {
-        return recipes;
-    }
-    const filter = recipes.filter(recipe => recipe.category === category);
-    return filter;
+export async function filterRecipesByCategory(category: string) {
+  if (category === 'none') {
+    return await getRecipes();
+  }
+  if (category === 'favorites') {
+    return getFavoriteRecipes();
+  }
+  return getRecipesByCategory(category);
 }
 
-// export async function rateRecipe(recipe: IRecipe) {
-//     try {
-//         const res = await postRatingsInFirebase(recipe);
-//         return res;
-//     } catch (error) {
-//         throw error;
-//     }
-// }
-
-export async function getImageUrl(imagePath) {
-    imagePath
-    return '';
+export function getImageUrl(imagePath) {
+  imagePath;
+  return '';
 }

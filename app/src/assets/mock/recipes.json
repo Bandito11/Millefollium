@@ -1,0 +1,98 @@
+[
+    {
+        "calories": "600",
+        "carbs": "40",
+        "category": "dinner",
+        "fat": "10",
+        "ingredients": [
+            {
+                "amount": "1 breast (for about 200 calories WITHOUT the skin)",
+                "name": "chicken"
+            },
+            {
+                "amount": "1 cup (for about 100 calories)",
+                "name": "rice"
+            },
+            {
+                "amount": "Eat the amount you want (1 cup is about 20 calories)",
+                "name": "spinach"
+            }
+        ],
+        "name": "chicken with rice & spinach",
+        "notes": "can eat it with some vegetables",
+        "protein": "30",
+        "steps": [
+            "put salt, pepper, thyme, onion powder and red pepper on the chicken",
+            "spray the pan with the cooking spray and set it on the stove on low. ",
+            "put the chicken on the pan and wait around 10 minutes and turn it around.",
+            "once the chicken is golden and crispy take it out of the pan and put it on a plate and cut it in small pieces.",
+            "mix it with the rice and spinach in a bowl and enjoy!"
+        ]
+    },
+    {
+        "calories": "700",
+        "carbs": "21",
+        "category": "breakfast",
+        "fat": "12",
+        "ingredients": [
+            {
+                "amount": "50 calories",
+                "name": "White eggs"
+            },
+            {
+                "amount": "30 calories",
+                "name": "Cinnamon"
+            },
+            {
+                "amount": "12 calories",
+                "name": "vanilla extract"
+            }
+        ],
+        "name": "french toast",
+        "notes": "You can also use protein powder for that extra protein intake. You can also add no calorie sugar.",
+        "protein": "12",
+        "steps": [
+            "mix vanilla extract, cinnamon and white eggs in a bowl.",
+            "soak bread in mix and put in the hot pan.",
+            "cook bread until it has a brownish color",
+            "eat it with fruit or low calorie light syrup"
+        ]
+    },
+    {
+        "calories": "300",
+        "carbs": "10",
+        "category": "lunch",
+        "fat": "30",
+        "name": "egg sandwich",
+        "protein": "8",
+        "ingredients": [
+            {
+                "amount": "1 (aproximately 74 calories)",
+                "name": "white eggs"
+            },
+            {
+                "amount": "160 calories",
+                "name": "2 slices of bread"
+            },
+            {
+                "amount": "30 calories per tablespoon",
+                "name": "light mayo"
+            },
+            {
+                "amount": "20 calories",
+                "name": "spinach"
+            },
+            {
+                "amount": "1 slice",
+                "name": "cheese"
+            }
+        ],
+        "notes": "",
+        "steps": [
+            "add the egg in a pot and fill with water until it covers the egg. Let it boil for approximately 11-13 minutes.",
+            "after the egg is finished cooking, cut it in little pieces with a spoon.",
+            "mix the egg with the light mayo and add the spinach to it.",
+            "add the egg mixture into the sandwhich and add the cheese on top and enjoy."
+        ]
+    }
+]
