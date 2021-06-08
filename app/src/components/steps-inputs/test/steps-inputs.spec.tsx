@@ -1,18 +1,18 @@
 import { newSpecPage } from '@stencil/core/testing';
-import { AppRecipeDaily } from '../app-recipe-daily';
+import { StepsInputs } from '../steps-inputs';
 
-describe('app-recipe-daily', () => {
+describe('steps-inputs', () => {
   it('renders', async () => {
     const page = await newSpecPage({
-      components: [AppRecipeDaily],
-      html: `<app-recipe-daily></app-recipe-daily>`,
+      components: [StepsInputs],
+      html: `<steps-inputs></steps-inputs>`,
     });
     expect(page.root).toEqualHtml(`
-      <app-recipe-daily>
+      <steps-inputs>
         <mock:shadow-root>
           <slot></slot>
         </mock:shadow-root>
-      </app-recipe-daily>
+      </steps-inputs>
     `);
   });
 });

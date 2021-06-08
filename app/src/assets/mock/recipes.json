@@ -20,6 +20,9 @@
         ],
         "name": "chicken with rice & spinach",
         "notes": "can eat it with some vegetables",
+        "utensils": [
+            "pan"
+        ],
         "protein": "30",
         "steps": [
             "put salt, pepper, thyme, onion powder and red pepper on the chicken",
@@ -49,6 +52,10 @@
             }
         ],
         "name": "french toast",
+        "utensils": [
+            "pan",
+            "whisker"
+        ],
         "notes": "You can also use protein powder for that extra protein intake. You can also add no calorie sugar.",
         "protein": "12",
         "steps": [
@@ -65,6 +72,9 @@
         "fat": "30",
         "name": "egg sandwich",
         "protein": "8",
+        "utensils": [
+            "pot"
+        ],
         "ingredients": [
             {
                 "amount": "1 (aproximately 74 calories)",

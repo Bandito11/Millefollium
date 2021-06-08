@@ -5,13 +5,14 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { IIngredient } from "./interfaces/IIngredient";
+import { IRecipeInputs } from "./interfaces/IRecipeInputs";
 export namespace Components {
     interface AppHome {
     }
-    interface AppRecipeDaily {
-        "calories": number;
-        "image": string;
-        "name": string;
+    interface AppRecipeAdd {
+    }
+    interface AppRecipeEdit {
     }
     interface AppRecipeInfo {
     }
@@ -23,6 +24,28 @@ export namespace Components {
     }
     interface CategoryChips {
     }
+    interface IngredientsInputs {
+        "ingredients": IIngredient[];
+    }
+    interface RecipeInputs {
+        "calories": number;
+        "carbs": number;
+        "category": string;
+        "fat": number;
+        "name": string;
+        "protein": number;
+    }
+    interface RecipeItem {
+        "calories": number;
+        "image": string;
+        "name": string;
+    }
+    interface StepsInputs {
+        "steps": string[];
+    }
+    interface UtensilsInputs {
+        "utensils": string[];
+    }
 }
 declare global {
     interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
@@ -31,11 +54,17 @@ declare global {
         prototype: HTMLAppHomeElement;
         new (): HTMLAppHomeElement;
     };
-    interface HTMLAppRecipeDailyElement extends Components.AppRecipeDaily, HTMLStencilElement {
+    interface HTMLAppRecipeAddElement extends Components.AppRecipeAdd, HTMLStencilElement {
     }
-    var HTMLAppRecipeDailyElement: {
-        prototype: HTMLAppRecipeDailyElement;
-        new (): HTMLAppRecipeDailyElement;
+    var HTMLAppRecipeAddElement: {
+        prototype: HTMLAppRecipeAddElement;
+        new (): HTMLAppRecipeAddElement;
+    };
+    interface HTMLAppRecipeEditElement extends Components.AppRecipeEdit, HTMLStencilElement {
+    }
+    var HTMLAppRecipeEditElement: {
+        prototype: HTMLAppRecipeEditElement;
+        new (): HTMLAppRecipeEditElement;
     };
     interface HTMLAppRecipeInfoElement extends Components.AppRecipeInfo, HTMLStencilElement {
     }
@@ -67,23 +96,58 @@ declare global {
         prototype: HTMLCategoryChipsElement;
         new (): HTMLCategoryChipsElement;
     };
+    interface HTMLIngredientsInputsElement extends Components.IngredientsInputs, HTMLStencilElement {
+    }
+    var HTMLIngredientsInputsElement: {
+        prototype: HTMLIngredientsInputsElement;
+        new (): HTMLIngredientsInputsElement;
+    };
+    interface HTMLRecipeInputsElement extends Components.RecipeInputs, HTMLStencilElement {
+    }
+    var HTMLRecipeInputsElement: {
+        prototype: HTMLRecipeInputsElement;
+        new (): HTMLRecipeInputsElement;
+    };
+    interface HTMLRecipeItemElement extends Components.RecipeItem, HTMLStencilElement {
+    }
+    var HTMLRecipeItemElement: {
+        prototype: HTMLRecipeItemElement;
+        new (): HTMLRecipeItemElement;
+    };
+    interface HTMLStepsInputsElement extends Components.StepsInputs, HTMLStencilElement {
+    }
+    var HTMLStepsInputsElement: {
+        prototype: HTMLStepsInputsElement;
+        new (): HTMLStepsInputsElement;
+    };
+    interface HTMLUtensilsInputsElement extends Components.UtensilsInputs, HTMLStencilElement {
+    }
+    var HTMLUtensilsInputsElement: {
+        prototype: HTMLUtensilsInputsElement;
+        new (): HTMLUtensilsInputsElement;
+    };
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
-        "app-recipe-daily": HTMLAppRecipeDailyElement;
+        "app-recipe-add": HTMLAppRecipeAddElement;
+        "app-recipe-edit": HTMLAppRecipeEditElement;
         "app-recipe-info": HTMLAppRecipeInfoElement;
         "app-recipe-list": HTMLAppRecipeListElement;
         "app-root": HTMLAppRootElement;
         "app-user-profile": HTMLAppUserProfileElement;
         "category-chips": HTMLCategoryChipsElement;
+        "ingredients-inputs": HTMLIngredientsInputsElement;
+        "recipe-inputs": HTMLRecipeInputsElement;
+        "recipe-item": HTMLRecipeItemElement;
+        "steps-inputs": HTMLStepsInputsElement;
+        "utensils-inputs": HTMLUtensilsInputsElement;
     }
 }
 declare namespace LocalJSX {
     interface AppHome {
     }
-    interface AppRecipeDaily {
-        "calories"?: number;
-        "image"?: string;
-        "name"?: string;
+    interface AppRecipeAdd {
+    }
+    interface AppRecipeEdit {
     }
     interface AppRecipeInfo {
     }
@@ -96,14 +160,46 @@ declare namespace LocalJSX {
     interface CategoryChips {
         "onCategoryCompleted"?: (event: CustomEvent<string>) => void;
     }
+    interface IngredientsInputs {
+        "ingredients"?: IIngredient[];
+        "onIngredientsInputData"?: (event: CustomEvent<IIngredient[]>) => void;
+    }
+    interface RecipeInputs {
+        "calories"?: number;
+        "carbs"?: number;
+        "category"?: string;
+        "fat"?: number;
+        "name"?: string;
+        "onRecipeInputData"?: (event: CustomEvent<IRecipeInputs>) => void;
+        "protein"?: number;
+    }
+    interface RecipeItem {
+        "calories"?: number;
+        "image"?: string;
+        "name"?: string;
+    }
+    interface StepsInputs {
+        "onStepsInputData"?: (event: CustomEvent<string[]>) => void;
+        "steps"?: string[];
+    }
+    interface UtensilsInputs {
+        "onUtensilInputData"?: (event: CustomEvent<string[]>) => void;
+        "utensils"?: string[];
+    }
     interface IntrinsicElements {
         "app-home": AppHome;
-        "app-recipe-daily": AppRecipeDaily;
+        "app-recipe-add": AppRecipeAdd;
+        "app-recipe-edit": AppRecipeEdit;
         "app-recipe-info": AppRecipeInfo;
         "app-recipe-list": AppRecipeList;
         "app-root": AppRoot;
         "app-user-profile": AppUserProfile;
         "category-chips": CategoryChips;
+        "ingredients-inputs": IngredientsInputs;
+        "recipe-inputs": RecipeInputs;
+        "recipe-item": RecipeItem;
+        "steps-inputs": StepsInputs;
+        "utensils-inputs": UtensilsInputs;
     }
 }
 export { LocalJSX as JSX };
@@ -111,12 +207,18 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
-            "app-recipe-daily": LocalJSX.AppRecipeDaily & JSXBase.HTMLAttributes<HTMLAppRecipeDailyElement>;
+            "app-recipe-add": LocalJSX.AppRecipeAdd & JSXBase.HTMLAttributes<HTMLAppRecipeAddElement>;
+            "app-recipe-edit": LocalJSX.AppRecipeEdit & JSXBase.HTMLAttributes<HTMLAppRecipeEditElement>;
             "app-recipe-info": LocalJSX.AppRecipeInfo & JSXBase.HTMLAttributes<HTMLAppRecipeInfoElement>;
             "app-recipe-list": LocalJSX.AppRecipeList & JSXBase.HTMLAttributes<HTMLAppRecipeListElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "app-user-profile": LocalJSX.AppUserProfile & JSXBase.HTMLAttributes<HTMLAppUserProfileElement>;
             "category-chips": LocalJSX.CategoryChips & JSXBase.HTMLAttributes<HTMLCategoryChipsElement>;
+            "ingredients-inputs": LocalJSX.IngredientsInputs & JSXBase.HTMLAttributes<HTMLIngredientsInputsElement>;
+            "recipe-inputs": LocalJSX.RecipeInputs & JSXBase.HTMLAttributes<HTMLRecipeInputsElement>;
+            "recipe-item": LocalJSX.RecipeItem & JSXBase.HTMLAttributes<HTMLRecipeItemElement>;
+            "steps-inputs": LocalJSX.StepsInputs & JSXBase.HTMLAttributes<HTMLStepsInputsElement>;
+            "utensils-inputs": LocalJSX.UtensilsInputs & JSXBase.HTMLAttributes<HTMLUtensilsInputsElement>;
         }
     }
 }

@@ -128,7 +128,7 @@ export class AppRecipeList {
               autocomplete="on"
             />
             <ion-buttons slot="end">
-              <ion-button>Add</ion-button>
+              <ion-button href="/recipe/add">New</ion-button>
               <ion-button href="/user/profile">
                 <ion-icon
                   slot="icon-only"
@@ -149,7 +149,7 @@ export class AppRecipeList {
         >
           <ion-list lines="none">
             {this.recipes.map((recipe) => (
-              <app-recipe-daily
+              <recipe-item
                 name={recipe.name}
                 calories={recipe.calories}
                 image={recipe.image}
@@ -174,7 +174,7 @@ export class AppRecipeList {
                     name="information-outline"
                   ></ion-icon>
                 </ion-button>
-              </app-recipe-daily>
+              </recipe-item>
             ))}
           </ion-list>
         </ion-content>

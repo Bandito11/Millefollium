@@ -83,6 +83,15 @@ class Recipe implements IRecipe {
     public set name(v: string) {
         this._name = v;
     }
+    
+    private _utensils : string[];
+    public get utensils() : string[] {
+        return this._utensils;
+    }
+    public set utensils(v : string[]) {
+        this._utensils = v;
+    }
+    
 
 }
 

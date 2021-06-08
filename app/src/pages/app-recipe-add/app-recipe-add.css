@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+.toast-success {
+  --background: var(--ion-color-success, #2dd36f);
+  --color: #fff;
+}
+
+.toast-error {
+  --background: var(--ion-color-danger, #eb445a);
+  --color: #fff;
+}

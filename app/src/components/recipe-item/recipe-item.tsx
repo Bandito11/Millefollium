@@ -2,14 +2,13 @@ import { Component, Host, h, Prop } from '@stencil/core';
 import { capitalizeAllFirstLetters } from '../../helpers/utils';
 
 @Component({
-  tag: 'app-recipe-daily',
-  styleUrl: 'app-recipe-daily.css',
+  tag: 'recipe-item',
+  styleUrl: 'recipe-item.css'
 })
-export class AppRecipeDaily {
+export class RecipeItem {
   @Prop() name: string;
   @Prop() calories: number;
   @Prop() image: string;
-
   render() {
     return (
       <Host>
@@ -29,4 +28,5 @@ export class AppRecipeDaily {
       </Host>
     );
   }
+
 }

@@ -33,23 +33,6 @@ export function dateToString(date: Date) {
   return `${month}/${days}/${date.getFullYear()}`;
 }
 
-export enum mealCategories {
-  breakfast = 'breakfast',
-  snack = 'snack',
-  lunch = 'lunch',
-  dinner = 'dinner',
-  dessert = 'dessert'
-}
-
-export enum mealTypes {
-  breakfast = 'breakfast',
-  breakfastSnack = 'breakfastSnack',
-  lunch = 'lunch',
-  lunchSnack = 'lunchSnack',
-  dinner = 'dinner',
-  dinnerSnack = 'dinnerSnack'
-}
-
 export async function goToRecipeInfo(name: string) {
   const router = document.querySelector('ion-router');
   if (router) {

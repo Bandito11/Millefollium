@@ -11,4 +11,5 @@ export interface IRecipe {
     steps: string[];
     category: string;
     favorite: boolean;
+    utensils: string[];
 }

@@ -1,11 +1,11 @@
 import { newE2EPage } from '@stencil/core/testing';
 
-describe('app-recipe-daily', () => {
+describe('ingredients-inputs', () => {
   it('renders', async () => {
     const page = await newE2EPage();
-    await page.setContent('<app-recipe-daily></app-recipe-daily>');
+    await page.setContent('<ingredients-inputs></ingredients-inputs>');
 
-    const element = await page.find('app-recipe-daily');
+    const element = await page.find('ingredients-inputs');
     expect(element).toHaveClass('hydrated');
   });
 });

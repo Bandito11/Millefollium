@@ -103,7 +103,10 @@ export class AppEntryForm {
       this.stepsInput(index)
     ];
   }
-
+  removeFromStepsControl(): void {
+    this.stepsControl.pop();
+    this.stepsControl = [...this.stepsControl];
+  }
   getPicture(): void {
     let chosenPic: HTMLInputElement;
     if (this.header) {
@@ -121,10 +124,7 @@ export class AppEntryForm {
     };
   }
 
-  removeFromStepsControl(): void {
-    this.stepsControl.pop();
-    this.stepsControl = [...this.stepsControl];
-  }
+
 
   async handleSubmit(ev: Event) {
     if (ev) {

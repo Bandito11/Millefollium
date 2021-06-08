@@ -60,23 +60,18 @@ export async function get() {
 }
 
 export function getOneRecipe(name: string) {
-  recipesView.removeFilters();
-  const result = recipesView
-    .applySimpleSort('name')
-    .applyFind({ name: name })
-    .data({ removeMeta: true });
-  if (result.length !== 1) {
-    throw new Error(
-      `There are multiple with the same ${name}. Please verify naming.`
-    );
+  const result = recipesColl.findOne({ name: name });
+  if (result) {
+    return result;
+  } else {
+    throw new Error(`Couldn't find a recipe called ${name}`);
   }
-  return result[0];
 }
 
 export function getRecipesByName(name: string) {
   recipesView.removeFilters();
   const result = recipesView
-    .applyFind({ name: { '$contains': name } })
+    .applyFind({ name: { $contains: name } })
     .applySimpleSort('name')
     .data({ removeMeta: true });
   return result;
