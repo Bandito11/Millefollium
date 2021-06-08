@@ -1,7 +1,0 @@
-{
-  "appId": "food.tracker",
-  "appName": "Food Tracker",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "www"
-}

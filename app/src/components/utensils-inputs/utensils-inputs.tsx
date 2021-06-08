@@ -64,7 +64,9 @@ export class UtensilsInputs {
       <Host>
         <ion-list>
           <ion-list-header>
-            <ion-label>Utensils</ion-label>
+            <ion-label>
+              <h2>Utensils</h2>
+            </ion-label>
           </ion-list-header>
           {this.inputs.map((utensilControl) => utensilControl)}
           <div class="ion-padding">

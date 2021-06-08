@@ -25,7 +25,11 @@ export class IngredientsInputs {
       this.data = [
         {
           name: null,
-          amount: null,
+          fat: 0,
+          protein: 0,
+          carbs: 0,
+          calories: 0,
+          amount: 0,
         },
       ];
     } else {
@@ -72,11 +76,71 @@ export class IngredientsInputs {
             }
           />
         </ion-item>
+        <ion-item>
+          <ion-label position="fixed">Calories</ion-label>
+          <ion-input
+            id={index}
+            required={true}
+            value={ingredient?.calories}
+            onInput={(event) =>
+              this.handleInput({
+                index: index,
+                event: event,
+                control: 'calories',
+              })
+            }
+          />
+        </ion-item>
+        <ion-item>
+          <ion-label position="fixed">Carbs (g)</ion-label>
+          <ion-input
+            id={index}
+            required={true}
+            value={ingredient?.carbs}
+            onInput={(event) =>
+              this.handleInput({
+                index: index,
+                event: event,
+                control: 'carbs',
+              })
+            }
+          />
+        </ion-item>
+        <ion-item>
+          <ion-label position="fixed">Fat (g)</ion-label>
+          <ion-input
+            id={index}
+            required={true}
+            value={ingredient?.fat}
+            onInput={(event) =>
+              this.handleInput({
+                index: index,
+                event: event,
+                control: 'fat',
+              })
+            }
+          />
+        </ion-item>
+        <ion-item>
+          <ion-label position="fixed">Protein (g)</ion-label>
+          <ion-input
+            id={index}
+            required={true}
+            value={ingredient?.protein}
+            onInput={(event) =>
+              this.handleInput({
+                index: index,
+                event: event,
+                control: 'protein',
+              })
+            }
+          />
+        </ion-item>
       </div>
     );
   }
   handleInput(arg0: { index: any; event: Event; control: string }): void {
-    this.data[arg0.index][arg0.control] = arg0.event.target['value'];
+    this.data[arg0.index][arg0.control] = parseInt(arg0.event.target['value']);
     this.ingredientsInputData.emit(this.data);
   }
 
@@ -84,7 +148,11 @@ export class IngredientsInputs {
     this.inputs = [...this.inputs, this.addIngredientInput(index)];
     this.data.push({
       name: null,
-      amount: null,
+      fat: 0,
+      protein: 0,
+      carbs: 0,
+      calories: 0,
+      amount: 0,
     });
   }
 
@@ -98,10 +166,12 @@ export class IngredientsInputs {
       <Host>
         <ion-list>
           <ion-list-header>
-            <ion-label>Ingredients</ion-label>
+            <ion-label>
+              <h2>Ingredients</h2>
+            </ion-label>
           </ion-list-header>
           {this.inputs.map((ingredientControl) => ingredientControl)}
-          <ion-item lines="none">
+          <ion-item>
             <ion-button onClick={() => this.addNewInput(this.inputs.length)}>
               Add Ingredient
             </ion-button>

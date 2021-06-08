@@ -75,4 +75,3 @@ export function calculateMacros(meals: IRecipe[]) {
       fat: totalFat.toFixed(0)
     }
   }
-  

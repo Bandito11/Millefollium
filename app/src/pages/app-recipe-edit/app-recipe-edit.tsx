@@ -1,5 +1,5 @@
 import { toastController } from '@ionic/core';
-import { Component, Host, h, Listen } from '@stencil/core';
+import { Component, Host, h, Listen, State } from '@stencil/core';
 import { routes } from '../../helpers/routes';
 import { capitalizeAllFirstLetters } from '../../helpers/utils';
 import { IIngredient } from '../../interfaces/IIngredient';
@@ -12,44 +12,40 @@ import { getRecipe, removeRecipe, updateRecipe } from '../../services/recipe';
   styleUrl: 'app-recipe-edit.css',
 })
 export class AppRecipeEdit {
-  data: IRecipe;
-  recipe: IRecipe;
+  @State() recipe: IRecipe & LokiObj;
 
   componentWillLoad() {
     const urlValues = location.pathname.split('/');
     const name = urlValues.pop().replace(/%20/g, ' ').trim();
-    this.data = getRecipe(name);
-    this.recipe = {
-      ...this.data,
-    };
+    this.recipe = getRecipe(name);
   }
 
   @Listen('recipeInputData')
   getRecipeInputData(event: CustomEvent<IRecipeInputs>) {
-    this.data = {
-      ...this.data,
+    this.recipe = {
+      ...this.recipe,
       ...event.detail,
     };
   }
 
   @Listen('ingredientsInputData')
   getIngredientsInputData(event: CustomEvent<IIngredient[]>) {
-    this.data = {
-      ...this.data,
+    this.recipe = {
+      ...this.recipe,
       ingredients: event.detail,
     };
   }
   @Listen('stepsInputData')
   getStepsInputData(event: CustomEvent<string[]>) {
-    this.data = {
-      ...this.data,
+    this.recipe = {
+      ...this.recipe,
       steps: event.detail,
     };
   }
   @Listen('utensilInputData')
   getUtensilsInputData(event: CustomEvent<string[]>) {
-    this.data = {
-      ...this.data,
+    this.recipe = {
+      ...this.recipe,
       utensils: event.detail,
     };
   }
@@ -76,30 +72,44 @@ export class AppRecipeEdit {
   };
 
   handleSubmit = async (event: MouseEvent) => {
+    let totalCalories = 0;
+    let totalCarbs = 0;
+    let totalFat = 0;
+    let totalProtein = 0;
     event.preventDefault();
     try {
-      if (!this.data.category) {
+      if (!this.recipe.category) {
         throw new Error(`Category was not picked.`);
       }
-      if (isNaN(this.data.calories)) {
-        throw new Error(`Calories is not a number.`);
-      }
-      if (isNaN(this.data.carbs)) {
-        throw new Error(`Carbs is not a number.`);
-      }
-      if (isNaN(this.data.protein)) {
-        throw new Error(`Protein is not a number.`);
-      }
-      if (isNaN(this.data.fat)) {
-        throw new Error(`Fat is not a number.`);
-      }
-      if (this.data.ingredients.length <= 0) {
+      if (this.recipe.ingredients.length <= 0) {
         throw new Error(`Recipes have to have at least one ingredient.`);
       }
-      if (this.data.steps.length <= 0) {
+      if (this.recipe.steps.length <= 0) {
         throw new Error(`Recipes have to have at least one steps.`);
       }
-      const { name } = updateRecipe(this.data);
+      this.recipe.ingredients.map((ingredient, i) => {
+        if (isNaN(ingredient.calories)) {
+          throw new Error(`Ingredient ${i}: Calories is not a number.`);
+        }
+        if (isNaN(ingredient.carbs)) {
+          throw new Error(`Ingredient ${i}: Carbs is not a number.`);
+        }
+        if (isNaN(ingredient.fat)) {
+          throw new Error(`Ingredient ${i}: Fat is not a number.`);
+        }
+        if (isNaN(ingredient.protein)) {
+          throw new Error(`Ingredient ${i}: Protein is not a number.`);
+        }
+        totalCalories += ingredient.calories;
+        totalCarbs += ingredient.carbs;
+        totalFat += ingredient.fat;
+        totalProtein += ingredient.protein;
+      });
+      this.recipe.calories = totalCalories;
+      this.recipe.carbs = totalCarbs;
+      this.recipe.fat = totalFat;
+      this.recipe.protein = totalProtein;
+      const { name } = updateRecipe(this.recipe);
       const toast = await toastController.create({
         message: `${name} was edited successfully!`,
         duration: 1000,
@@ -139,16 +149,16 @@ export class AppRecipeEdit {
         <ion-content>
           <form onSubmit={this.handleSubmit}>
             <recipe-inputs
-              name={this.data.name}
+              name={this.recipe.name}
               // calories={this.data.calories}
               // fat={this.data.fat}
               // protein={this.data.protein}
               // carbs={this.data.carbs}
-              category={this.data.category}
+              category={this.recipe.category}
             />
-            <ingredients-inputs ingredients={this.data.ingredients} />
-            <utensils-inputs utensils={this.data.utensils} />
-            <steps-inputs steps={this.data.steps} />
+            <ingredients-inputs ingredients={this.recipe.ingredients} />
+            <utensils-inputs utensils={this.recipe.utensils} />
+            <steps-inputs steps={this.recipe.steps} />
             <ion-button expand="block" type="submit">
               Edit Recipe
             </ion-button>

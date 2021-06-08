@@ -64,7 +64,9 @@ export class StepsInputs {
       <Host>
         <ion-list>
           <ion-list-header>
-            <ion-label>Steps</ion-label>
+            <ion-label>
+              <h2>Steps</h2>
+            </ion-label>
           </ion-list-header>
           {this.inputs.map((stepsControl) => stepsControl)}
           <div class="ion-padding">

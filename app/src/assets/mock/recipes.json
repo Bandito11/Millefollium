@@ -6,22 +6,35 @@
         "fat": "10",
         "ingredients": [
             {
-                "amount": "1 breast (for about 200 calories WITHOUT the skin)",
-                "name": "chicken"
+                "amount": "1 breast",
+                "name": "chicken",
+                "calories": 300,
+                "carbs": 10,
+                "fat": 23,
+                "protein": 10
             },
             {
-                "amount": "1 cup (for about 100 calories)",
-                "name": "rice"
+                "amount": "1 cup",
+                "name": "rice",
+                "calories": 100,
+                "carbs": 22,
+                "fat": 10,
+                "protein": 34
             },
             {
-                "amount": "Eat the amount you want (1 cup is about 20 calories)",
-                "name": "spinach"
+                "amount": "1 cup",
+                "name": "spinach",
+                "calories": 40,
+                "carbs": 10,
+                "fat": 0,
+                "protein": 0.1
             }
         ],
         "name": "chicken with rice & spinach",
         "notes": "can eat it with some vegetables",
         "utensils": [
-            "pan"
+            "pan",
+            "stove"
         ],
         "protein": "30",
         "steps": [
@@ -39,16 +52,28 @@
         "fat": "12",
         "ingredients": [
             {
-                "amount": "50 calories",
-                "name": "White eggs"
+                "amount": "4",
+                "name": "White eggs",
+                "calories": 320,
+                "carbs": 22,
+                "fat": 42,
+                "protein": 12
             },
             {
-                "amount": "30 calories",
-                "name": "Cinnamon"
+                "amount": "1 tbsp",
+                "name": "Cinnamon",
+                "calories": 60,
+                "carbs": 10,
+                "fat": 1,
+                "protein": 1
             },
             {
-                "amount": "12 calories",
-                "name": "vanilla extract"
+                "amount": "1 tsp",
+                "name": "vanilla extract",
+                "calories": 21,
+                "carbs": 4,
+                "fat": 6,
+                "protein": 3
             }
         ],
         "name": "french toast",
@@ -77,24 +102,44 @@
         ],
         "ingredients": [
             {
-                "amount": "1 (aproximately 74 calories)",
-                "name": "white eggs"
+                "amount": "1 egg",
+                "name": "white eggs",
+                "calories": 74,
+                "carbs": 2,
+                "fat": 14,
+                "protein": 3
             },
             {
-                "amount": "160 calories",
-                "name": "2 slices of bread"
+                "amount": "2 slices",
+                "name": "white bread",
+                "calories": 180,
+                "carbs": 22,
+                "fat": 33,
+                "protein": 3
             },
             {
-                "amount": "30 calories per tablespoon",
-                "name": "light mayo"
+                "amount": " 1 tbsp",
+                "name": "light mayo",
+                "calories": 30,
+                "carbs": 47,
+                "fat": 69,
+                "protein": 11
             },
             {
-                "amount": "20 calories",
-                "name": "spinach"
+                "amount": "1 cup",
+                "name": "spinach",
+                "calories": 10,
+                "carbs": 22,
+                "fat": 0,
+                "protein": 0.1
             },
             {
                 "amount": "1 slice",
-                "name": "cheese"
+                "name": "cheese",
+                "calories": 40,
+                "carbs": 40,
+                "fat": 30,
+                "protein": 2
             }
         ],
         "notes": "",

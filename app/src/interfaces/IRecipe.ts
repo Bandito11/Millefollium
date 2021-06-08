@@ -1,15 +1,16 @@
-import { IIngredient } from "./IIngredient";
+import { IIngredient } from './IIngredient';
 
 export interface IRecipe {
-    name: string;
-    calories: number;
-    image: string;
-    ingredients: IIngredient[];
-    fat: number;
-    protein: number;
-    carbs: number;
-    steps: string[];
-    category: string;
-    favorite: boolean;
-    utensils: string[];
+  name: string;
+  image: string;
+  calories: number;
+  carbs: number;
+  protein: number;
+  fat: number;
+  ingredients: IIngredient[];
+  steps: string[];
+  category: string;
+  favorite: boolean;
+  utensils: string[];
+  notes: string;
 }

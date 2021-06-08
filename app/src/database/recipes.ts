@@ -13,8 +13,8 @@ export function insert(recipe: IRecipe) {
   }
 }
 
-export function update(recipe: IRecipe) {
-  const result = recipesColl.findOne({ name: recipe.name });
+export function update(recipe: IRecipe & LokiObj) {
+  const result = recipesColl.get(recipe.$loki);
   if (result) {
     const doc: IRecipe = {
       ...result,
@@ -28,8 +28,8 @@ export function update(recipe: IRecipe) {
   );
 }
 
-export function remove(recipe: IRecipe) {
-  const found = recipesColl.findOne({ name: recipe.name });
+export function remove(recipe: IRecipe & LokiObj) {
+  const found = recipesColl.get(recipe.$loki);
   if (found) {
     const result = recipesColl.remove(found);
     return result;

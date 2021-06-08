@@ -92,6 +92,14 @@ class Recipe implements IRecipe {
         this._utensils = v;
     }
     
+    private _notes : string;
+    public get notes() : string {
+        return this._notes;
+    }
+    public set notes(v : string) {
+        this._notes = v;
+    }
+    
 
 }
 

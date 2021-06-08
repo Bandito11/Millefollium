@@ -24,8 +24,22 @@ export namespace Components {
     }
     interface CategoryChips {
     }
+    interface IngredientDetails {
+        "amount": any;
+        "calories": any;
+        "carbs": any;
+        "color": any;
+        "fat": any;
+        "name": any;
+        "protein": any;
+    }
     interface IngredientsInputs {
         "ingredients": IIngredient[];
+    }
+    interface MacroDetails {
+        "carbs": any;
+        "fat": any;
+        "protein": any;
     }
     interface RecipeInputs {
         "category": string;
@@ -36,8 +50,16 @@ export namespace Components {
         "image": string;
         "name": string;
     }
+    interface StepDetails {
+        "color": string;
+        "step": string;
+    }
     interface StepsInputs {
         "steps": string[];
+    }
+    interface UtensilDetails {
+        "color": any;
+        "utensil": any;
     }
     interface UtensilsInputs {
         "utensils": string[];
@@ -92,11 +114,23 @@ declare global {
         prototype: HTMLCategoryChipsElement;
         new (): HTMLCategoryChipsElement;
     };
+    interface HTMLIngredientDetailsElement extends Components.IngredientDetails, HTMLStencilElement {
+    }
+    var HTMLIngredientDetailsElement: {
+        prototype: HTMLIngredientDetailsElement;
+        new (): HTMLIngredientDetailsElement;
+    };
     interface HTMLIngredientsInputsElement extends Components.IngredientsInputs, HTMLStencilElement {
     }
     var HTMLIngredientsInputsElement: {
         prototype: HTMLIngredientsInputsElement;
         new (): HTMLIngredientsInputsElement;
+    };
+    interface HTMLMacroDetailsElement extends Components.MacroDetails, HTMLStencilElement {
+    }
+    var HTMLMacroDetailsElement: {
+        prototype: HTMLMacroDetailsElement;
+        new (): HTMLMacroDetailsElement;
     };
     interface HTMLRecipeInputsElement extends Components.RecipeInputs, HTMLStencilElement {
     }
@@ -110,11 +144,23 @@ declare global {
         prototype: HTMLRecipeItemElement;
         new (): HTMLRecipeItemElement;
     };
+    interface HTMLStepDetailsElement extends Components.StepDetails, HTMLStencilElement {
+    }
+    var HTMLStepDetailsElement: {
+        prototype: HTMLStepDetailsElement;
+        new (): HTMLStepDetailsElement;
+    };
     interface HTMLStepsInputsElement extends Components.StepsInputs, HTMLStencilElement {
     }
     var HTMLStepsInputsElement: {
         prototype: HTMLStepsInputsElement;
         new (): HTMLStepsInputsElement;
+    };
+    interface HTMLUtensilDetailsElement extends Components.UtensilDetails, HTMLStencilElement {
+    }
+    var HTMLUtensilDetailsElement: {
+        prototype: HTMLUtensilDetailsElement;
+        new (): HTMLUtensilDetailsElement;
     };
     interface HTMLUtensilsInputsElement extends Components.UtensilsInputs, HTMLStencilElement {
     }
@@ -131,10 +177,14 @@ declare global {
         "app-root": HTMLAppRootElement;
         "app-user-profile": HTMLAppUserProfileElement;
         "category-chips": HTMLCategoryChipsElement;
+        "ingredient-details": HTMLIngredientDetailsElement;
         "ingredients-inputs": HTMLIngredientsInputsElement;
+        "macro-details": HTMLMacroDetailsElement;
         "recipe-inputs": HTMLRecipeInputsElement;
         "recipe-item": HTMLRecipeItemElement;
+        "step-details": HTMLStepDetailsElement;
         "steps-inputs": HTMLStepsInputsElement;
+        "utensil-details": HTMLUtensilDetailsElement;
         "utensils-inputs": HTMLUtensilsInputsElement;
     }
 }
@@ -156,9 +206,23 @@ declare namespace LocalJSX {
     interface CategoryChips {
         "onCategoryCompleted"?: (event: CustomEvent<string>) => void;
     }
+    interface IngredientDetails {
+        "amount"?: any;
+        "calories"?: any;
+        "carbs"?: any;
+        "color"?: any;
+        "fat"?: any;
+        "name"?: any;
+        "protein"?: any;
+    }
     interface IngredientsInputs {
         "ingredients"?: IIngredient[];
         "onIngredientsInputData"?: (event: CustomEvent<IIngredient[]>) => void;
+    }
+    interface MacroDetails {
+        "carbs"?: any;
+        "fat"?: any;
+        "protein"?: any;
     }
     interface RecipeInputs {
         "category"?: string;
@@ -170,9 +234,17 @@ declare namespace LocalJSX {
         "image"?: string;
         "name"?: string;
     }
+    interface StepDetails {
+        "color"?: string;
+        "step"?: string;
+    }
     interface StepsInputs {
         "onStepsInputData"?: (event: CustomEvent<string[]>) => void;
         "steps"?: string[];
+    }
+    interface UtensilDetails {
+        "color"?: any;
+        "utensil"?: any;
     }
     interface UtensilsInputs {
         "onUtensilInputData"?: (event: CustomEvent<string[]>) => void;
@@ -187,10 +259,14 @@ declare namespace LocalJSX {
         "app-root": AppRoot;
         "app-user-profile": AppUserProfile;
         "category-chips": CategoryChips;
+        "ingredient-details": IngredientDetails;
         "ingredients-inputs": IngredientsInputs;
+        "macro-details": MacroDetails;
         "recipe-inputs": RecipeInputs;
         "recipe-item": RecipeItem;
+        "step-details": StepDetails;
         "steps-inputs": StepsInputs;
+        "utensil-details": UtensilDetails;
         "utensils-inputs": UtensilsInputs;
     }
 }
@@ -206,10 +282,14 @@ declare module "@stencil/core" {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "app-user-profile": LocalJSX.AppUserProfile & JSXBase.HTMLAttributes<HTMLAppUserProfileElement>;
             "category-chips": LocalJSX.CategoryChips & JSXBase.HTMLAttributes<HTMLCategoryChipsElement>;
+            "ingredient-details": LocalJSX.IngredientDetails & JSXBase.HTMLAttributes<HTMLIngredientDetailsElement>;
             "ingredients-inputs": LocalJSX.IngredientsInputs & JSXBase.HTMLAttributes<HTMLIngredientsInputsElement>;
+            "macro-details": LocalJSX.MacroDetails & JSXBase.HTMLAttributes<HTMLMacroDetailsElement>;
             "recipe-inputs": LocalJSX.RecipeInputs & JSXBase.HTMLAttributes<HTMLRecipeInputsElement>;
             "recipe-item": LocalJSX.RecipeItem & JSXBase.HTMLAttributes<HTMLRecipeItemElement>;
+            "step-details": LocalJSX.StepDetails & JSXBase.HTMLAttributes<HTMLStepDetailsElement>;
             "steps-inputs": LocalJSX.StepsInputs & JSXBase.HTMLAttributes<HTMLStepsInputsElement>;
+            "utensil-details": LocalJSX.UtensilDetails & JSXBase.HTMLAttributes<HTMLUtensilDetailsElement>;
             "utensils-inputs": LocalJSX.UtensilsInputs & JSXBase.HTMLAttributes<HTMLUtensilsInputsElement>;
         }
     }

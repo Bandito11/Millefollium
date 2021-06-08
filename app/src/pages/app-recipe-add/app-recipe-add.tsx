@@ -25,6 +25,7 @@ export class AppRecipeAdd {
       category: 'todo',
       favorite: false,
       utensils: [],
+      notes: '',
     };
   }
 
@@ -58,23 +59,17 @@ export class AppRecipeAdd {
     };
   }
 
+  handleInput = (event: Event) => (this.recipe.notes = event.target['value']);
+
   handleSubmit = async (event: MouseEvent) => {
+    let totalCalories = 0;
+    let totalCarbs = 0;
+    let totalFat = 0;
+    let totalProtein = 0;
     event.preventDefault();
     try {
       if (!this.recipe.category) {
         throw new Error(`Category was not picked.`);
-      }
-      if (isNaN(this.recipe.calories)) {
-        throw new Error(`Calories is not a number.`);
-      }
-      if (isNaN(this.recipe.carbs)) {
-        throw new Error(`Carbs is not a number.`);
-      }
-      if (isNaN(this.recipe.protein)) {
-        throw new Error(`Protein is not a number.`);
-      }
-      if (isNaN(this.recipe.fat)) {
-        throw new Error(`Fat is not a number.`);
       }
       if (this.recipe.ingredients.length <= 0) {
         throw new Error(`Recipes have to have at least one ingredient.`);
@@ -82,6 +77,28 @@ export class AppRecipeAdd {
       if (this.recipe.steps.length <= 0) {
         throw new Error(`Recipes have to have at least one steps.`);
       }
+      this.recipe.ingredients.map((ingredient, i) => {
+        if (isNaN(ingredient.calories)) {
+          throw new Error(`Ingredient ${i}: Calories is not a number.`);
+        }
+        if (isNaN(ingredient.carbs)) {
+          throw new Error(`Ingredient ${i}: Carbs is not a number.`);
+        }
+        if (isNaN(ingredient.fat)) {
+          throw new Error(`Ingredient ${i}: Fat is not a number.`);
+        }
+        if (isNaN(ingredient.protein)) {
+          throw new Error(`Ingredient ${i}: Protein is not a number.`);
+        }
+        totalCalories += ingredient.calories;
+        totalCarbs += ingredient.carbs;
+        totalFat += ingredient.fat;
+        totalProtein += ingredient.protein;
+      });
+      this.recipe.calories = totalCalories;
+      this.recipe.carbs = totalCarbs;
+      this.recipe.fat = totalFat;
+      this.recipe.protein = totalProtein;
       const { name } = addRecipe(this.recipe);
       const toast = await toastController.create({
         message: `${name} was added!`,
@@ -114,10 +131,14 @@ export class AppRecipeAdd {
         </ion-header>
         <ion-content>
           <form onSubmit={this.handleSubmit}>
-            <recipe-inputs />
-            <ingredients-inputs />
-            <utensils-inputs />
-            <steps-inputs />
+            <ion-list lines="none">
+              <recipe-inputs />
+              <ingredients-inputs />
+              <utensils-inputs />
+              <steps-inputs />
+            </ion-list>
+            <h5>Notes</h5>
+            <ion-textarea onInput={this.handleInput}></ion-textarea>
             <ion-button expand="block" type="submit">
               Add New Recipe
             </ion-button>

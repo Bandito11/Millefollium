@@ -16,15 +16,22 @@
   },
   "dependencies": {
     "@capacitor/filesystem": "^1.0.0",
+    "@capacitor/ios": "^3.0.0",
     "@ionic/storage": "^3.0.4",
     "firebase": "^8.6.5",
     "lokijs": "1.5.11",
     "rollup-plugin-node-polyfills": "^0.2.1"
   },
   "devDependencies": {
-    "@ionic/core": "^5.4.1",
-    "@stencil/core": "^2.2.0",
-    "@types/lokijs": "1.5.3"
+    "@capacitor/cli": "^3.0.0",
+    "@capacitor/core": "^3.0.0",
+    "@ionic/core": "^5.6.9",
+    "@stencil/core": "^2.6.0",
+    "@types/jest": "^26.0.23",
+    "@types/lokijs": "1.5.3",
+    "@types/puppeteer": "^5.4.3",
+    "jest": "^27.0.4",
+    "puppeteer": "^10.0.0"
   },
   "repository": {
     "type": "git",

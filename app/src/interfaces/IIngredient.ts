@@ -1,8 +1,8 @@
 export interface IIngredient {
   name: string;
-  //   amount: number;
+  amount: number;
+  calories: number;
+  carbs: number;
   fat: number;
   protein: number;
-  carbs: number;
-  calories: number;
 }

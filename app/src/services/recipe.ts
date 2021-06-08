@@ -28,11 +28,11 @@ export function addRecipe(recipe: IRecipe) {
   return insert(recipe);
 }
 
-export function updateRecipe(recipe: IRecipe) {
+export function updateRecipe(recipe: IRecipe & LokiObj) {
   return update(recipe);
 }
 
-export function removeRecipe(meal: IRecipe) {
+export function removeRecipe(meal: IRecipe & LokiObj) {
   return remove(meal);
 }
 

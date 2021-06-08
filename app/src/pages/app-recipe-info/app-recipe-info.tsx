@@ -2,14 +2,13 @@ import { toastController } from '@ionic/core';
 import { Component, Host, h, State } from '@stencil/core';
 import { IRecipe } from '../../interfaces/IRecipe';
 import { getRecipe, updateRecipe } from '../../services/recipe';
-import { capitalizeFirstLetter } from '../../helpers/utils';
 import { routes } from '../../helpers/routes';
 @Component({
   tag: 'app-recipe-info',
   styleUrl: 'app-recipe-info.css',
 })
 export class AppRecipeInfo {
-  @State() recipe: IRecipe;
+  @State() recipe: IRecipe & LokiObj;
 
   componentWillLoad() {
     const urlValues = location.pathname.split('/');
@@ -89,83 +88,72 @@ export class AppRecipeInfo {
               )}
             </ion-button>
           </ion-item>
-          <h3>Macronutrients</h3>
+          <h4>Macronutrients</h4>
           <ion-list lines="none">
-            <ion-item>
-              <ion-label>{this.recipe.protein}g Protein</ion-label>
-            </ion-item>
-            <ion-item>
-              <ion-label>{this.recipe.carbs}g Carbs</ion-label>
-            </ion-item>
-            <ion-item>
-              <ion-label>{this.recipe.fat}g Fat</ion-label>
-            </ion-item>
+            <macro-details
+              carbs={this.recipe.carbs}
+              fat={this.recipe.fat}
+              protein={this.recipe.protein}
+            />
           </ion-list>
-          <p class="ion-text-capitalize">Category: {this.recipe.category}</p>
-          <h3>Ingredients</h3>
+          <h4 class="ion-text-capitalize">Category: {this.recipe.category}</h4>
+          <h5>Ingredients</h5>
           <ion-list lines="none">
             {this.recipe.ingredients.map((ingredient, i) =>
               i % 2 ? (
-                <ion-item color="light">
-                  <ion-label class="ion-text-capitalize">
-                    {ingredient.name}
-                  </ion-label>
-                  <ion-label class="ion-text-wrap">
-                    {ingredient.amount}
-                  </ion-label>
-                </ion-item>
+                <ingredient-details
+                  color="light"
+                  name={ingredient.name}
+                  calories={ingredient.calories}
+                  carbs={ingredient.carbs}
+                  fat={ingredient.fat}
+                  protein={ingredient.protein}
+                  amount={ingredient.amount}
+                />
               ) : (
-                <ion-item>
-                  <ion-label class="ion-text-capitalize">
-                    {ingredient.name}
-                  </ion-label>
-                  <ion-label class="ion-text-wrap">
-                    {ingredient.amount}
-                  </ion-label>
-                </ion-item>
+                <ingredient-details
+                  name={ingredient.name}
+                  calories={ingredient.calories}
+                  carbs={ingredient.carbs}
+                  fat={ingredient.fat}
+                  protein={ingredient.protein}
+                  amount={ingredient.amount}
+                />
               )
             )}
           </ion-list>
           {this.recipe.utensils.length > 0 ? (
             <div>
-              <h3>Cooking Utensils</h3>
+              <h5>Cooking Utensils</h5>
               <ion-list lines="none">
                 {this.recipe.utensils.map((utensil, i) =>
                   i % 2 ? (
-                    <ion-item color="light">
-                      <ion-label class="ion-text-capitalize">
-                        {utensil}
-                      </ion-label>
-                    </ion-item>
+                    <utensil-details color="light" utensil={utensil} />
                   ) : (
-                    <ion-item>
-                      <ion-label class="ion-text-capitalize">
-                        {utensil}
-                      </ion-label>
-                    </ion-item>
+                    <utensil-details utensil={utensil} />
                   )
                 )}
               </ion-list>
             </div>
           ) : null}
-          <h3>How to prepare</h3>
+          <h5>How to prepare</h5>
           <ion-list lines="none">
             {this.recipe.steps.map((step, i) =>
               i % 2 ? (
-                <ion-item color="light">
-                  <ion-label id="steps" class="ion-text-wrap">
-                    {capitalizeFirstLetter(step)}
-                  </ion-label>
-                </ion-item>
+                <step-details color="light" step={step} />
               ) : (
-                <ion-item>
-                  <ion-label id="steps" class="ion-text-wrap">
-                    {capitalizeFirstLetter(step)}
-                  </ion-label>
-                </ion-item>
+                <step-details step={step} />
               )
             )}
           </ion-list>
+          {this.recipe.notes ? (
+            <div>
+              <h5>Notes</h5>
+              <ion-label>
+                <p>{this.recipe.notes}</p>
+              </ion-label>
+            </div>
+          ) : null}
         </ion-content>
       </Host>
     );
