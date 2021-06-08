@@ -1,9 +1,9 @@
 import { toastController } from '@ionic/core';
 import { Component, Host, h, State } from '@stencil/core';
-import Recipe from '../../models/recipe';
 import { IRecipe } from '../../interfaces/IRecipe';
 import { getRecipe, updateRecipe } from '../../services/recipe';
 import { capitalizeFirstLetter } from '../../helpers/utils';
+import { routes } from '../../helpers/routes';
 @Component({
   tag: 'app-recipe-info',
   styleUrl: 'app-recipe-info.css',
@@ -12,24 +12,9 @@ export class AppRecipeInfo {
   @State() recipe: IRecipe;
 
   componentWillLoad() {
-    this.recipe = Recipe;
-    this.getRecipeInfo();
-  }
-
-  getRecipeInfo() {
     const urlValues = location.pathname.split('/');
-    const name = urlValues.pop().replace(/%20/g, ' ').trim(); //used to query results
-    try {
-      const data = getRecipe(name);
-      if (data) {
-        this.recipe = {
-          ...data,
-          category: data.category,
-        };
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    const name = urlValues.pop().replace(/%20/g, ' ').trim();
+    this.recipe = getRecipe(name);
   }
 
   async setFavorite() {
@@ -82,7 +67,12 @@ export class AppRecipeInfo {
               {this.recipe.name}
             </ion-title>
             <ion-buttons slot="start">
-              <ion-back-button defaultHref="/"></ion-back-button>
+              <ion-back-button defaultHref={routes.baseUrl}></ion-back-button>
+            </ion-buttons>
+            <ion-buttons slot="end">
+              <ion-button href={routes.recipe.edit(this.recipe.name)}>
+                Edit
+              </ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>

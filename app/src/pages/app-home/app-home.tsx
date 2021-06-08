@@ -22,7 +22,7 @@ export class AppHome {
   pastDate: number;
   dates: number[];
   scrollTopMax: number;
-  interval: NodeJS.Timeout;
+  interval: number;
   @State() weighLoss: number;
   @State() recommendedCalories: number;
 

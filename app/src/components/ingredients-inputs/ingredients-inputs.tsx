@@ -14,18 +14,29 @@ import { IIngredient } from '../../interfaces/IIngredient';
   styleUrl: 'ingredients-inputs.css',
 })
 export class IngredientsInputs {
-  @State() ingredientsInputs: HTMLElement[];
+  @State() inputs: HTMLElement[];
   @Prop() ingredients: IIngredient[];
+  data: IIngredient[];
 
   componentWillLoad() {
-    this.ingredientsInputs = [this.addIngredientInput(0)];
+    this.inputs = [];
     if (!this.ingredients) {
-      this.ingredients = [
+      this.inputs = [...this.inputs, this.addIngredientInput(0)];
+      this.data = [
         {
           name: null,
           amount: null,
         },
       ];
+    } else {
+      this.data = [...this.ingredients];
+      this.data.map(
+        (ingredient, i) =>
+          (this.inputs = [
+            ...this.inputs,
+            this.addIngredientInput(i, ingredient),
+          ])
+      );
     }
   }
 
@@ -47,7 +58,7 @@ export class IngredientsInputs {
           />
         </ion-item>
         <ion-item>
-          <ion-label position="fixed">Amount (g)</ion-label>
+          <ion-label position="fixed">Amount</ion-label>
           <ion-input
             id={index}
             required={true}
@@ -65,25 +76,22 @@ export class IngredientsInputs {
     );
   }
   handleInput(arg0: { index: any; event: Event; control: string }): void {
-    this.ingredients[arg0.index][arg0.control] = arg0.event.target['value'];
-    this.ingredientsInputData.emit(this.ingredients);
+    this.data[arg0.index][arg0.control] = arg0.event.target['value'];
+    this.ingredientsInputData.emit(this.data);
   }
 
-  addToIngredientInputs(index) {
-    this.ingredientsInputs = [
-      ...this.ingredientsInputs,
-      this.addIngredientInput(index),
-    ];
-    this.ingredients.push({
+  addNewInput(index) {
+    this.inputs = [...this.inputs, this.addIngredientInput(index)];
+    this.data.push({
       name: null,
       amount: null,
     });
   }
 
   removeFromIngredientInputs(): void {
-    this.ingredientsInputs.pop();
-    this.ingredientsInputs = [...this.ingredientsInputs];
-    this.ingredients.pop();
+    this.inputs.pop();
+    this.inputs = [...this.inputs];
+    this.data.pop();
   }
   render() {
     return (
@@ -92,13 +100,9 @@ export class IngredientsInputs {
           <ion-list-header>
             <ion-label>Ingredients</ion-label>
           </ion-list-header>
-          {this.ingredientsInputs.map((ingredientControl) => ingredientControl)}
-          <ion-item>
-            <ion-button
-              onClick={() =>
-                this.addToIngredientInputs(this.ingredientsInputs.length)
-              }
-            >
+          {this.inputs.map((ingredientControl) => ingredientControl)}
+          <ion-item lines="none">
+            <ion-button onClick={() => this.addNewInput(this.inputs.length)}>
               Add Ingredient
             </ion-button>
             <ion-button

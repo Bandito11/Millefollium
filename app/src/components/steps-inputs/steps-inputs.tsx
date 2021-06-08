@@ -13,13 +13,21 @@ import {
   styleUrl: 'steps-inputs.css',
 })
 export class StepsInputs {
-  @State() stepsInputs: HTMLElement[];
+  @State() inputs: HTMLElement[];
   @Prop() steps: string[];
+  data: string[];
 
   componentWillLoad() {
-    this.stepsInputs = [this.addStepInput(0)];
+    this.inputs = [];
     if (!this.steps) {
-      this.steps = [null];
+      this.inputs = [...this.inputs, this.addStepInput(0)];
+      this.data = [null];
+    } else {
+      this.data = [...this.steps];
+      this.data.map(
+        (step, i) =>
+          (this.inputs = [...this.inputs, this.addStepInput(i, step)])
+      );
     }
   }
 
@@ -39,17 +47,17 @@ export class StepsInputs {
     );
   }
   handleInput(arg0: { index: any; event: Event }): void {
-    this.steps[arg0.index] = arg0.event.target['value'];
-    this.stepsInputData.emit(this.steps);
+    this.data[arg0.index] = arg0.event.target['value'];
+    this.stepsInputData.emit(this.data);
   }
-  addToStepsInputs(index) {
-    this.stepsInputs = [...this.stepsInputs, this.addStepInput(index)];
-    this.steps.push(null);
+  addNewInput(index) {
+    this.inputs = [...this.inputs, this.addStepInput(index)];
+    this.data.push(null);
   }
-  removeFromStepsInputs(): void {
-    this.stepsInputs.pop();
-    this.stepsInputs = [...this.stepsInputs];
-    this.steps.pop();
+  popInput(): void {
+    this.inputs.pop();
+    this.inputs = [...this.inputs];
+    this.data.pop();
   }
   render() {
     return (
@@ -58,18 +66,18 @@ export class StepsInputs {
           <ion-list-header>
             <ion-label>Steps</ion-label>
           </ion-list-header>
-          {this.stepsInputs.map(stepsControl => stepsControl)}
+          {this.inputs.map((stepsControl) => stepsControl)}
           <div class="ion-padding">
             <ion-button
               size="small"
-              onClick={() => this.addToStepsInputs(this.stepsInputs.length)}
+              onClick={() => this.addNewInput(this.inputs.length)}
             >
               Add step
             </ion-button>
             <ion-button
               size="small"
               color="secondary"
-              onClick={() => this.removeFromStepsInputs()}
+              onClick={() => this.popInput()}
             >
               Remove step
             </ion-button>

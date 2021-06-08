@@ -10,10 +10,10 @@ import { addRecipe } from '../../services/recipe';
   styleUrl: 'app-recipe-add.css',
 })
 export class AppRecipeAdd {
-  data: IRecipe;
+  recipe: IRecipe;
 
   componentWillLoad() {
-    this.data = {
+    this.recipe = {
       name: 'todo',
       calories: 0,
       image: 'todo',
@@ -30,30 +30,30 @@ export class AppRecipeAdd {
 
   @Listen('recipeInputData')
   getRecipeInputData(event: CustomEvent<IRecipeInputs>) {
-    this.data = {
-      ...this.data,
+    this.recipe = {
+      ...this.recipe,
       ...event.detail,
     };
   }
 
   @Listen('ingredientsInputData')
   getIngredientsInputData(event: CustomEvent<IIngredient[]>) {
-    this.data = {
-      ...this.data,
+    this.recipe = {
+      ...this.recipe,
       ingredients: event.detail,
     };
   }
   @Listen('stepsInputData')
   getStepsInputData(event: CustomEvent<string[]>) {
-    this.data = {
-      ...this.data,
+    this.recipe = {
+      ...this.recipe,
       steps: event.detail,
     };
   }
   @Listen('utensilInputData')
   getUtensilsInputData(event: CustomEvent<string[]>) {
-    this.data = {
-      ...this.data,
+    this.recipe = {
+      ...this.recipe,
       utensils: event.detail,
     };
   }
@@ -61,40 +61,35 @@ export class AppRecipeAdd {
   handleSubmit = async (event: MouseEvent) => {
     event.preventDefault();
     try {
-      if (!this.data.category) {
+      if (!this.recipe.category) {
         throw new Error(`Category was not picked.`);
       }
-      if (isNaN(this.data.calories)) {
+      if (isNaN(this.recipe.calories)) {
         throw new Error(`Calories is not a number.`);
       }
-      if (isNaN(this.data.carbs)) {
+      if (isNaN(this.recipe.carbs)) {
         throw new Error(`Carbs is not a number.`);
       }
-      if (isNaN(this.data.protein)) {
+      if (isNaN(this.recipe.protein)) {
         throw new Error(`Protein is not a number.`);
       }
-      if (isNaN(this.data.fat)) {
+      if (isNaN(this.recipe.fat)) {
         throw new Error(`Fat is not a number.`);
       }
-      if (this.data.ingredients.length <= 0) {
+      if (this.recipe.ingredients.length <= 0) {
         throw new Error(`Recipes have to have at least one ingredient.`);
       }
-      if (this.data.steps.length <= 0) {
+      if (this.recipe.steps.length <= 0) {
         throw new Error(`Recipes have to have at least one steps.`);
       }
-      this.data.ingredients.forEach((ingredient) => {
-        if (isNaN(ingredient.amount)) {
-          throw new Error(`Ingredient amount is not a number.`);
-        }
-      });
-      const { name } = addRecipe(this.data);
+      const { name } = addRecipe(this.recipe);
       const toast = await toastController.create({
         message: `${name} was added!`,
         duration: 1500,
         cssClass: 'toast-success',
       });
       toast.present();
-      setTimeout(() => history.back(), 1500);
+      setTimeout(() => (location.href = '/'), 1500);
     } catch (error) {
       const toast = await toastController.create({
         message: error,
@@ -122,7 +117,9 @@ export class AppRecipeAdd {
             <ingredients-inputs />
             <utensils-inputs />
             <steps-inputs />
-            <ion-button type="submit">Add New Recipe</ion-button>
+            <ion-button expand="block" type="submit">
+              Add New Recipe
+            </ion-button>
           </form>
         </ion-content>
       </Host>

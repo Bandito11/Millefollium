@@ -13,43 +13,51 @@ import {
   styleUrl: 'utensils-inputs.css',
 })
 export class UtensilsInputs {
-  @State() utensilInputs: HTMLElement[];
+  @State() inputs: HTMLElement[];
   @Prop() utensils: string[];
+  data: string[];
 
   componentWillLoad() {
-    this.utensilInputs = [this.addUtensilInput(0)];
+    this.inputs = [];
     if (!this.utensils) {
-      this.utensils = [null];
+      this.inputs = [...this.inputs, this.addUtensilInput(0)];
+      this.data = [null];
+    } else {
+      this.data = [...this.utensils];
+      this.data.map(
+        (utensil, i) =>
+          (this.inputs = [...this.inputs, this.addUtensilInput(i, utensil)])
+      );
     }
   }
 
   @Event() utensilInputData: EventEmitter<string[]>;
 
-  addUtensilInput(index, step?: string) {
+  addUtensilInput(index, utensil?: string) {
     return (
       <ion-item>
         <ion-label position="stacked">{index + 1}</ion-label>
         <ion-input
           id={index}
           required={true}
-          value={step}
+          value={utensil}
           onInput={(event) => this.handleInput({ index: index, event: event })}
         />
       </ion-item>
     );
   }
   handleInput(arg0: { index: any; event: Event }): void {
-    this.utensils[arg0.index] = arg0.event.target['value'];
-    this.utensilInputData.emit(this.utensils);
+    this.data[arg0.index] = arg0.event.target['value'];
+    this.utensilInputData.emit(this.data);
   }
   addToUtensilInputs(index) {
-    this.utensilInputs = [...this.utensilInputs, this.addUtensilInput(index)];
-    this.utensils.push(null);
+    this.inputs = [...this.inputs, this.addUtensilInput(index)];
+    this.data.push(null);
   }
   removeFromUtensilInputs(): void {
-    this.utensilInputs.pop();
-    this.utensilInputs = [...this.utensilInputs];
-    this.utensils.pop();
+    this.inputs.pop();
+    this.inputs = [...this.inputs];
+    this.data.pop();
   }
   render() {
     return (
@@ -58,11 +66,11 @@ export class UtensilsInputs {
           <ion-list-header>
             <ion-label>Utensils</ion-label>
           </ion-list-header>
-          {this.utensilInputs.map((utensilControl) => utensilControl)}
+          {this.inputs.map((utensilControl) => utensilControl)}
           <div class="ion-padding">
             <ion-button
               size="small"
-              onClick={() => this.addToUtensilInputs(this.utensilInputs.length)}
+              onClick={() => this.addToUtensilInputs(this.inputs.length)}
             >
               Add utensil
             </ion-button>
