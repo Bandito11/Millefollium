@@ -1,6 +1,5 @@
-import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 
-const { Filesystem } = Plugins;
 
 getImageDirectory();
 
@@ -9,13 +8,13 @@ async function getImageDirectory() {
     try {
         ret = await Filesystem.readdir({
             path: 'images',
-            directory: FilesystemDirectory.Documents
+            directory: Directory.Documents
         });
     } catch (error) {
         try {
             ret = await Filesystem.mkdir({
                 path: 'images',
-                directory: FilesystemDirectory.Documents,
+                directory: Directory.Documents,
                 recursive: false // like mkdir -p
             });
         } catch (error) {
@@ -30,8 +29,8 @@ export async function writeImageFile(opts: { data: string, name: string }) {
         await Filesystem.writeFile({
             path: `images/${opts.name}.png`,
             data: opts.data,
-            directory: FilesystemDirectory.Documents,
-            encoding: FilesystemEncoding.UTF8
+            directory: Directory.Documents,
+            encoding: Encoding.UTF8
         });
     } catch (e) {
         console.error('Unable to write file', e);
@@ -41,8 +40,8 @@ export async function writeImageFile(opts: { data: string, name: string }) {
 export async function readImageFile(name) {
     let contents = await Filesystem.readFile({
         path: `images/${name}.png`,
-        directory: FilesystemDirectory.Documents,
-        encoding: FilesystemEncoding.UTF8
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8
     });
     return contents;
 }

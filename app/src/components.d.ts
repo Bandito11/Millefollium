@@ -28,12 +28,8 @@ export namespace Components {
         "ingredients": IIngredient[];
     }
     interface RecipeInputs {
-        "calories": number;
-        "carbs": number;
         "category": string;
-        "fat": number;
         "name": string;
-        "protein": number;
     }
     interface RecipeItem {
         "calories": number;
@@ -165,13 +161,9 @@ declare namespace LocalJSX {
         "onIngredientsInputData"?: (event: CustomEvent<IIngredient[]>) => void;
     }
     interface RecipeInputs {
-        "calories"?: number;
-        "carbs"?: number;
         "category"?: string;
-        "fat"?: number;
         "name"?: string;
         "onRecipeInputData"?: (event: CustomEvent<IRecipeInputs>) => void;
-        "protein"?: number;
     }
     interface RecipeItem {
         "calories"?: number;

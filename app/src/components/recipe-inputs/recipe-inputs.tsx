@@ -10,24 +10,35 @@ import { IRecipeInputs } from '../../interfaces/IRecipeInputs';
 })
 export class RecipeInputs implements IRecipeInputs {
   @Prop() name: string;
-  @Prop() calories: number;
-  @Prop() carbs: number;
-  @Prop() protein: number;
-  @Prop() fat: number;
+  // @Prop() calories: number;
+  // @Prop() carbs: number;
+  // @Prop() protein: number;
+  // @Prop() fat: number;
   @Prop() category: string;
   recipeInput: IRecipeInputs;
 
   @Event() recipeInputData: EventEmitter<IRecipeInputs>;
 
   componentWillLoad() {
-    this.recipeInput = {
-      name: null,
-      calories: 0,
-      carbs: 0,
-      protein: 0,
-      fat: 0,
-      category: null,
-    };
+    if (this.name) {
+      this.recipeInput = {
+        name: this.name,
+        // calories: this.calories,
+        // carbs: this.carbs,
+        // protein: this.protein,
+        // fat: this.fat,
+        category: this.category,
+      };
+    } else {
+      this.recipeInput = {
+        name: null,
+        // calories: 0,
+        // carbs: 0,
+        // protein: 0,
+        // fat: 0,
+        category: null,
+      };
+    }
   }
 
   handleSelect = (event: CustomEvent<SelectChangeEventDetail<any>>) => {
@@ -61,19 +72,19 @@ export class RecipeInputs implements IRecipeInputs {
             }
           />
         </ion-item>
-        <ion-item>
+        {/* <ion-item>
           <ion-label position="fixed">
             Calories <ion-text color="danger">*</ion-text>
           </ion-label>
           <ion-input
-            required
+            disabled
             type="text"
             value={this.calories}
             onInput={(event) =>
               this.handleChange({ control: 'calories', event: event })
             }
           />
-        </ion-item>
+        </ion-item> */}
         <ion-item>
           <ion-label>Category</ion-label>
           <ion-select
@@ -88,45 +99,45 @@ export class RecipeInputs implements IRecipeInputs {
             ))}
           </ion-select>
         </ion-item>
-        <ion-item>
+        {/* <ion-item>
           <ion-label position="fixed">
             Carbs (g) <ion-text color="danger">*</ion-text>
           </ion-label>
           <ion-input
-            required
+            disabled
             type="text"
             value={this.carbs}
             onInput={(event) =>
               this.handleChange({ control: 'carbs', event: event })
             }
           />
-        </ion-item>
-        <ion-item>
+        </ion-item> */}
+        {/* <ion-item>
           <ion-label position="fixed">
             Protein (g) <ion-text color="danger">*</ion-text>
           </ion-label>
           <ion-input
-            required
+            disabled
             type="text"
             value={this.protein}
             onInput={(event) =>
               this.handleChange({ control: 'protein', event: event })
             }
           />
-        </ion-item>
-        <ion-item>
+        </ion-item> */}
+        {/* <ion-item>
           <ion-label position="fixed">
             Fat (g) <ion-text color="danger">*</ion-text>
           </ion-label>
           <ion-input
-            required
+            disabled
             type="text"
             value={this.fat}
             onInput={(event) =>
               this.handleChange({ control: 'fat', event: event })
             }
           />
-        </ion-item>
+        </ion-item> */}
       </Host>
     );
   }

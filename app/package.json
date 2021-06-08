@@ -15,24 +15,16 @@
     "deploy": "stencil build && firebase deploy"
   },
   "dependencies": {
-    "@capacitor/cli": "2.4.2",
-    "@capacitor/core": "2.4.2",
-    "@ericblade/quagga2": "1.2.4",
-    "firebase": "^8.0.1",
-    "jest": "^26.6.2",
-    "localforage": "^1.9.0",
+    "@capacitor/filesystem": "^1.0.0",
+    "@ionic/storage": "^3.0.4",
+    "firebase": "^8.6.5",
     "lokijs": "1.5.11",
-    "puppeteer": "^5.4.1"
+    "rollup-plugin-node-polyfills": "^0.2.1"
   },
   "devDependencies": {
     "@ionic/core": "^5.4.1",
-    "@ionic/pwa-elements": "3.0.1",
     "@stencil/core": "^2.2.0",
-    "@types/jest": "^26.0.15",
-    "@types/lokijs": "1.5.3",
-    "@types/puppeteer": "^5.4.0",
-    "rollup-plugin-node-polyfills": "0.2.1",
-    "workbox-build": "^4.3.1"
+    "@types/lokijs": "1.5.3"
   },
   "repository": {
     "type": "git",

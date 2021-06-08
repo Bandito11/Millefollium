@@ -85,11 +85,12 @@ export class AppRecipeAdd {
       const { name } = addRecipe(this.recipe);
       const toast = await toastController.create({
         message: `${name} was added!`,
-        duration: 1500,
+        duration: 1000,
         cssClass: 'toast-success',
       });
       toast.present();
-      setTimeout(() => (location.href = '/'), 1500);
+      const nav = document.querySelector('ion-nav');
+      setTimeout(() => nav.popToRoot(), 1000);
     } catch (error) {
       const toast = await toastController.create({
         message: error,

@@ -59,11 +59,12 @@ export class AppRecipeEdit {
     if (name) {
       const toast = await toastController.create({
         message: `${name} was deleted successfully!`,
-        duration: 1500,
+        duration: 1000,
         cssClass: 'toast-error',
       });
       toast.present();
-      setTimeout(() => (location.href = '/'), 1500);
+      const nav = document.querySelector('ion-nav');
+      setTimeout(() => nav.popToRoot(), 1000);
     } else {
       const toast = await toastController.create({
         message: `Couldn't remove this recipe because it doesn't exist in the database.`,
@@ -101,11 +102,12 @@ export class AppRecipeEdit {
       const { name } = updateRecipe(this.data);
       const toast = await toastController.create({
         message: `${name} was edited successfully!`,
-        duration: 1500,
+        duration: 1000,
         cssClass: 'toast-success',
       });
       toast.present();
-      setTimeout(() => history.back(), 1500);
+      const nav = document.querySelector('ion-nav');
+      setTimeout(() => nav.popToRoot(), 1000);
     } catch (error) {
       const toast = await toastController.create({
         message: error,
@@ -138,10 +140,10 @@ export class AppRecipeEdit {
           <form onSubmit={this.handleSubmit}>
             <recipe-inputs
               name={this.data.name}
-              calories={this.data.calories}
-              fat={this.data.fat}
-              protein={this.data.protein}
-              carbs={this.data.carbs}
+              // calories={this.data.calories}
+              // fat={this.data.fat}
+              // protein={this.data.protein}
+              // carbs={this.data.carbs}
               category={this.data.category}
             />
             <ingredients-inputs ingredients={this.data.ingredients} />
