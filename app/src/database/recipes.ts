@@ -41,17 +41,17 @@ export function remove(recipe: IRecipe & LokiObj) {
 
 //FIXME: Delete the ASYNC and the Fetch
 export async function get() {
-  await fetch('assets/mock/recipes.json')
-    .then((res) => res.json())
-    .then((data) =>
-      data.map((item) => {
-        try {
-          insert(item);
-        } catch (error) {
-          error;
-        }
-      })
-    );
+  // await fetch('assets/mock/recipes.json')
+  //   .then((res) => res.json())
+  //   .then((data) =>
+  //     data.map((item) => {
+  //       try {
+  //         insert(item);
+  //       } catch (error) {
+  //         error;
+  //       }
+  //     })
+  //   );
   recipesView.removeFilters();
   const data = recipesView
     .applySimpleSort('name', { useJavascriptSorting: true })

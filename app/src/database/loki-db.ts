@@ -23,7 +23,9 @@ export let dailyEntriesView: DynamicView<IDaily>;
 export let profileView: DynamicView<IProfile>;
 export let recipesView: DynamicView<IRecipe>;
 
-export function initLocalDB() {
+// await initLocalDB();
+
+await (function initLocalDB() {
   return new Promise((resolve) => {
     db = new loki('food-tracker.db', {
       autosave: true,
@@ -61,3 +63,4 @@ export function initLocalDB() {
     });
   });
 }
+)()

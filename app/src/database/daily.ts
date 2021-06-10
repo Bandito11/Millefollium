@@ -1,8 +1,6 @@
 import { IDaily } from '../interfaces/IDaily';
 import { dailyEntriesColl, dailyEntriesView } from './loki-db';
 
-//TODO: Use Dynamic Views and fix methods names and logic if needed
-
 export function insertUpdateDaily(entry: IDaily) {
   const foundEntry = dailyEntriesColl.where((doc: IDaily) => {
     if (doc.date === entry.date) {

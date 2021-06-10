@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/Bandito11/food-tracker/issues"
   },
-  "homepage": "https://github.com/Bandito11/food-tracker#readme"
+  "homepage": "https://github.com/Bandito11/food-tracker#readme",
+  "dependencies": {
+    "@capacitor/android": "^3.0.1",
+    "@ionic/core": "^5.6.9"
+  }
 }

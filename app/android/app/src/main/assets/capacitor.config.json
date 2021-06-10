@@ -1,0 +1,6 @@
+{
+	"appId": "com.example.app",
+	"appName": "millefollium",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
