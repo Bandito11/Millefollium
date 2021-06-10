@@ -127,6 +127,7 @@ export class AppRecipeEdit {
       toast.present();
     }
   };
+  handleInput = (event: Event) => (this.recipe.notes = event.target['value']);
 
   render() {
     return (
@@ -150,15 +151,13 @@ export class AppRecipeEdit {
           <form onSubmit={this.handleSubmit}>
             <recipe-inputs
               name={this.recipe.name}
-              // calories={this.data.calories}
-              // fat={this.data.fat}
-              // protein={this.data.protein}
-              // carbs={this.data.carbs}
               category={this.recipe.category}
             />
             <ingredients-inputs ingredients={this.recipe.ingredients} />
             <utensils-inputs utensils={this.recipe.utensils} />
             <steps-inputs steps={this.recipe.steps} />
+            <h5>Notes</h5>
+            <ion-textarea onInput={this.handleInput}></ion-textarea>
             <ion-button expand="block" type="submit">
               Edit Recipe
             </ion-button>

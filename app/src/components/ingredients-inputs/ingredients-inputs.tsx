@@ -82,6 +82,7 @@ export class IngredientsInputs {
             id={index}
             required={true}
             value={ingredient?.calories}
+            type="number"
             onInput={(event) =>
               this.handleInput({
                 index: index,
@@ -97,6 +98,7 @@ export class IngredientsInputs {
             id={index}
             required={true}
             value={ingredient?.carbs}
+            type="number"
             onInput={(event) =>
               this.handleInput({
                 index: index,
@@ -112,6 +114,7 @@ export class IngredientsInputs {
             id={index}
             required={true}
             value={ingredient?.fat}
+            type="number"
             onInput={(event) =>
               this.handleInput({
                 index: index,
@@ -127,6 +130,7 @@ export class IngredientsInputs {
             id={index}
             required={true}
             value={ingredient?.protein}
+            type="number"
             onInput={(event) =>
               this.handleInput({
                 index: index,
@@ -140,7 +144,13 @@ export class IngredientsInputs {
     );
   }
   handleInput(arg0: { index: any; event: Event; control: string }): void {
-    this.data[arg0.index][arg0.control] = parseInt(arg0.event.target['value']);
+    const value = arg0.event.target['value'];
+    const parseValue = parseInt(value);
+    if (parseValue) {
+      this.data[arg0.index][arg0.control] = parseValue;
+    } else {
+      this.data[arg0.index][arg0.control] = value;
+    }
     this.ingredientsInputData.emit(this.data);
   }
 

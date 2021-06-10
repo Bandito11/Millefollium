@@ -39,7 +39,6 @@ export class UtensilsInputs {
         <ion-label position="stacked">{index + 1}</ion-label>
         <ion-input
           id={index}
-          required={true}
           value={utensil}
           onInput={(event) => this.handleInput({ index: index, event: event })}
         />

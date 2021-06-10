@@ -1,5 +1,5 @@
 import { Component, h } from '@stencil/core';
-0.
+
 @Component({
   tag: 'app-root',
   styleUrl: 'app-root.css',

@@ -43,8 +43,17 @@ export class AppRecipeList {
     }
   };
 
+  navWillChange() {
+    document
+      .querySelector('ion-nav')
+      .addEventListener('ionNavWillChange', () => {
+        this.getRecipes();
+      });
+  }
+
   async componentWillLoad() {
     await this.getRecipes();
+    this.navWillChange();
   }
 
   clearSearch = async (ev: CustomEvent<KeyboardEvent>) => {
