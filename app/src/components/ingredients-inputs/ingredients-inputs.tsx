@@ -93,22 +93,6 @@ export class IngredientsInputs {
           />
         </ion-item>
         <ion-item>
-          <ion-label position="fixed">Carbs (g)</ion-label>
-          <ion-input
-            id={index}
-            required={true}
-            value={ingredient?.carbs}
-            type="number"
-            onInput={(event) =>
-              this.handleInput({
-                index: index,
-                event: event,
-                control: 'carbs',
-              })
-            }
-          />
-        </ion-item>
-        <ion-item>
           <ion-label position="fixed">Fat (g)</ion-label>
           <ion-input
             id={index}
@@ -120,6 +104,22 @@ export class IngredientsInputs {
                 index: index,
                 event: event,
                 control: 'fat',
+              })
+            }
+          />
+        </ion-item>
+        <ion-item>
+          <ion-label position="fixed">Carbs (g)</ion-label>
+          <ion-input
+            id={index}
+            required={true}
+            value={ingredient?.carbs}
+            type="number"
+            onInput={(event) =>
+              this.handleInput({
+                index: index,
+                event: event,
+                control: 'carbs',
               })
             }
           />
@@ -145,11 +145,14 @@ export class IngredientsInputs {
   }
   handleInput(arg0: { index: any; event: Event; control: string }): void {
     const value = arg0.event.target['value'];
-    const parseValue = parseInt(value);
-    if (parseValue) {
-      this.data[arg0.index][arg0.control] = parseValue;
-    } else {
-      this.data[arg0.index][arg0.control] = value;
+    const control = arg0.control;
+    switch (control) {
+      case 'name':
+      case 'amount':
+        this.data[arg0.index][arg0.control] = value;
+        break;
+      default:
+        this.data[arg0.index][arg0.control] = parseInt(value);
     }
     this.ingredientsInputData.emit(this.data);
   }
