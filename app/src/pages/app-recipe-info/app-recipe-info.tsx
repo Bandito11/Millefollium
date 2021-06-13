@@ -28,29 +28,27 @@ export class AppRecipeInfo {
         favorite: false,
       };
     }
-    const result = updateRecipe(this.recipe);
-    let options = {
-      message: '',
-      color: '',
-    };
-    if (result) {
-      if (result.favorite) {
-        options.message = `Added to favorites.`;
-        options.color = 'success';
+    try {
+      const { favorite, name } = updateRecipe(this.recipe);
+      if (favorite) {
+        const toast = await toastController.create({
+          message: `${name} added to favorites.`,
+          duration: 1000,
+          color: 'success',
+        });
+        toast.present();
       } else {
-        options.message = `Removed from favorites.`;
-        options.color = 'danger';
+        const toast = await toastController.create({
+          message: `${name} removed from favorites.`,
+          duration: 1000,
+          color: 'danger',
+        });
+        toast.present();
       }
+    } catch (error) {
       const toast = await toastController.create({
-        message: options.message,
-        duration: 1000,
-        color: options.color,
-      });
-      toast.present();
-    } else {
-      const toast = await toastController.create({
-        message: `Couldn't be added to favorites. Please try again later.`,
-        duration: 1000,
+        message: error,
+        duration: 1500,
         color: 'danger',
       });
       toast.present();

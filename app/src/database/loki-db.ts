@@ -1,17 +1,18 @@
 import loki from 'lokijs';
+import { IonicStorageAdapter } from '../helpers/ionic-storage-adapter';
 import { IDaily } from '../interfaces/IDaily';
 import { IProfile } from '../interfaces/IProfile';
 import { IRecipe } from '../interfaces/IRecipe';
 
-//FIXME: adapter only used for testing
-const adapter = new loki.LokiMemoryAdapter({ asyncResponses: true });
-// const adapter = new loki.LokiPartitioningAdapter(
-//   new CapacitorFileLokiAdapter(),
-//   { paging: true }
-// );
-// const adapter = new loki.LokiPartitioningAdapter(new IonicStorageAdapter(), {
-//   paging: true,
-// });
+let adapter: loki.LokiPartitioningAdapter | LokiMemoryAdapter;
+
+if (location.hostname=== 'localhost') {
+  adapter = new loki.LokiMemoryAdapter({ asyncResponses: true });
+} else {
+  adapter = new loki.LokiPartitioningAdapter(new IonicStorageAdapter(), {
+    paging: true,
+  });
+}
 
 let db: Loki;
 
@@ -62,5 +63,4 @@ await (function initLocalDB() {
       adapter: adapter,
     });
   });
-}
-)()
+})();

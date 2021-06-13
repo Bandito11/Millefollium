@@ -114,6 +114,7 @@ export class AppRecipeEdit {
         message: `${name} was edited successfully!`,
         duration: 1000,
         cssClass: 'toast-success',
+        position: 'top',
       });
       toast.present();
       const nav = document.querySelector('ion-nav');
@@ -123,6 +124,7 @@ export class AppRecipeEdit {
         message: error,
         duration: 1500,
         cssClass: 'toast-error',
+        position: 'top',
       });
       toast.present();
     }

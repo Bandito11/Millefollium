@@ -104,6 +104,7 @@ export class AppRecipeAdd {
         message: `${name} was added!`,
         duration: 1000,
         cssClass: 'toast-success',
+        position: 'top'
       });
       toast.present();
       const nav = document.querySelector('ion-nav');
@@ -113,6 +114,7 @@ export class AppRecipeAdd {
         message: error,
         duration: 1500,
         cssClass: 'toast-error',
+        position: 'top'
       });
       toast.present();
     }
