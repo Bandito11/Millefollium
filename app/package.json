@@ -15,18 +15,18 @@
     "update": "ncu -u & npm update & npm install"
   },
   "dependencies": {
-    "@capacitor/android": "^3.0.1",
-    "@capacitor/core": "^3.0.1",
-    "@capacitor/filesystem": "^1.0.1",
-    "@capacitor/ios": "^3.0.1",
-    "@ionic/core": "^5.6.9",
+    "@capacitor/android": "^3.0.2",
+    "@capacitor/core": "^3.0.2",
+    "@capacitor/filesystem": "^1.0.2",
+    "@capacitor/ios": "^3.0.2",
+    "@ionic/core": "^5.6.11",
     "@ionic/storage": "^3.0.4",
-    "firebase": "^8.6.5",
+    "firebase": "^8.7.0",
     "lokijs": "1.5.12",
     "rollup-plugin-node-polyfills": "^0.2.1"
   },
   "devDependencies": {
-    "@capacitor/cli": "^3.0.1",
+    "@capacitor/cli": "^3.0.2",
     "@stencil/core": "^2.6.0",
     "@types/lokijs": "1.5.4"
   },
