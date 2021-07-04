@@ -11,7 +11,8 @@
     "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watch",
-    "deploy": "stencil build && firebase deploy"
+    "deploy": "stencil build && firebase deploy",
+    "update": "ncu -u & npm update & npm install"
   },
   "dependencies": {
     "@capacitor/android": "^3.0.1",
@@ -27,11 +28,7 @@
   "devDependencies": {
     "@capacitor/cli": "^3.0.1",
     "@stencil/core": "^2.6.0",
-    "@types/jest": "^26.0.23",
-    "@types/lokijs": "1.5.4",
-    "@types/puppeteer": "^5.4.3",
-    "jest": "^27.0.4",
-    "puppeteer": "^10.0.0"
+    "@types/lokijs": "1.5.4"
   },
   "repository": {
     "type": "git",
